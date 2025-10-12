@@ -1,2 +1,0 @@
-# litjohn.github.io
-webpage
