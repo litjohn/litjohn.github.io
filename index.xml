@@ -1,4 +1,172 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>litjohn's blog</title><link>https://litjohn.github.io/</link><description>Recent content on litjohn's blog</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sun, 12 Oct 2025 23:00:01 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>CPS，控制上下文与四十行代码的传说</title><link>https://litjohn.github.io/posts/cps%E6%8E%A7%E5%88%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8E%E5%9B%9B%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BC%A0%E8%AF%B4/</link><pubDate>Sun, 12 Oct 2025 23:00:01 +0800</pubDate><guid>https://litjohn.github.io/posts/cps%E6%8E%A7%E5%88%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8E%E5%9B%9B%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BC%A0%E8%AF%B4/</guid><description>&lt;p&gt;光剑系列的第七作！&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>litjohn's blog</title><link>https://litjohn.github.io/</link><description>Recent content on litjohn's blog</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Mon, 13 Oct 2025 15:22:34 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>调用栈、de Bruijn 索引与堆栈的内存模型</title><link>https://litjohn.github.io/posts/%E8%B0%83%E7%94%A8%E6%A0%88de-bruijn-%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%A0%86%E6%A0%88%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</link><pubDate>Mon, 13 Oct 2025 15:22:34 +0800</pubDate><guid>https://litjohn.github.io/posts/%E8%B0%83%E7%94%A8%E6%A0%88de-bruijn-%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%A0%86%E6%A0%88%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</guid><description>&lt;p&gt;光剑系列的第六作！&lt;/p&gt;
+&lt;p&gt;（放一个 Gemini 生成的欧比旺的图来解释一下光剑是什么）
+&lt;img loading="lazy" src="https://cdn.luogu.com.cn/upload/image_hosting/76io2hwx.png"&gt;&lt;/p&gt;
+&lt;p&gt;前五作：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;第一篇：&lt;a href="https://www.luogu.com.cn/article/cr6hfiut"&gt;Let&amp;rsquo;s build our mathematics by using lambda calculus &amp;amp;&amp;amp; church encoding!&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;第二篇：&lt;a href="https://www.luogu.com.cn/article/uhume1ou"&gt;惰性求值、无穷流与发生的魔法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;第三篇：&lt;a href="https://www.luogu.com.cn/article/ygxlqlsn"&gt;协程、生成器与 call/cc 的控制流&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;第四篇：&lt;a href="https://www.luogu.com.cn/article/0hxig3i4"&gt;动态作用域、词法作用域与表达式求值的环境模型&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;第五篇：&lt;a href="https://www.luogu.com.cn/article/h0g9paih"&gt;基于环境模型的解释器&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我们上篇文章写了解释器。在评论区里面可以看到一个非常神秘的东西：https://www.zhihu.com/question/30262900/answer/1943149381&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-scheme" data-lang="scheme"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;; 嵌套的括号不是 scheme 标准语法。表示定义柯里化的函数，和嵌套 lambda 等价。&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;Z&lt;/span&gt; env)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (car env))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;S&lt;/span&gt; vp) env)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;vp&lt;/span&gt; (cdr env)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;Lam&lt;/span&gt; e) env)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;lambda &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;x&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;e&lt;/span&gt; (cons x env))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;App&lt;/span&gt; e1 e2) env)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ((&lt;span style="color:#a6e22e"&gt;e1&lt;/span&gt; env) (&lt;span style="color:#a6e22e"&gt;e2&lt;/span&gt; env)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;; (define global-env &amp;#39;())&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;顺便，还有人问我为什么不再布置一道习题，那么这就是习题！&lt;/p&gt;</description></item><item><title>基于环境模型的解释器</title><link>https://litjohn.github.io/posts/%E5%9F%BA%E4%BA%8E%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A7%A3%E9%87%8A%E5%99%A8/</link><pubDate>Mon, 13 Oct 2025 15:21:50 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%9F%BA%E4%BA%8E%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A7%A3%E9%87%8A%E5%99%A8/</guid><description>&lt;p&gt;光剑系列的第五作！前四篇：&lt;/p&gt;
+&lt;p&gt;第一篇：&lt;a href="https://www.luogu.com.cn/article/cr6hfiut"&gt;Let&amp;rsquo;s build our mathematics by using lambda calculus &amp;amp;&amp;amp; church encoding!&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第二篇：&lt;a href="https://www.luogu.com.cn/article/uhume1ou"&gt;惰性求值、无穷流与发生的魔法&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第三篇：&lt;a href="https://www.luogu.com.cn/article/ygxlqlsn"&gt;协程、生成器与 call/cc 的控制流&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第四篇：&lt;a href="https://www.luogu.com.cn/article/0hxig3i4"&gt;动态作用域、词法作用域与表达式求值的环境模型&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="前言"&gt;前言&lt;/h2&gt;
+&lt;p&gt;又见面了！上一篇文章中我将动态作用域的实现留作了习题，一定非常恶心吧！毕竟我尝试了两天枚举了各种不用宏和用宏的解决方案都没有任何成果，只能看着看不懂的编译错误或者不期望的展开结果发呆。&lt;/p&gt;
+&lt;p&gt;如果有哪位读者做出了那个习题，请务必通过本文评论区联系我。&lt;/p&gt;
+&lt;p&gt;不过，其实只要自己实现一个解释器，就能够轻松而优雅地完成这个习题。&lt;/p&gt;
+&lt;p&gt;恰好，上一篇文章中介绍了环境模型，这将是我们解释器的原理。&lt;/p&gt;
+&lt;p&gt;我们将选择 scheme 实现解释器。因为 scheme 的解释器特别好写而作者太菜了只会这个。&lt;/p&gt;
+&lt;h2 id="实现"&gt;实现&lt;/h2&gt;
+&lt;p&gt;在实现一个具有比较多特性的 scheme 子集之前，我们将先实现一个更简单的 lambda 演算解释器。&lt;/p&gt;
+&lt;p&gt;看过第一作的读者们想必还记得 lambda 演算吧？它只含有函数一种对象，函数抽象和函数应用两种操作，已经是图灵完备的。&lt;/p&gt;
+&lt;p&gt;那么我们来实现它，使用环境模型和闭包。&lt;/p&gt;
+&lt;h3 id="预备工作--函数"&gt;预备工作 · 函数&lt;/h3&gt;
+&lt;p&gt;lambda 只有函数一种核心对象。实现函数自然成为了我们的重要任务。&lt;/p&gt;
+&lt;p&gt;在环境模型下，想要实现词法作用域肯定要用闭包。所以我们的函数也将被表示为一个闭包。&lt;/p&gt;
+&lt;p&gt;它含有四个字段：第一个是符号 closure，用于标识身份。后面三个字段分别是形式参数、函数体和保存的环境。这些是闭包的核心要素。&lt;/p&gt;
+&lt;p&gt;我们可以先实现单参数的函数。因为具有一等公民函数的特性，我们可以通过柯里化实现多参数函数。&lt;/p&gt;
+&lt;p&gt;对于闭包的存储，随便用什么都行。我用的是一个 vector（定长数组）。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-scheme" data-lang="scheme"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;make-closure&lt;/span&gt; params body env)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (vector &lt;span style="color:#e6db74"&gt;&amp;#39;closure&lt;/span&gt; params body env))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;有了函数的数据结构标识，我们还需要有对于闭包的操作：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-scheme" data-lang="scheme"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;closure?&lt;/span&gt; obj)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;and &lt;/span&gt;(vector? obj) (eq? (vector-ref obj &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;) &lt;span style="color:#e6db74"&gt;&amp;#39;closure&lt;/span&gt;)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;closure-param&lt;/span&gt; closure) (vector-ref closure &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;closure-body&lt;/span&gt; closure) (vector-ref closure &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;closure-env&lt;/span&gt; closure) (vector-ref closure &lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后，为了支持对于函数的应用和抽象，我们需要一些关于环境的操作。&lt;/p&gt;</description></item><item><title>动态作用域、词法作用域与表达式求值的环境模型</title><link>https://litjohn.github.io/posts/%E5%8A%A8%E6%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E8%AF%8D%E6%B3%95%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B1%82%E5%80%BC%E7%9A%84%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B/</link><pubDate>Mon, 13 Oct 2025 15:20:24 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%8A%A8%E6%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E8%AF%8D%E6%B3%95%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B1%82%E5%80%BC%E7%9A%84%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B/</guid><description>&lt;p&gt;光剑系列的第四作！前三篇：&lt;/p&gt;
+&lt;p&gt;第一篇：&lt;a href="https://www.luogu.com.cn/article/cr6hfiut"&gt;Let&amp;rsquo;s build our mathematics by using lambda calculus &amp;amp;&amp;amp; church encoding!&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第二篇：&lt;a href="https://www.luogu.com.cn/article/uhume1ou"&gt;惰性求值、无穷流与发生的魔法&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第三篇：&lt;a href="https://www.luogu.com.cn/article/ygxlqlsn"&gt;协程、生成器与 call/cc 的控制流&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="引子"&gt;引子&lt;/h2&gt;
+&lt;p&gt;在&lt;a href="https://www.luogu.com.cn/article/uhume1ou"&gt;惰性求值、无穷流与发生的魔法&lt;/a&gt;中，我们使用无参 lambda 构建了一个 thunk。&lt;/p&gt;
+&lt;p&gt;想必有读者读完之后苦思冥想，最后发现“不对呀！主播，你为什么要用一个 lambda 呢？这里用 quote 不是也可以起到‘冻结计算’的作用？最后用一次 eval 将被冻结的原始表达式求值就可以得到真实值了。”&lt;/p&gt;
+&lt;p&gt;比如说，我们使用过的这个示例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-scheme" data-lang="scheme"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;x (&lt;span style="color:#66d9ef"&gt;lambda &lt;/span&gt;() (+ &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;x&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;就可以转化为下面的形式：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-scheme" data-lang="scheme"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;x &lt;span style="color:#f92672"&gt;&amp;#39;&lt;/span&gt;(+ &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;2&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (eval x)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#ae81ff"&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果你这么想了，恭喜你！你自己发现了一条通向本文核心内容，函数抽象的动态作用域与词法作用域区别的道路。&lt;/p&gt;
+&lt;p&gt;接下来，请容我解释动态作用域、词法作用域，它们的区别以及 thunk 两种构建方法与它们的联系。在本文中，我们还将手动在 scheme 中构建一套动态作用域的函数抽象/应用体系。最终成果如下：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-scheme" data-lang="scheme"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;&lt;span style="color:#75715e"&gt;;; 假设使用支持 SRFI-39 的实现（chez 等很多支持）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;x (&lt;span style="color:#a6e22e"&gt;make-parameter&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;10&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;f&lt;/span&gt; y) (+ (&lt;span style="color:#a6e22e"&gt;x&lt;/span&gt;) y))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#a6e22e"&gt;f&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;) &lt;span style="color:#75715e"&gt;; =&amp;gt; 15&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#a6e22e"&gt;parameterize&lt;/span&gt; ([x &lt;span style="color:#ae81ff"&gt;100&lt;/span&gt;])
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;f&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;5&lt;/span&gt;)) &lt;span style="color:#75715e"&gt;; =&amp;gt; 105 ; x 按调用链动态解析&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="分道扬镳当自由变量出现"&gt;分道扬镳——当自由变量出现&lt;/h2&gt;
+&lt;p&gt;上面的两种方法看似都能实现对计算的“冻结”，但是它们的作用真的完全一样吗？&lt;/p&gt;</description></item><item><title>协程、生成器与 call/cc 的控制流</title><link>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call/cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</link><pubDate>Mon, 13 Oct 2025 15:19:20 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call/cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</guid><description>&lt;h2 id="上期回顾"&gt;上期回顾&lt;/h2&gt;
+&lt;p&gt;光剑系列的第三作！前两篇：&lt;/p&gt;
+&lt;p&gt;第一篇：&lt;a href="https://www.luogu.com.cn/article/cr6hfiut"&gt;Let&amp;rsquo;s build our mathematics by using lambda calculus &amp;amp;&amp;amp; church encoding!&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第二篇：&lt;a href="https://www.luogu.com.cn/article/uhume1ou"&gt;惰性求值、无穷流与发生的魔法&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id="前言与一个震撼的-demo"&gt;前言与一个震撼的 demo&lt;/h2&gt;
+&lt;p&gt;在上一篇文章中，我们探讨并实现了惰性求值与无穷流。希望你们还对自然数流印象深刻。&lt;/p&gt;
+&lt;p&gt;自然数流也可以视为一个不断生成新的自然数的生成器。那么，从这个意义上，我们有更简洁而强大的实现方式。&lt;/p&gt;
+&lt;p&gt;（还是一贯的 scheme 代码）&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-scheme" data-lang="scheme"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;nature-gen&lt;/span&gt; return)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;let &lt;/span&gt;loop ((&lt;span style="color:#a6e22e"&gt;i&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;set! &lt;/span&gt;return
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;call/cc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;lambda &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;state&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;return&lt;/span&gt; (cons state i)))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;loop&lt;/span&gt; (+ i &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;nature-numbers
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;let &lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;k&lt;/span&gt; nature-gen))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;tmp-interface&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;let &lt;/span&gt;((&lt;span style="color:#a6e22e"&gt;result&lt;/span&gt; (call/cc k)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;set! &lt;/span&gt;k (car result))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (cdr result)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; tmp-interface))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这就是一个自然数的生成器！每次调用 nature-numbers，它都会返回一个新的自然数。&lt;/p&gt;</description></item><item><title>惰性求值、无穷流与发生的魔法</title><link>https://litjohn.github.io/posts/%E6%83%B0%E6%80%A7%E6%B1%82%E5%80%BC%E6%97%A0%E7%A9%B7%E6%B5%81%E4%B8%8E%E5%8F%91%E7%94%9F%E7%9A%84%E9%AD%94%E6%B3%95/</link><pubDate>Mon, 13 Oct 2025 15:15:17 +0800</pubDate><guid>https://litjohn.github.io/posts/%E6%83%B0%E6%80%A7%E6%B1%82%E5%80%BC%E6%97%A0%E7%A9%B7%E6%B5%81%E4%B8%8E%E5%8F%91%E7%94%9F%E7%9A%84%E9%AD%94%E6%B3%95/</guid><description>&lt;p&gt;光剑第二作！&lt;/p&gt;
+&lt;h2 id="前言什么是魔法"&gt;前言：什么是魔法？&lt;/h2&gt;
+&lt;p&gt;（注：这个前言可以跳过。它是最终成果展示。感到迷惑很正常，请先阅读正文。）&lt;/p&gt;
+&lt;p&gt;什么是魔法？&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-scheme" data-lang="scheme"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define-syntax &lt;/span&gt;delay
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;syntax-rules &lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ((&lt;span style="color:#66d9ef"&gt;delay &lt;/span&gt;x) (&lt;span style="color:#66d9ef"&gt;lambda &lt;/span&gt;() x))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;lazy-variable&lt;/span&gt; thunk)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (cons &lt;span style="color:#66d9ef"&gt;#f&lt;/span&gt; thunk))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;is-calculated?&lt;/span&gt; variable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (car variable))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(force variable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;if &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;is-calculated?&lt;/span&gt; variable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (cdr variable)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;begin&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (set-car! variable &lt;span style="color:#66d9ef"&gt;#t&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (set-cdr! variable ((cdr variable)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (cdr variable))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define-syntax &lt;/span&gt;stream-cons
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;syntax-rules &lt;/span&gt;()
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; ((&lt;span style="color:#a6e22e"&gt;stream-cons&lt;/span&gt; a b)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;cons&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; a
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;lazy-variable&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;delay &lt;/span&gt;b))))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;stream-car&lt;/span&gt; x)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (car x))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;stream-cdr&lt;/span&gt; x)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (force (cdr x)))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;(&lt;span style="color:#a6e22e"&gt;int-from&lt;/span&gt; n)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;stream-cons&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; n
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#a6e22e"&gt;int-from&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (+ n &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;))))
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define &lt;/span&gt;nature-numbers (&lt;span style="color:#a6e22e"&gt;int-from&lt;/span&gt; &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;))
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;真成四十行代码了。感兴趣的读者可以数一数，刚好 39 行。&lt;/p&gt;</description></item><item><title>Let's Build Our Mathematics by Using Lambda Calculus &amp;&amp; Church Encoding!</title><link>https://litjohn.github.io/posts/lets-build-our-mathematics-by-using-lambda-calculus--church-encoding/</link><pubDate>Mon, 13 Oct 2025 14:57:18 +0800</pubDate><guid>https://litjohn.github.io/posts/lets-build-our-mathematics-by-using-lambda-calculus--church-encoding/</guid><description>&lt;h3 id="致谢"&gt;致谢&lt;/h3&gt;
+&lt;p&gt;Gemini 2.5 Pro 0325 &amp;amp;&amp;amp; 0506：文本润色、事实正确性审查，以及帮助我学习、理解和回忆这些内容。&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://www.luogu.com.cn/user/528472"&gt;myster1ous&lt;/a&gt;： 给予我巨大的启发，帮助我构建出 prev 函数。&lt;/p&gt;
+&lt;h2 id="前言"&gt;前言&lt;/h2&gt;
+&lt;p&gt;本文是光剑系列的第一作，又名《lambda 演算，邱奇编码与优雅的计算模型》。&lt;/p&gt;
+&lt;p&gt;本文的目的是带领大家踏上一段奇妙的旅程：我们将使用 λ 演算（Lambda Calculus）这一极简的计算模型，并通过丘奇编码（Church Encoding）这一巧妙的技术，一步步构建出我们日常编程中熟悉和依赖的计算体系，例如数字、布尔逻辑乃至更复杂的数据结构。&lt;/p&gt;
+&lt;p&gt;为了方便演示和实践，本文中的所有代码示例都将使用 Scheme 语言。Scheme 是 Lisp 家族的一员，它的语法是 &lt;strong&gt;S-表达式 (Symbolic Expressions)&lt;/strong&gt;。S-表达式不仅简洁优雅，而且其结构与 λ 演算的表达方式惊人地契合。&lt;/p&gt;
+&lt;p&gt;在我们开始之前，让我们先快速了解一下 S-表达式：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;核心是列表 (List)：&lt;/strong&gt; S-表达式的基本形式是由圆括号 &lt;code&gt;()&lt;/code&gt; 包围起来的列表。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;结构：&lt;code&gt;(操作符 参数1 参数2 ...)&lt;/code&gt;：&lt;/strong&gt; 列表中的第一个元素通常是&lt;strong&gt;操作符&lt;/strong&gt;（即要应用的函数），其余元素则是传递给该操作符的&lt;strong&gt;参数&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;原子 (Atom) 与嵌套：&lt;/strong&gt; 列表中的元素可以是&lt;strong&gt;原子&lt;/strong&gt;（如数字 &lt;code&gt;123&lt;/code&gt;、符号 &lt;code&gt;x&lt;/code&gt;、&lt;code&gt;+&lt;/code&gt;），也可以是另一个 S-表达式。这种嵌套能力使得 S-表达式可以表示复杂的树状结构。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例如，表达式 &lt;code&gt;(+ 1 (* 2 3))&lt;/code&gt; 在 Scheme 中表示数学上的 &lt;code&gt;1 + (2 * 3)&lt;/code&gt;。
+这里：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;最外层的 &lt;code&gt;(+ 1 (* 2 3))&lt;/code&gt; 是一个 S-表达式。&lt;code&gt;+&lt;/code&gt; 是操作符，&lt;code&gt;1&lt;/code&gt; 和 &lt;code&gt;(* 2 3)&lt;/code&gt; 是它的参数。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;(* 2 3)&lt;/code&gt; 本身也是一个 S-表达式。&lt;code&gt;*&lt;/code&gt; 是操作符，&lt;code&gt;2&lt;/code&gt; 和 &lt;code&gt;3&lt;/code&gt; 是它的参数。执行它会得到 &lt;code&gt;6&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;所以整个表达式 &lt;code&gt;(+ 1 6)&lt;/code&gt; 最终会计算得到 &lt;code&gt;7&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;理解了 S-表达式，我们就可以更顺畅地进入 λ 演算的世界了。&lt;/p&gt;</description></item><item><title>CPS，控制上下文与四十行代码的传说</title><link>https://litjohn.github.io/posts/cps%E6%8E%A7%E5%88%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8E%E5%9B%9B%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BC%A0%E8%AF%B4/</link><pubDate>Sun, 12 Oct 2025 23:00:01 +0800</pubDate><guid>https://litjohn.github.io/posts/cps%E6%8E%A7%E5%88%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8E%E5%9B%9B%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BC%A0%E8%AF%B4/</guid><description>&lt;p&gt;光剑系列的第七作！&lt;/p&gt;
 &lt;p&gt;前六作：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;第一篇：&lt;a href="https://www.luogu.com.cn/article/cr6hfiut"&gt;Let&amp;rsquo;s build our mathematics by using lambda calculus &amp;amp;&amp;amp; church encoding!&lt;/a&gt;&lt;/li&gt;
@@ -22,13 +190,13 @@
 &lt;h2 id="cps-变换"&gt;CPS 变换&lt;/h2&gt;
 &lt;h3 id="一个例子"&gt;一个例子&lt;/h3&gt;
 &lt;p&gt;先看下面这段代码：&lt;/p&gt;
-&lt;pre tabindex="0"&gt;&lt;code&gt;(define (fact-cps n k)
-(if (= n 0)
-(k 1)
-(fact-cps
-(- n 1)
-(lambda (v) (k (* v n))))))
-&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;从名字就可以看出，这是一个计算阶乘的函数。不过它看上去非常的不同寻常。&lt;/p&gt;</description></item><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"&gt;&lt;code class="language-racket" data-lang="racket"&gt;&lt;span style="display:flex;"&gt;&lt;span&gt;(&lt;span style="color:#66d9ef"&gt;define&lt;/span&gt; (fact-cps n k)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;if&lt;/span&gt; (= n &lt;span style="color:#ae81ff"&gt;0&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (k &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (fact-cps
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (- n &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
+&lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;lambda&lt;/span&gt; (v) (k (* v n))))))&lt;span style="color:#960050;background-color:#1e0010"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;从名字就可以看出，这是一个计算阶乘的函数。不过它看上去非常的不同寻常。&lt;/p&gt;</description></item><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：https://www.luogu.com.cn/article/yc9w22em&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;

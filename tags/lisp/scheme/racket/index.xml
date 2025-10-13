@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on litjohn's blog</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on litjohn's blog</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Mon, 13 Oct 2025 15:22:34 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>调用栈、de Bruijn 索引与堆栈的内存模型</title><link>https://litjohn.github.io/posts/%E8%B0%83%E7%94%A8%E6%A0%88de-bruijn-%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%A0%86%E6%A0%88%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</link><pubDate>Mon, 13 Oct 2025 15:22:34 +0800</pubDate><guid>https://litjohn.github.io/posts/%E8%B0%83%E7%94%A8%E6%A0%88de-bruijn-%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%A0%86%E6%A0%88%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</guid><description>&lt;p&gt;光剑系列的第六作！&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Lisp/Scheme/Racket on litjohn's blog</title><link>https://litjohn.github.io/tags/lisp/scheme/racket/</link><description>Recent content in Lisp/Scheme/Racket on litjohn's blog</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Mon, 13 Oct 2025 15:22:34 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/tags/lisp/scheme/racket/index.xml" rel="self" type="application/rss+xml"/><item><title>调用栈、de Bruijn 索引与堆栈的内存模型</title><link>https://litjohn.github.io/posts/%E8%B0%83%E7%94%A8%E6%A0%88de-bruijn-%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%A0%86%E6%A0%88%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</link><pubDate>Mon, 13 Oct 2025 15:22:34 +0800</pubDate><guid>https://litjohn.github.io/posts/%E8%B0%83%E7%94%A8%E6%A0%88de-bruijn-%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%A0%86%E6%A0%88%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/</guid><description>&lt;p&gt;光剑系列的第六作！&lt;/p&gt;
 &lt;p&gt;（放一个 Gemini 生成的欧比旺的图来解释一下光剑是什么）
 &lt;img loading="lazy" src="https://cdn.luogu.com.cn/upload/image_hosting/76io2hwx.png"&gt;&lt;/p&gt;
 &lt;p&gt;前五作：&lt;/p&gt;
@@ -196,36 +196,4 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (fact-cps
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (- n &lt;span style="color:#ae81ff"&gt;1&lt;/span&gt;)
 &lt;/span&gt;&lt;/span&gt;&lt;span style="display:flex;"&gt;&lt;span&gt; (&lt;span style="color:#66d9ef"&gt;lambda&lt;/span&gt; (v) (k (* v n))))))&lt;span style="color:#960050;background-color:#1e0010"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;从名字就可以看出，这是一个计算阶乘的函数。不过它看上去非常的不同寻常。&lt;/p&gt;</description></item><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
-&lt;p&gt;系列前作：https://www.luogu.com.cn/article/yc9w22em&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
-&lt;p&gt;优化一些代数式计算的复杂度时，最简单常用的技巧就是试着拆开，然后分离常量和变量，将不同类项分开处理。而当你推不出一些式子时，可以放弃推式子而使用递推。交换求和顺序/交换 DP 转移顺序/维度是破解循环依赖，找到好的计算顺序的方法，这和拆贡献是相关的：拆贡献其实就是变换了统计的第一维度。从按照整体的统计变成按照单个元素统计。&lt;/p&gt;
-&lt;p&gt;双指针就是“在不合法和不优之间的境界线上游走”，同时也是“一种扫描线”，并且是“在复杂度允许的情况下，枚举一定量信息以确定更多条件”的体现。&lt;/p&gt;
-&lt;p&gt;而“枚举一定量信息”在 DP 中也很常用。DP 的经典套路就是随便乱设状态，加入信息直到能够转移为止，然后利用种种洞察和优化去掉一部分维度，优化转移直到时空复杂度达标。&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;在做任何题的时候，第一步考虑性质刻画。无论是操作的性质还是维护信息的性质。性质就是限制，能够帮你找出正解。&lt;/p&gt;
-&lt;p&gt;一个好的性质刻画也很重要。一个愚蠢的性质刻画会极大地妨碍你做题。所以如果你觉得性质刻画太笨，就试着简化。&lt;/p&gt;
-&lt;p&gt;“信息学”的本质就是对于信息的处理。算法对于复杂度的优化本质上是减少不必要的对信息的处理（计算）。所以当你试图确定复杂度或者优化复杂度时，不妨思考一下“这个题，至少需要处理哪些信息？如何避免处理不必要的信息？”&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;信息即向量，操作即矩阵。&lt;/p&gt;
-&lt;p&gt;写了线性代数大学习，你应当能知道这点。有许多操作都是线性/仿射的，可以写成矩阵。从而拥有结合性，可以用快速幂或者线段树等方法处理。&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;孤链压缩权值线段树/01 trie。线性空间复杂度，从此整数可重集再也不用平衡树。&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;线性筛线性预处理积性数论函数。要点在于筛 n = i * p 时用到的 p 和 i 满足 p 不大于 i 的最小质因子。比埃筛更好写。&lt;/p&gt;
-&lt;p&gt;以后再也不要 naive 地 n log n 算 d(i) 了。&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;利用单调性等等贪心性质简化问题。&lt;/p&gt;
-&lt;p&gt;有交不优 =&amp;gt; 钦定末尾。&lt;/p&gt;
-&lt;p&gt;有时二维问题按第一维排序，而后第二维更小就一定更优所以无脑排除一些。剩下的就满足二维偏序（相当于利用贪心性质额外制造了一个维度上的单调性。这里的贪心性质是“a 被 b 包含 =&amp;gt; b 的所有解都不劣于 a 的对应解/a 能干的所有 b 都能干”）&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;两种证明贪心的策略：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;局部上，交换论证/调整法：调整一定能导出不劣的解。&lt;/li&gt;
-&lt;li&gt;整体上，必要性 =&amp;gt; 充分性：我们至少需要多少操作，然后让这些操作发挥最大的效益。&lt;/li&gt;
-&lt;/ol&gt;
-&lt;hr&gt;
-&lt;p&gt;增量更新并不要求旧的答案一定是新的答案。在旧答案总数很小时，可以暴力枚举它们判断它们是否是新的答案。或者，如果容易确定哪些不是新的答案，排除它们即可。&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;对于一些非常复杂的操作，可以考虑寻找不变量。常见的不变量常常和奇偶性或者两类元素的差有关。因为总和是容易变的，但是有时对于两类东西的作用是相同的，就可以被作差消去。&lt;/p&gt;</description></item></channel></rss>
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;从名字就可以看出，这是一个计算阶乘的函数。不过它看上去非常的不同寻常。&lt;/p&gt;</description></item></channel></rss>

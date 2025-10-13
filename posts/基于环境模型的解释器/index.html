@@ -1,0 +1,390 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>基于环境模型的解释器 | litjohn's blog</title><meta name=keywords content="PLT,lisp/scheme/racket"><meta name=description content="光剑系列的第五作！前四篇：
+第一篇：Let&rsquo;s build our mathematics by using lambda calculus && church encoding!
+第二篇：惰性求值、无穷流与发生的魔法
+第三篇：协程、生成器与 call/cc 的控制流
+第四篇：动态作用域、词法作用域与表达式求值的环境模型
+前言
+又见面了！上一篇文章中我将动态作用域的实现留作了习题，一定非常恶心吧！毕竟我尝试了两天枚举了各种不用宏和用宏的解决方案都没有任何成果，只能看着看不懂的编译错误或者不期望的展开结果发呆。
+如果有哪位读者做出了那个习题，请务必通过本文评论区联系我。
+不过，其实只要自己实现一个解释器，就能够轻松而优雅地完成这个习题。
+恰好，上一篇文章中介绍了环境模型，这将是我们解释器的原理。
+我们将选择 scheme 实现解释器。因为 scheme 的解释器特别好写而作者太菜了只会这个。
+实现
+在实现一个具有比较多特性的 scheme 子集之前，我们将先实现一个更简单的 lambda 演算解释器。
+看过第一作的读者们想必还记得 lambda 演算吧？它只含有函数一种对象，函数抽象和函数应用两种操作，已经是图灵完备的。
+那么我们来实现它，使用环境模型和闭包。
+预备工作 · 函数
+lambda 只有函数一种核心对象。实现函数自然成为了我们的重要任务。
+在环境模型下，想要实现词法作用域肯定要用闭包。所以我们的函数也将被表示为一个闭包。
+它含有四个字段：第一个是符号 closure，用于标识身份。后面三个字段分别是形式参数、函数体和保存的环境。这些是闭包的核心要素。
+我们可以先实现单参数的函数。因为具有一等公民函数的特性，我们可以通过柯里化实现多参数函数。
+对于闭包的存储，随便用什么都行。我用的是一个 vector（定长数组）。
+(define (make-closure params body env)
+  (vector 'closure params body env))
+有了函数的数据结构标识，我们还需要有对于闭包的操作：
+(define (closure? obj)
+  (and (vector? obj) (eq? (vector-ref obj 0) 'closure)))
+
+(define (closure-param closure) (vector-ref closure 1))
+(define (closure-body closure) (vector-ref closure 2))
+(define (closure-env closure) (vector-ref closure 3))
+然后，为了支持对于函数的应用和抽象，我们需要一些关于环境的操作。"><meta name=author content><link rel=canonical href=https://litjohn.github.io/posts/%E5%9F%BA%E4%BA%8E%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A7%A3%E9%87%8A%E5%99%A8/><link crossorigin=anonymous href=/assets/css/stylesheet.a090830a421002426baafbd314e38f149d77b4c48a12ee9312700d770b27fb26.css integrity="sha256-oJCDCkIQAkJrqvvTFOOPFJ13tMSKEu6TEnANdwsn+yY=" rel="preload stylesheet" as=style><link rel=icon href=https://litjohn.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://litjohn.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://litjohn.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://litjohn.github.io/apple-touch-icon.png><link rel=mask-icon href=https://litjohn.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://litjohn.github.io/posts/%E5%9F%BA%E4%BA%8E%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A7%A3%E9%87%8A%E5%99%A8/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css integrity=sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.js integrity=sha384-Qsn9KnoKISj6dI8g7p1HBlNpVx0I8p1SvlwOldgi3IorMle61nQy4zEahWYtljaz crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous></script><script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],throwOnError:!1})})</script><meta property="og:url" content="https://litjohn.github.io/posts/%E5%9F%BA%E4%BA%8E%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A7%A3%E9%87%8A%E5%99%A8/"><meta property="og:site_name" content="litjohn's blog"><meta property="og:title" content="基于环境模型的解释器"><meta property="og:description" content="光剑系列的第五作！前四篇：
+第一篇：Let’s build our mathematics by using lambda calculus && church encoding!
+第二篇：惰性求值、无穷流与发生的魔法
+第三篇：协程、生成器与 call/cc 的控制流
+第四篇：动态作用域、词法作用域与表达式求值的环境模型
+前言 又见面了！上一篇文章中我将动态作用域的实现留作了习题，一定非常恶心吧！毕竟我尝试了两天枚举了各种不用宏和用宏的解决方案都没有任何成果，只能看着看不懂的编译错误或者不期望的展开结果发呆。
+如果有哪位读者做出了那个习题，请务必通过本文评论区联系我。
+不过，其实只要自己实现一个解释器，就能够轻松而优雅地完成这个习题。
+恰好，上一篇文章中介绍了环境模型，这将是我们解释器的原理。
+我们将选择 scheme 实现解释器。因为 scheme 的解释器特别好写而作者太菜了只会这个。
+实现 在实现一个具有比较多特性的 scheme 子集之前，我们将先实现一个更简单的 lambda 演算解释器。
+看过第一作的读者们想必还记得 lambda 演算吧？它只含有函数一种对象，函数抽象和函数应用两种操作，已经是图灵完备的。
+那么我们来实现它，使用环境模型和闭包。
+预备工作 · 函数 lambda 只有函数一种核心对象。实现函数自然成为了我们的重要任务。
+在环境模型下，想要实现词法作用域肯定要用闭包。所以我们的函数也将被表示为一个闭包。
+它含有四个字段：第一个是符号 closure，用于标识身份。后面三个字段分别是形式参数、函数体和保存的环境。这些是闭包的核心要素。
+我们可以先实现单参数的函数。因为具有一等公民函数的特性，我们可以通过柯里化实现多参数函数。
+对于闭包的存储，随便用什么都行。我用的是一个 vector（定长数组）。
+(define (make-closure params body env) (vector 'closure params body env)) 有了函数的数据结构标识，我们还需要有对于闭包的操作：
+(define (closure? obj) (and (vector? obj) (eq? (vector-ref obj 0) 'closure))) (define (closure-param closure) (vector-ref closure 1)) (define (closure-body closure) (vector-ref closure 2)) (define (closure-env closure) (vector-ref closure 3)) 然后，为了支持对于函数的应用和抽象，我们需要一些关于环境的操作。"><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-10-13T15:21:50+08:00"><meta property="article:modified_time" content="2025-10-13T15:21:50+08:00"><meta property="article:tag" content="PLT"><meta property="article:tag" content="Lisp/Scheme/Racket"><meta property="og:see_also" content="https://litjohn.github.io/posts/%E8%B0%83%E7%94%A8%E6%A0%88de-bruijn-%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%A0%86%E6%A0%88%E7%9A%84%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B/"><meta property="og:see_also" content="https://litjohn.github.io/posts/%E5%8A%A8%E6%80%81%E4%BD%9C%E7%94%A8%E5%9F%9F%E8%AF%8D%E6%B3%95%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B1%82%E5%80%BC%E7%9A%84%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B/"><meta property="og:see_also" content="https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call/cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/"><meta property="og:see_also" content="https://litjohn.github.io/posts/%E6%83%B0%E6%80%A7%E6%B1%82%E5%80%BC%E6%97%A0%E7%A9%B7%E6%B5%81%E4%B8%8E%E5%8F%91%E7%94%9F%E7%9A%84%E9%AD%94%E6%B3%95/"><meta property="og:see_also" content="https://litjohn.github.io/posts/lets-build-our-mathematics-by-using-lambda-calculus--church-encoding/"><meta property="og:see_also" content="https://litjohn.github.io/posts/cps%E6%8E%A7%E5%88%B6%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B8%8E%E5%9B%9B%E5%8D%81%E8%A1%8C%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BC%A0%E8%AF%B4/"><meta name=twitter:card content="summary"><meta name=twitter:title content="基于环境模型的解释器"><meta name=twitter:description content="光剑系列的第五作！前四篇：
+第一篇：Let&rsquo;s build our mathematics by using lambda calculus && church encoding!
+第二篇：惰性求值、无穷流与发生的魔法
+第三篇：协程、生成器与 call/cc 的控制流
+第四篇：动态作用域、词法作用域与表达式求值的环境模型
+前言
+又见面了！上一篇文章中我将动态作用域的实现留作了习题，一定非常恶心吧！毕竟我尝试了两天枚举了各种不用宏和用宏的解决方案都没有任何成果，只能看着看不懂的编译错误或者不期望的展开结果发呆。
+如果有哪位读者做出了那个习题，请务必通过本文评论区联系我。
+不过，其实只要自己实现一个解释器，就能够轻松而优雅地完成这个习题。
+恰好，上一篇文章中介绍了环境模型，这将是我们解释器的原理。
+我们将选择 scheme 实现解释器。因为 scheme 的解释器特别好写而作者太菜了只会这个。
+实现
+在实现一个具有比较多特性的 scheme 子集之前，我们将先实现一个更简单的 lambda 演算解释器。
+看过第一作的读者们想必还记得 lambda 演算吧？它只含有函数一种对象，函数抽象和函数应用两种操作，已经是图灵完备的。
+那么我们来实现它，使用环境模型和闭包。
+预备工作 · 函数
+lambda 只有函数一种核心对象。实现函数自然成为了我们的重要任务。
+在环境模型下，想要实现词法作用域肯定要用闭包。所以我们的函数也将被表示为一个闭包。
+它含有四个字段：第一个是符号 closure，用于标识身份。后面三个字段分别是形式参数、函数体和保存的环境。这些是闭包的核心要素。
+我们可以先实现单参数的函数。因为具有一等公民函数的特性，我们可以通过柯里化实现多参数函数。
+对于闭包的存储，随便用什么都行。我用的是一个 vector（定长数组）。
+(define (make-closure params body env)
+  (vector 'closure params body env))
+有了函数的数据结构标识，我们还需要有对于闭包的操作：
+(define (closure? obj)
+  (and (vector? obj) (eq? (vector-ref obj 0) 'closure)))
+
+(define (closure-param closure) (vector-ref closure 1))
+(define (closure-body closure) (vector-ref closure 2))
+(define (closure-env closure) (vector-ref closure 3))
+然后，为了支持对于函数的应用和抽象，我们需要一些关于环境的操作。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://litjohn.github.io/posts/"},{"@type":"ListItem","position":2,"name":"基于环境模型的解释器","item":"https://litjohn.github.io/posts/%E5%9F%BA%E4%BA%8E%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A7%A3%E9%87%8A%E5%99%A8/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"基于环境模型的解释器","name":"基于环境模型的解释器","description":"光剑系列的第五作！前四篇：\n第一篇：Let\u0026rsquo;s build our mathematics by using lambda calculus \u0026amp;\u0026amp; church encoding!\n第二篇：惰性求值、无穷流与发生的魔法\n第三篇：协程、生成器与 call/cc 的控制流\n第四篇：动态作用域、词法作用域与表达式求值的环境模型\n前言 又见面了！上一篇文章中我将动态作用域的实现留作了习题，一定非常恶心吧！毕竟我尝试了两天枚举了各种不用宏和用宏的解决方案都没有任何成果，只能看着看不懂的编译错误或者不期望的展开结果发呆。\n如果有哪位读者做出了那个习题，请务必通过本文评论区联系我。\n不过，其实只要自己实现一个解释器，就能够轻松而优雅地完成这个习题。\n恰好，上一篇文章中介绍了环境模型，这将是我们解释器的原理。\n我们将选择 scheme 实现解释器。因为 scheme 的解释器特别好写而作者太菜了只会这个。\n实现 在实现一个具有比较多特性的 scheme 子集之前，我们将先实现一个更简单的 lambda 演算解释器。\n看过第一作的读者们想必还记得 lambda 演算吧？它只含有函数一种对象，函数抽象和函数应用两种操作，已经是图灵完备的。\n那么我们来实现它，使用环境模型和闭包。\n预备工作 · 函数 lambda 只有函数一种核心对象。实现函数自然成为了我们的重要任务。\n在环境模型下，想要实现词法作用域肯定要用闭包。所以我们的函数也将被表示为一个闭包。\n它含有四个字段：第一个是符号 closure，用于标识身份。后面三个字段分别是形式参数、函数体和保存的环境。这些是闭包的核心要素。\n我们可以先实现单参数的函数。因为具有一等公民函数的特性，我们可以通过柯里化实现多参数函数。\n对于闭包的存储，随便用什么都行。我用的是一个 vector（定长数组）。\n(define (make-closure params body env) (vector \u0026#39;closure params body env)) 有了函数的数据结构标识，我们还需要有对于闭包的操作：\n(define (closure? obj) (and (vector? obj) (eq? (vector-ref obj 0) \u0026#39;closure))) (define (closure-param closure) (vector-ref closure 1)) (define (closure-body closure) (vector-ref closure 2)) (define (closure-env closure) (vector-ref closure 3)) 然后，为了支持对于函数的应用和抽象，我们需要一些关于环境的操作。\n","keywords":["PLT","lisp/scheme/racket"],"articleBody":"光剑系列的第五作！前四篇：\n第一篇：Let’s build our mathematics by using lambda calculus \u0026\u0026 church encoding!\n第二篇：惰性求值、无穷流与发生的魔法\n第三篇：协程、生成器与 call/cc 的控制流\n第四篇：动态作用域、词法作用域与表达式求值的环境模型\n前言 又见面了！上一篇文章中我将动态作用域的实现留作了习题，一定非常恶心吧！毕竟我尝试了两天枚举了各种不用宏和用宏的解决方案都没有任何成果，只能看着看不懂的编译错误或者不期望的展开结果发呆。\n如果有哪位读者做出了那个习题，请务必通过本文评论区联系我。\n不过，其实只要自己实现一个解释器，就能够轻松而优雅地完成这个习题。\n恰好，上一篇文章中介绍了环境模型，这将是我们解释器的原理。\n我们将选择 scheme 实现解释器。因为 scheme 的解释器特别好写而作者太菜了只会这个。\n实现 在实现一个具有比较多特性的 scheme 子集之前，我们将先实现一个更简单的 lambda 演算解释器。\n看过第一作的读者们想必还记得 lambda 演算吧？它只含有函数一种对象，函数抽象和函数应用两种操作，已经是图灵完备的。\n那么我们来实现它，使用环境模型和闭包。\n预备工作 · 函数 lambda 只有函数一种核心对象。实现函数自然成为了我们的重要任务。\n在环境模型下，想要实现词法作用域肯定要用闭包。所以我们的函数也将被表示为一个闭包。\n它含有四个字段：第一个是符号 closure，用于标识身份。后面三个字段分别是形式参数、函数体和保存的环境。这些是闭包的核心要素。\n我们可以先实现单参数的函数。因为具有一等公民函数的特性，我们可以通过柯里化实现多参数函数。\n对于闭包的存储，随便用什么都行。我用的是一个 vector（定长数组）。\n(define (make-closure params body env) (vector 'closure params body env)) 有了函数的数据结构标识，我们还需要有对于闭包的操作：\n(define (closure? obj) (and (vector? obj) (eq? (vector-ref obj 0) 'closure))) (define (closure-param closure) (vector-ref closure 1)) (define (closure-body closure) (vector-ref closure 2)) (define (closure-env closure) (vector-ref closure 3)) 然后，为了支持对于函数的应用和抽象，我们需要一些关于环境的操作。\n预备工作 · 环境 第一步是定义一个全局环境。\n(define global-env (list '())) 注意，环境会构成一个链，所以我们用一个链表表示。而链表内每个元素是一个映射。这里选择了简单的关联列表实现映射，虽然它的查找复杂度是线性的，但是可以简化实现。对于我们的教学示例，复杂度/性能并不是最重要的因素。\n同样的，有了环境的对象，我们就有对它的操作：\n; 接受一个参数名，一个参数值(会是个闭包)，和父环境 (define (extend-environment param arg base-env) (let ((frame (list (cons param arg)))) ; 创建只有一个绑定的新帧 (cons frame base-env))) (define (lookup-variable-value var env) (let loop ((e env)) (if (null? e) (error \"Unbound variable\" var) (let ((frame (car e))) (cond ((assoc var frame) =\u003e cdr) ; R6RS 的 =\u003e 很有用 (else (loop (cdr e)))))))) (define (define-variable! var val) ; define 总是修改最外层（全局）环境 (set-car! global-env (cons (cons var val) (car global-env)))) 预备工作到这里就结束了。下面是重头戏。\n求值器 · 主循环 我们需要一个函数来对传入的表达式求值。\n那么，求值器应该处理哪些情况呢？\n首先，肯定有 define 和 lambda 两种特殊形式。\n对于 define，很简单：只需要求值被绑定值然后绑定到变量名上就可以了：\n((eq? op 'define) (let* ((var (cadr exp)) (val-exp (caddr exp)) (value (calc val-exp env))) (define-variable! var value) 'ok)) ; 提示信息 而对于 lambda，我们采取一种非常懒惰的策略：拆开 S 表达式，然后再包装成一个闭包，函数体丝毫不动：\n((eq? op 'lambda) (let ((param (caadr exp)) (body (caddr exp))) (make-closure param body env))) 之后呢？之后还要处理递归的边界情况：单个符号。\n((symbol? exp) (lookup-variable-value exp env)) 然后，三种简单情况就都做完了。下面是整个过程中最困难、重要和精妙的步骤：函数应用。\n对于这种情况，我们按照一贯做法先求值操作符，然后从左到右求值各操作数。\n最后怎么办呢？不急。我们进行一个锅的甩，使用一个另外的 apply-proc 函数来完成这项工作 ;)\n(else (let ((proc (calc (car exp) env)) ; 求值函数部分 -\u003e 必须是个闭包 (arg (calc (cadr exp) env))) ; 求值参数部分 -\u003e 也是个值(闭包) (apply-proc proc arg) ) ) 最后加上错误处理，就得到了求值器 calc 的完整代码：\n(define (calc exp env) (cond ((symbol? exp) (lookup-variable-value exp env)) ((list? exp) (let ((op (car exp))) (cond ((eq? op 'lambda) (let ((param (caadr exp)) (body (caddr exp))) (make-closure param body env) ) ) ((eq? op 'define) (let* ((var (cadr exp)) (val-exp (caddr exp)) (value (calc val-exp env))) (define-variable! var value) 'ok)) (else (let ((proc (calc (car exp) env)) ; 求值函数部分 -\u003e 必须是个闭包 (arg (calc (cadr exp) env))) ; 求值参数部分 -\u003e 也是个值(闭包) (apply-proc proc arg) ) ) ) ) ) (else (error \"Invalid expression\" exp)) ) ) 各位可能很好奇 apply-proc 是何方神圣。不急不急，我这就把它放出来：\n(define (apply-proc proc arg) (if (closure? proc) (let ((param (closure-param proc)) (body (closure-body proc)) (env (closure-env proc))) ; 关键步骤：在闭包 *捕获的环境* 上扩展新绑定 (let ((new-env (extend-environment param arg env))) (calc body new-env))) (error \"Not a procedure\" proc))) 惊不惊喜，意不意外？\n完成了一切实际计算工作的 apply-proc，其实什么也没干！\n它只不过是把闭包保存的参数名和实际参数制造了一个绑定，添加到环境中。然后又把锅甩了回去，递归调用 calc 对函数体进行求值！\n不过不要忙着大跌眼镜。apply-proc 干的这件事，其实和“代入”非常类似。这样它能够生效就一点都不奇怪了。\n只不过环境模型下不是直接代入，而是扩展环境加入新的绑定。\n一点边角工作 交互循环以及美观打印器。由于不是重点，让 AI 生成的。\n(define (run exp) (calc exp global-env)) (define (pretty-print obj) (cond ; 我们的主角：闭包 ((closure? obj) (display \"#","wordCount":"1249","inLanguage":"en","datePublished":"2025-10-13T15:21:50+08:00","dateModified":"2025-10-13T15:21:50+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://litjohn.github.io/posts/%E5%9F%BA%E4%BA%8E%E7%8E%AF%E5%A2%83%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%A7%A3%E9%87%8A%E5%99%A8/"},"publisher":{"@type":"Organization","name":"litjohn's blog","logo":{"@type":"ImageObject","url":"https://litjohn.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://litjohn.github.io/ accesskey=h title="litjohn's blog (Alt + H)">litjohn's blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://litjohn.github.io/categories/ title=分类><span>分类</span></a></li><li><a href=https://litjohn.github.io/tags/ title=标签><span>标签</span></a></li><li><a href=https://litjohn.github.io/series/ title=系列><span>系列</span></a></li><li><a href=https://litjohn.github.io/archives/ title=归档><span>归档</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">基于环境模型的解释器</h1><div class=post-meta><span title='2025-10-13 15:21:50 +0800 +0800'>October 13, 2025</span></div></header><div class=post-content><p>光剑系列的第五作！前四篇：</p><p>第一篇：<a href=https://www.luogu.com.cn/article/cr6hfiut>Let&rsquo;s build our mathematics by using lambda calculus && church encoding!</a></p><p>第二篇：<a href=https://www.luogu.com.cn/article/uhume1ou>惰性求值、无穷流与发生的魔法</a></p><p>第三篇：<a href=https://www.luogu.com.cn/article/ygxlqlsn>协程、生成器与 call/cc 的控制流</a></p><p>第四篇：<a href=https://www.luogu.com.cn/article/0hxig3i4>动态作用域、词法作用域与表达式求值的环境模型</a></p><h2 id=前言>前言<a hidden class=anchor aria-hidden=true href=#前言>#</a></h2><p>又见面了！上一篇文章中我将动态作用域的实现留作了习题，一定非常恶心吧！毕竟我尝试了两天枚举了各种不用宏和用宏的解决方案都没有任何成果，只能看着看不懂的编译错误或者不期望的展开结果发呆。</p><p>如果有哪位读者做出了那个习题，请务必通过本文评论区联系我。</p><p>不过，其实只要自己实现一个解释器，就能够轻松而优雅地完成这个习题。</p><p>恰好，上一篇文章中介绍了环境模型，这将是我们解释器的原理。</p><p>我们将选择 scheme 实现解释器。因为 scheme 的解释器特别好写而作者太菜了只会这个。</p><h2 id=实现>实现<a hidden class=anchor aria-hidden=true href=#实现>#</a></h2><p>在实现一个具有比较多特性的 scheme 子集之前，我们将先实现一个更简单的 lambda 演算解释器。</p><p>看过第一作的读者们想必还记得 lambda 演算吧？它只含有函数一种对象，函数抽象和函数应用两种操作，已经是图灵完备的。</p><p>那么我们来实现它，使用环境模型和闭包。</p><h3 id=预备工作--函数>预备工作 · 函数<a hidden class=anchor aria-hidden=true href=#预备工作--函数>#</a></h3><p>lambda 只有函数一种核心对象。实现函数自然成为了我们的重要任务。</p><p>在环境模型下，想要实现词法作用域肯定要用闭包。所以我们的函数也将被表示为一个闭包。</p><p>它含有四个字段：第一个是符号 closure，用于标识身份。后面三个字段分别是形式参数、函数体和保存的环境。这些是闭包的核心要素。</p><p>我们可以先实现单参数的函数。因为具有一等公民函数的特性，我们可以通过柯里化实现多参数函数。</p><p>对于闭包的存储，随便用什么都行。我用的是一个 vector（定长数组）。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>make-closure</span> params body env)
+</span></span><span style=display:flex><span>  (vector <span style=color:#e6db74>&#39;closure</span> params body env))
+</span></span></code></pre></div><p>有了函数的数据结构标识，我们还需要有对于闭包的操作：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure?</span> obj)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>and </span>(vector? obj) (eq? (vector-ref obj <span style=color:#ae81ff>0</span>) <span style=color:#e6db74>&#39;closure</span>)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure-param</span> closure) (vector-ref closure <span style=color:#ae81ff>1</span>))
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure-body</span> closure) (vector-ref closure <span style=color:#ae81ff>2</span>))
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure-env</span> closure) (vector-ref closure <span style=color:#ae81ff>3</span>))
+</span></span></code></pre></div><p>然后，为了支持对于函数的应用和抽象，我们需要一些关于环境的操作。</p><h3 id=预备工作--环境>预备工作 · 环境<a hidden class=anchor aria-hidden=true href=#预备工作--环境>#</a></h3><p>第一步是定义一个全局环境。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>(<span style=color:#66d9ef>define </span>global-env (list <span style=color:#f92672>&#39;</span>()))
+</span></span></code></pre></div><p>注意，环境会构成一个链，所以我们用一个链表表示。而链表内每个元素是一个映射。这里选择了简单的关联列表实现映射，虽然它的查找复杂度是线性的，但是可以简化实现。对于我们的教学示例，复杂度/性能并不是最重要的因素。</p><p>同样的，有了环境的对象，我们就有对它的操作：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span><span style=color:#75715e>; 接受一个参数名，一个参数值(会是个闭包)，和父环境</span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>extend-environment</span> param arg base-env)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>frame</span> (list (cons param arg)))) <span style=color:#75715e>; 创建只有一个绑定的新帧</span>
+</span></span><span style=display:flex><span>    (cons frame base-env)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>lookup-variable-value</span> var env)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>let </span>loop ((<span style=color:#a6e22e>e</span> env))
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>if </span>(null? e)
+</span></span><span style=display:flex><span>        (<span style=color:#a6e22e>error</span> <span style=color:#e6db74>&#34;Unbound variable&#34;</span> var)
+</span></span><span style=display:flex><span>        (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>frame</span> (car e)))
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>            ((assoc var frame) <span style=color:#66d9ef>=&gt; </span>cdr) <span style=color:#75715e>; R6RS 的 =&gt; 很有用</span>
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>else </span>(<span style=color:#a6e22e>loop</span> (cdr e))))))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>define-variable!</span> var val)
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; define 总是修改最外层（全局）环境</span>
+</span></span><span style=display:flex><span>  (set-car! global-env
+</span></span><span style=display:flex><span>    (cons (cons var val) (car global-env))))
+</span></span></code></pre></div><p>预备工作到这里就结束了。下面是重头戏。</p><h3 id=求值器--主循环>求值器 · 主循环<a hidden class=anchor aria-hidden=true href=#求值器--主循环>#</a></h3><p>我们需要一个函数来对传入的表达式求值。</p><p>那么，求值器应该处理哪些情况呢？</p><p>首先，肯定有 define 和 lambda 两种特殊形式。</p><p>对于 define，很简单：只需要求值被绑定值然后绑定到变量名上就可以了：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>((eq? op <span style=color:#e6db74>&#39;define</span>)
+</span></span><span style=display:flex><span>          (<span style=color:#66d9ef>let* </span>((<span style=color:#a6e22e>var</span> (cadr exp))
+</span></span><span style=display:flex><span>                 (<span style=color:#a6e22e>val-exp</span> (caddr exp))
+</span></span><span style=display:flex><span>                 (<span style=color:#a6e22e>value</span> (<span style=color:#a6e22e>calc</span> val-exp env)))
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>define-variable!</span> var value)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;ok</span>)) <span style=color:#75715e>; 提示信息</span>
+</span></span></code></pre></div><p>而对于 lambda，我们采取一种非常懒惰的策略：拆开 S 表达式，然后再包装成一个闭包，函数体丝毫不动：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>((eq? op <span style=color:#e6db74>&#39;lambda</span>)
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>param</span> (caadr exp))
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>body</span> (caddr exp)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>make-closure</span> param body env)))
+</span></span></code></pre></div><p>之后呢？之后还要处理递归的边界情况：单个符号。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>((symbol? exp)  (<span style=color:#a6e22e>lookup-variable-value</span> exp env))
+</span></span></code></pre></div><hr><p>然后，三种简单情况就都做完了。下面是整个过程中最困难、重要和精妙的步骤：函数应用。</p><p>对于这种情况，我们按照一贯做法先求值操作符，然后从左到右求值各操作数。</p><p>最后怎么办呢？不急。我们进行一个锅的甩，使用一个另外的 apply-proc 函数来完成这项工作 ;)</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>(<span style=color:#a6e22e>else</span>
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>proc</span> (<span style=color:#a6e22e>calc</span> (car exp) env)) <span style=color:#75715e>; 求值函数部分 -&gt; 必须是个闭包</span>
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>arg</span> (<span style=color:#a6e22e>calc</span> (cadr exp) env)))  <span style=color:#75715e>; 求值参数部分 -&gt; 也是个值(闭包)</span>
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>apply-proc</span> proc arg)
+</span></span><span style=display:flex><span>            )
+</span></span><span style=display:flex><span>          )
+</span></span></code></pre></div><p>最后加上错误处理，就得到了求值器 calc 的完整代码：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>calc</span> exp env)
+</span></span><span style=display:flex><span>  (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>    ((symbol? exp)  (<span style=color:#a6e22e>lookup-variable-value</span> exp env))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    ((list? exp)
+</span></span><span style=display:flex><span>      (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>op</span> (car exp)))
+</span></span><span style=display:flex><span>        (<span style=color:#66d9ef>cond </span>
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;lambda</span>)
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>param</span> (caadr exp))
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>body</span> (caddr exp)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>make-closure</span> param body env)
+</span></span><span style=display:flex><span>            )
+</span></span><span style=display:flex><span>          )
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;define</span>)
+</span></span><span style=display:flex><span>          (<span style=color:#66d9ef>let* </span>((<span style=color:#a6e22e>var</span> (cadr exp))
+</span></span><span style=display:flex><span>                 (<span style=color:#a6e22e>val-exp</span> (caddr exp))
+</span></span><span style=display:flex><span>                 (<span style=color:#a6e22e>value</span> (<span style=color:#a6e22e>calc</span> val-exp env)))
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>define-variable!</span> var value)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#39;ok</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>else</span>
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>proc</span> (<span style=color:#a6e22e>calc</span> (car exp) env)) <span style=color:#75715e>; 求值函数部分 -&gt; 必须是个闭包</span>
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>arg</span> (<span style=color:#a6e22e>calc</span> (cadr exp) env)))  <span style=color:#75715e>; 求值参数部分 -&gt; 也是个值(闭包)</span>
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>apply-proc</span> proc arg)
+</span></span><span style=display:flex><span>            )
+</span></span><span style=display:flex><span>          )
+</span></span><span style=display:flex><span>        )
+</span></span><span style=display:flex><span>      )
+</span></span><span style=display:flex><span>    )
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>else </span>(<span style=color:#a6e22e>error</span> <span style=color:#e6db74>&#34;Invalid expression&#34;</span> exp))
+</span></span><span style=display:flex><span>  )
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><hr><p>各位可能很好奇 apply-proc 是何方神圣。不急不急，我这就把它放出来：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>apply-proc</span> proc arg)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>if </span>(<span style=color:#a6e22e>closure?</span> proc)
+</span></span><span style=display:flex><span>      (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>param</span> (<span style=color:#a6e22e>closure-param</span> proc))
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>body</span> (<span style=color:#a6e22e>closure-body</span> proc))
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>env</span> (<span style=color:#a6e22e>closure-env</span> proc)))
+</span></span><span style=display:flex><span>        <span style=color:#75715e>; 关键步骤：在闭包 *捕获的环境* 上扩展新绑定</span>
+</span></span><span style=display:flex><span>        (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>new-env</span> (<span style=color:#a6e22e>extend-environment</span> param arg env)))
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>calc</span> body new-env)))
+</span></span><span style=display:flex><span>      (<span style=color:#a6e22e>error</span> <span style=color:#e6db74>&#34;Not a procedure&#34;</span> proc)))
+</span></span></code></pre></div><p>惊不惊喜，意不意外？</p><p>完成了一切实际计算工作的 apply-proc，其实什么也没干！</p><p>它只不过是把闭包保存的参数名和实际参数制造了一个绑定，添加到环境中。然后又把锅甩了回去，递归调用 calc 对函数体进行求值！</p><p>不过不要忙着大跌眼镜。apply-proc 干的这件事，其实和“代入”非常类似。这样它能够生效就一点都不奇怪了。</p><p>只不过环境模型下不是直接代入，而是扩展环境加入新的绑定。</p><h3 id=一点边角工作>一点边角工作<a hidden class=anchor aria-hidden=true href=#一点边角工作>#</a></h3><p>交互循环以及美观打印器。由于不是重点，让 AI 生成的。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>run</span> exp)
+</span></span><span style=display:flex><span>  (<span style=color:#a6e22e>calc</span> exp global-env))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>pretty-print</span> obj)
+</span></span><span style=display:flex><span>  (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>; 我们的主角：闭包</span>
+</span></span><span style=display:flex><span>    ((<span style=color:#a6e22e>closure?</span> obj)
+</span></span><span style=display:flex><span>     (display <span style=color:#e6db74>&#34;#&lt;closure: (lambda (&#34;</span>)
+</span></span><span style=display:flex><span>     (write (<span style=color:#a6e22e>closure-param</span> obj))
+</span></span><span style=display:flex><span>     (display <span style=color:#e6db74>&#34;) &#34;</span>)
+</span></span><span style=display:flex><span>     (<span style=color:#a6e22e>pretty-print</span> (<span style=color:#a6e22e>closure-body</span> obj)) <span style=color:#75715e>; 递归地美化打印函数体</span>
+</span></span><span style=display:flex><span>     (display <span style=color:#e6db74>&#34;)&gt;&#34;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>; 对列表/S表达式进行美化</span>
+</span></span><span style=display:flex><span>    ((pair? obj)
+</span></span><span style=display:flex><span>     (display <span style=color:#e6db74>&#34;(&#34;</span>)
+</span></span><span style=display:flex><span>     (<span style=color:#a6e22e>pretty-print</span> (car obj))
+</span></span><span style=display:flex><span>     (<span style=color:#66d9ef>let </span>loop ((<span style=color:#a6e22e>rest</span> (cdr obj)))
+</span></span><span style=display:flex><span>       (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>         ((null? rest) (display <span style=color:#e6db74>&#34;)&#34;</span>))
+</span></span><span style=display:flex><span>         ((pair? rest)
+</span></span><span style=display:flex><span>          (display <span style=color:#e6db74>&#34; &#34;</span>)
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>pretty-print</span> (car rest))
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>loop</span> (cdr rest)))
+</span></span><span style=display:flex><span>         <span style=color:#75715e>; 处理点对列表，如 (a . b)</span>
+</span></span><span style=display:flex><span>         (<span style=color:#a6e22e>else</span>
+</span></span><span style=display:flex><span>          (display <span style=color:#e6db74>&#34; . &#34;</span>)
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>pretty-print</span> rest)
+</span></span><span style=display:flex><span>          (display <span style=color:#e6db74>&#34;)&#34;</span>)))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>; 其他所有类型（符号、布尔值等）用默认方式打印</span>
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>else </span>(write obj))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>repl</span>)
+</span></span><span style=display:flex><span>  (display <span style=color:#e6db74>&#34;Lambda&gt; &#34;</span>)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>let </span>((exp (<span style=color:#a6e22e>read</span>)))
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>if </span>(eq? exp <span style=color:#e6db74>&#39;exit</span>)
+</span></span><span style=display:flex><span>        (display <span style=color:#e6db74>&#34;Goodbye!&#34;</span>)
+</span></span><span style=display:flex><span>        (<span style=color:#a6e22e>begin</span>
+</span></span><span style=display:flex><span>          (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>result</span> (<span style=color:#a6e22e>run</span> exp))) <span style=color:#75715e>; &lt;-- 使用 run 而不是 calc</span>
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>pretty-print</span> result)
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>newline</span>))
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>repl</span>)))))
+</span></span></code></pre></div><h2 id=如何实现动态作用域>如何实现动态作用域？<a hidden class=anchor aria-hidden=true href=#如何实现动态作用域>#</a></h2><p>太简单了。求值函数应用的时候，不要把它放在保存的环境中求值，而是直接在当前环境中求值。</p><p>具体的，对于 apply-proc 函数：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>apply-proc</span> proc arg) <span style=color:#75715e>; 在这里加入 env 参数，让 calc 传入求值时的当前环境</span>
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>if </span>(<span style=color:#a6e22e>closure?</span> proc)
+</span></span><span style=display:flex><span>      (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>param</span> (<span style=color:#a6e22e>closure-param</span> proc))
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>body</span> (<span style=color:#a6e22e>closure-body</span> proc))
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>env</span> (<span style=color:#a6e22e>closure-env</span> proc))) <span style=color:#75715e>; 去掉这一项，直接使用 calc 传入的当前环境而不是函数内部保存的环境</span>
+</span></span><span style=display:flex><span>        (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>new-env</span> (<span style=color:#a6e22e>extend-environment</span> param arg env)))
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>calc</span> body new-env)))
+</span></span><span style=display:flex><span>      (<span style=color:#a6e22e>error</span> <span style=color:#e6db74>&#34;Not a procedure&#34;</span> proc)))
+</span></span></code></pre></div><p>这样函数的存储中也就不需要保存定义时环境了。</p><h2 id=后续>后续<a hidden class=anchor aria-hidden=true href=#后续>#</a></h2><p>我们的解释器还很幼稚，只能处理函数一种对象。一切数字、布尔等等都需要邱奇编码来模拟，可读性差且效率低下。</p><p>所以，我们就有了一个超级加强版的解释器！</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-scheme data-lang=scheme><span style=display:flex><span><span style=color:#75715e>; (make-closure &#39;(p1 p2) &#39;(body) env)</span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>make-closure</span> params body env)
+</span></span><span style=display:flex><span>  (vector <span style=color:#e6db74>&#39;closure</span> params body env))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>make-closure-with-name</span> params body env name)
+</span></span><span style=display:flex><span>  (vector <span style=color:#e6db74>&#39;closure</span> params body env name))    
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure?</span> obj)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>and </span>(vector? obj) (eq? (vector-ref obj <span style=color:#ae81ff>0</span>) <span style=color:#e6db74>&#39;closure</span>)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure-param</span> closure) (vector-ref closure <span style=color:#ae81ff>1</span>))
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure-body</span> closure) (vector-ref closure <span style=color:#ae81ff>2</span>))
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure-env</span> closure) (vector-ref closure <span style=color:#ae81ff>3</span>))
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>closure-name</span> closure) (vector-ref closure <span style=color:#ae81ff>4</span>))  
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>global-env (list <span style=color:#f92672>&#39;</span>()))
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>intrinsics (list (cons <span style=color:#e6db74>&#39;+</span> +) (cons <span style=color:#e6db74>&#39;-</span> -) (cons <span style=color:#e6db74>&#39;*</span> *) (cons <span style=color:#e6db74>&#39;/</span> /) (cons <span style=color:#e6db74>&#39;=</span> =) (cons <span style=color:#e6db74>&#39;&lt;</span> &lt;) (cons <span style=color:#e6db74>&#39;&gt;</span> &gt;) (cons <span style=color:#e6db74>&#39;&gt;=</span> &gt;=) (cons <span style=color:#e6db74>&#39;&lt;=</span> &lt;=) (cons <span style=color:#e6db74>&#39;not</span> not) (cons <span style=color:#e6db74>&#39;cons</span> cons) (cons <span style=color:#e6db74>&#39;car</span> car) (cons <span style=color:#e6db74>&#39;cdr</span> cdr) (cons <span style=color:#e6db74>&#39;map</span> map) (cons <span style=color:#e6db74>&#39;filter</span> filter)
+</span></span><span style=display:flex><span>  (cons <span style=color:#e6db74>&#39;for-each</span> for-each) (cons <span style=color:#e6db74>&#39;vector-ref</span> vector-ref) (cons <span style=color:#e6db74>&#39;vector-set!</span> vector-set!) (cons <span style=color:#e6db74>&#39;vector</span> vector) (cons <span style=color:#e6db74>&#39;list</span> list))) <span style=color:#75715e>; 内建函数。用于支持对于数字的操作等等。可以自行添加。</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>new-environment</span> bounds base-env)
+</span></span><span style=display:flex><span>  (cons bounds base-env))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>lookup-variable-value</span> var env)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>let </span>loop ((<span style=color:#a6e22e>e</span> env))
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>if </span>(null? e)
+</span></span><span style=display:flex><span>        (<span style=color:#a6e22e>error</span> var <span style=color:#e6db74>&#34;Unbound variable&#34;</span>)
+</span></span><span style=display:flex><span>        (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>frame</span> (car e)))
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>            ((assq var frame) <span style=color:#66d9ef>=&gt; </span>cdr) <span style=color:#75715e>; R6RS 的 =&gt; 很有用</span>
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>else </span>(<span style=color:#a6e22e>loop</span> (cdr e))))))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>modify</span> var val env)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>let </span>loop ((<span style=color:#a6e22e>e</span> env))
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>if </span>(null? e)
+</span></span><span style=display:flex><span>        (<span style=color:#a6e22e>error</span> var <span style=color:#e6db74>&#34;Unbound variable&#34;</span>)
+</span></span><span style=display:flex><span>        (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>frame</span> (car e)))
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>            ((assq var frame) <span style=color:#66d9ef>=&gt; </span>(<span style=color:#66d9ef>lambda </span>(<span style=color:#a6e22e>v</span>) (set-cdr! v val)))
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>else </span>(<span style=color:#a6e22e>loop</span> (cdr e))))))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>define-variable!</span> var val)
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; 合法性检查：变量名必须是符号</span>
+</span></span><span style=display:flex><span>  (<span style=color:#a6e22e>when</span> (not (symbol? var))
+</span></span><span style=display:flex><span>    (<span style=color:#a6e22e>error</span> var <span style=color:#e6db74>&#34;Variable name must be a symbol&#34;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>; define 总是修改最外层（全局）环境</span>
+</span></span><span style=display:flex><span>  (set-car! global-env
+</span></span><span style=display:flex><span>    (cons (cons var val) (car global-env))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>calc</span> exp env)
+</span></span><span style=display:flex><span>  (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>    ((<span style=color:#66d9ef>or </span>(number? exp) (string? exp) (vector? exp) (boolean? exp)) exp) <span style=color:#75715e>; 在这个解释器中，数字等原始数据结构也可以视为一种 intrinsics.</span>
+</span></span><span style=display:flex><span>    ((<span style=color:#66d9ef>and </span>(list? exp) (assq (car exp) intrinsics)) <span style=color:#66d9ef>=&gt; </span>
+</span></span><span style=display:flex><span>     (<span style=color:#66d9ef>lambda </span>(<span style=color:#a6e22e>x</span>)
+</span></span><span style=display:flex><span>      (<span style=color:#66d9ef>let </span>([f (cdr x)])
+</span></span><span style=display:flex><span>        (apply f 
+</span></span><span style=display:flex><span>          (map 
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>lambda </span>(<span style=color:#a6e22e>v</span>) (<span style=color:#a6e22e>calc</span> v env)) 
+</span></span><span style=display:flex><span>            (cdr exp)))))) <span style=color:#75715e>; 注意，操作数数量不匹配会由 scheme 自己报错。所以为了省事略去了。</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    ((symbol? exp) (<span style=color:#a6e22e>lookup-variable-value</span> exp env))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    ((list? exp)
+</span></span><span style=display:flex><span>      (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>op</span> (car exp)))
+</span></span><span style=display:flex><span>        (<span style=color:#66d9ef>cond </span>
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;lambda</span>)
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>param</span> (cadr exp))
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>body</span> (cons <span style=color:#e6db74>&#39;begin</span> (cddr exp))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>make-closure</span> param body env)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;define</span>)
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>let* </span>((<span style=color:#a6e22e>var</span> (cadr exp))
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>val-exp</span> (caddr exp))
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>value</span> (<span style=color:#a6e22e>calc</span> val-exp env)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>              (<span style=color:#66d9ef>if </span>(<span style=color:#a6e22e>closure?</span> value)
+</span></span><span style=display:flex><span>                (<span style=color:#66d9ef>let </span>([param (<span style=color:#a6e22e>closure-param</span> value)]
+</span></span><span style=display:flex><span>                      [body (<span style=color:#a6e22e>closure-body</span> value)]
+</span></span><span style=display:flex><span>                      [env (<span style=color:#a6e22e>closure-env</span> value)])
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>define-variable!</span> var (<span style=color:#a6e22e>make-closure-with-name</span> param body env var)))
+</span></span><span style=display:flex><span>                (<span style=color:#a6e22e>define-variable!</span> var value))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;let</span>)
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>calc</span> (cons <span style=color:#e6db74>&#39;begin</span> (cddr exp))
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>new-environment</span> 
+</span></span><span style=display:flex><span>                    (map 
+</span></span><span style=display:flex><span>                      (<span style=color:#66d9ef>lambda </span>(<span style=color:#a6e22e>x</span>) (cons (car x) (<span style=color:#a6e22e>calc</span> (cadr x) env))) 
+</span></span><span style=display:flex><span>                      (cadr exp)) 
+</span></span><span style=display:flex><span>                      env)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;set!</span>)
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>if </span>(not (symbol? (cadr exp))) 
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>error</span> exp <span style=color:#e6db74>&#34;Invalid syntax set!&#34;</span>)
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>modify</span> (cadr exp) (<span style=color:#a6e22e>calc</span> (caddr exp) env) env)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;begin</span>)
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>let </span>loop ([x (cdr exp)])
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>                ((null? x) (<span style=color:#a6e22e>error</span> exp <span style=color:#e6db74>&#34;Invalid syntax begin&#34;</span>))
+</span></span><span style=display:flex><span>                ((null? (cdr x)) (<span style=color:#a6e22e>calc</span> (car x) env))
+</span></span><span style=display:flex><span>                (<span style=color:#66d9ef>else </span>(<span style=color:#a6e22e>calc</span> (car x) env) (<span style=color:#a6e22e>loop</span> (cdr x))))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;quote</span>)
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>if </span>(<span style=color:#66d9ef>or </span>(null? (cdr exp)) (not (null? (cddr exp))))
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>error</span> exp <span style=color:#e6db74>&#34;Invalid syntax quote&#34;</span>)
+</span></span><span style=display:flex><span>              (cadr exp)))
+</span></span><span style=display:flex><span>          
+</span></span><span style=display:flex><span>          ((eq? op <span style=color:#e6db74>&#39;if</span>)
+</span></span><span style=display:flex><span>           (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>            ((<span style=color:#66d9ef>or </span>(null? (cdr exp)) (null? (cddr exp))) (<span style=color:#a6e22e>error</span> exp <span style=color:#e6db74>&#34;Invalid syntax if&#34;</span>))
+</span></span><span style=display:flex><span>            ((null? (cdddr exp)) (<span style=color:#66d9ef>if </span>(<span style=color:#a6e22e>calc</span> (cadr exp) env) (<span style=color:#a6e22e>calc</span> (caddr exp) env)))
+</span></span><span style=display:flex><span>            ((null? (cddddr exp))
+</span></span><span style=display:flex><span>              (<span style=color:#66d9ef>if </span>(<span style=color:#a6e22e>calc</span> (cadr exp) env) 
+</span></span><span style=display:flex><span>                (<span style=color:#a6e22e>calc</span> (caddr exp) env)
+</span></span><span style=display:flex><span>                (<span style=color:#a6e22e>calc</span> (cadddr exp) env)))
+</span></span><span style=display:flex><span>                
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>else </span>(<span style=color:#a6e22e>error</span> exp <span style=color:#e6db74>&#34;Invalid syntax if&#34;</span>))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>else</span>
+</span></span><span style=display:flex><span>            (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>proc</span> (<span style=color:#a6e22e>calc</span> (car exp) env)) <span style=color:#75715e>; 求值函数部分 -&gt; 必须是个闭包</span>
+</span></span><span style=display:flex><span>                  (<span style=color:#a6e22e>arg</span> (map (<span style=color:#66d9ef>lambda </span>(<span style=color:#a6e22e>x</span>) (<span style=color:#a6e22e>calc</span> x env)) (cdr exp))))  <span style=color:#75715e>; 求值参数部分 -&gt; 也是个值(闭包)</span>
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>apply-proc</span> proc arg))))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>else </span>(<span style=color:#a6e22e>error</span> exp <span style=color:#e6db74>&#34;Invalid expression&#34;</span>))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>apply-proc</span> proc arg)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>if </span>(<span style=color:#a6e22e>closure?</span> proc)
+</span></span><span style=display:flex><span>      (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>param</span> (<span style=color:#a6e22e>closure-param</span> proc))
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>body</span> (<span style=color:#a6e22e>closure-body</span> proc))
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>env</span> (<span style=color:#a6e22e>closure-env</span> proc)))
+</span></span><span style=display:flex><span>        <span style=color:#75715e>; 关键步骤：在闭包 *捕获的环境* 上扩展新绑定</span>
+</span></span><span style=display:flex><span>        (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>new-env</span> 
+</span></span><span style=display:flex><span>              (<span style=color:#a6e22e>new-environment</span>
+</span></span><span style=display:flex><span>                (map cons param arg) 
+</span></span><span style=display:flex><span>                env)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>calc</span> body new-env)))
+</span></span><span style=display:flex><span>      (<span style=color:#a6e22e>error</span> proc <span style=color:#e6db74>&#34;Not a procedure&#34;</span>)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>run</span> exp)
+</span></span><span style=display:flex><span>  (<span style=color:#a6e22e>calc</span> exp global-env))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>pretty-print</span> obj)
+</span></span><span style=display:flex><span>  (<span style=color:#a6e22e>cond</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>; 我们的主角：闭包</span>
+</span></span><span style=display:flex><span>    ((<span style=color:#a6e22e>closure?</span> obj)
+</span></span><span style=display:flex><span>     (<span style=color:#66d9ef>if </span>(= (vector-length obj) <span style=color:#ae81ff>4</span>) (display <span style=color:#e6db74>&#34;#&lt;procedure&gt;&#34;</span>) (<span style=color:#66d9ef>begin </span>(display <span style=color:#e6db74>&#34;#&lt;procedure &#34;</span>) (display (<span style=color:#a6e22e>closure-name</span> obj)) (display <span style=color:#e6db74>&#34;&gt;&#34;</span>))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>; 其他所有类型（符号、布尔值等）用默认方式打印</span>
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>else </span>(display obj))))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>(<span style=color:#66d9ef>define </span>(<span style=color:#a6e22e>repl</span>)
+</span></span><span style=display:flex><span>  (display <span style=color:#e6db74>&#34;Lambda&gt; &#34;</span>)
+</span></span><span style=display:flex><span>  (<span style=color:#66d9ef>let </span>((exp (<span style=color:#a6e22e>read</span>)))
+</span></span><span style=display:flex><span>    (<span style=color:#66d9ef>if </span>(eq? exp <span style=color:#e6db74>&#39;exit</span>)
+</span></span><span style=display:flex><span>        (display <span style=color:#e6db74>&#34;Goodbye!&#34;</span>)
+</span></span><span style=display:flex><span>        (<span style=color:#a6e22e>begin</span>
+</span></span><span style=display:flex><span>          (<span style=color:#66d9ef>let </span>((<span style=color:#a6e22e>result</span> (<span style=color:#a6e22e>run</span> exp))) <span style=color:#75715e>; &lt;-- 使用 run 而不是 calc</span>
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>pretty-print</span> result)
+</span></span><span style=display:flex><span>            (<span style=color:#a6e22e>newline</span>))
+</span></span><span style=display:flex><span>          (<span style=color:#a6e22e>repl</span>)))))
+</span></span></code></pre></div><p>它实现的是一个 scheme 的核心子集。</p><p>相较于上面的 lambda 解释器，它主要增加了以下特性：</p><ol><li>多参数函数调用<br>这个是通过对 apply-proc 的修改做到的（虽然 calc 和扩展环境的函数也都进行了修改）。我们将所有参数存储为列表，apply-proc 时将形式参数和实际参数的列表通过 map 变成一个新的环境帧，然后链接到老环境上。</li><li>数字、字符串、向量、布尔值的原生支持<br>实现非常简单，只用了 <code>((or (number? exp) (string? exp) (vector? exp) (boolean? exp)) exp)</code> 一行，大概就是让这些量摆脱常规的变量查找求值，直接返回自己。</li><li>来自 scheme 的内建函数<br>这一项是通过 intrinsics 列表做到的。我们先在 intrinsics 列表中查找对应的内建函数，如果有匹配就直接应用。这样我们就可以处理数字等等了。你也可以自行向 intrinsics 列表中添加新的内建函数。</li><li>对于 quote、let、begin、set!、if 等特殊形式的支持<br>注意，标准 scheme 的 define 可以在内部块作用域的开头出现，定义作用域在块内的变量。而我为了简化没有实现这一点。</li><li>函数的美观打印：不再显示函数体和参数列表，而是显示函数名，就像标准 scheme 实现那样：<code>#&lt;procedure></code>/<code>#&lt;procedure name></code>。这样就可以方便的用它来玩邱奇编码了！</li></ol><h2 id=一些意想不到的特性>一些意想不到的特性<a hidden class=anchor aria-hidden=true href=#一些意想不到的特性>#</a></h2><p>我们的解释器是支持递归的。</p><p>因为定义递归函数时，calc 会直接拆解表达式并构建闭包，最后绑定到函数名上，完全不动函数体。所以就不会出现递归函数名被视为未定义变量的状况。而调用时，函数名已经存在于环境中，对于递归函数的调用会正确地指向它自己。</p><p>我们的解释器支持尾调用优化。</p><p>我们自己没有出手实现这个特性。但是通过对 calc 和 apply-proc 的观察，你可以发现它们在处理函数应用时互相的递归是尾递归的，所以恰好借用了宿主语言 scheme 的尾递归优化。</p><p>并且，尾调用被优化掉之后，无用的环境帧也就被 GC 清除了。所以，我们的解释器巧妙地利用了宿主语言的特性，获得了 TCO（尾调用优化）。</p><h2 id=后记>后记<a hidden class=anchor aria-hidden=true href=#后记>#</a></h2><p>总之就是这样了。我们实现了一个简单的 lambda 演算的解释器，并展示了如何将它扩展到更强大的 scheme 方言。过程中顺便解决了上篇文章那个极其恶心的习题。</p><p>下次再会！</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://litjohn.github.io/tags/plt/>PLT</a></li><li><a href=https://litjohn.github.io/tags/lisp/scheme/racket/>Lisp/Scheme/Racket</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://litjohn.github.io/>litjohn's blog</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
