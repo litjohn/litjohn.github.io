@@ -187,7 +187,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;h2 id="分道扬镳当自由变量出现"&gt;分道扬镳——当自由变量出现&lt;/h2&gt;
-&lt;p&gt;上面的两种方法看似都能实现对计算的“冻结”，但是它们的作用真的完全一样吗？&lt;/p&gt;</description></item><item><title>协程、生成器与 call/cc 的控制流</title><link>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call/cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</link><pubDate>Mon, 13 Oct 2025 15:19:20 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call/cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</guid><description>&lt;h2 id="上期回顾"&gt;上期回顾&lt;/h2&gt;
+&lt;p&gt;上面的两种方法看似都能实现对计算的“冻结”，但是它们的作用真的完全一样吗？&lt;/p&gt;</description></item><item><title>协程、生成器与 call/cc 的控制流</title><link>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call-cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</link><pubDate>Mon, 13 Oct 2025 15:19:20 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call-cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</guid><description>&lt;h2 id="上期回顾"&gt;上期回顾&lt;/h2&gt;
 &lt;p&gt;光剑系列的第三作！前两篇：&lt;/p&gt;
 &lt;p&gt;第一篇：&lt;a href="https://www.luogu.com.cn/article/cr6hfiut"&gt;Let&amp;rsquo;s build our mathematics by using lambda calculus &amp;amp;&amp;amp; church encoding!&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;第二篇：&lt;a href="https://www.luogu.com.cn/article/uhume1ou"&gt;惰性求值、无穷流与发生的魔法&lt;/a&gt;&lt;/p&gt;

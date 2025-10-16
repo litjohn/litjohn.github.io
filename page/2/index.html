@@ -21,8 +21,9 @@
 局部上，交换论证/调整法：调整一定能导出不劣的解。 整体上，必要性 => 充分性：我们至少需要多少操作，然后让这些操作发挥最大的效益。 增量更新并不要求旧的答案一定是新的答案。在旧答案总数很小时，可以暴力枚举它们判断它们是否是新的答案。或者，如果容易确定哪些不是新的答案，排除它们即可。
 对于一些非常复杂的操作，可以考虑寻找不变量。常见的不变量常常和奇偶性或者两类元素的差有关。因为总和是容易变的，但是有时对于两类东西的作用是相同的，就可以被作差消去。
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
-一些看似具有对称性的问题/贪心策略，其实是不对称的。
-这种不对称常常是因为一些题目操作的性质引起的，比如说字典序的比较是从前往后的，这就导致有时你必须逆向贪心。或者一个操作操作了“从当前位置开始，长度为 k 的区间”，这也是一种不对称性，常常导致你需要逆向贪心。</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><footer class=page-footer><nav class=pagination><a class=prev href=https://litjohn.github.io/>«&nbsp;Prev&nbsp;</a></nav></footer></main><footer class=footer><span>&copy; 2025 <a href=https://litjohn.github.io/>litjohn's blog</a></span> ·
+不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
+这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><footer class=page-footer><nav class=pagination><a class=prev href=https://litjohn.github.io/>«&nbsp;Prev&nbsp;</a></nav></footer></main><footer class=footer><span>&copy; 2025 <a href=https://litjohn.github.io/>litjohn's blog</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>

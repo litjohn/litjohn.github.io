@@ -649,7 +649,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;h2 id="分道扬镳当自由变量出现"&gt;分道扬镳——当自由变量出现&lt;/h2&gt;
-&lt;p&gt;上面的两种方法看似都能实现对计算的“冻结”，但是它们的作用真的完全一样吗？&lt;/p&gt;</description></item><item><title>协程、生成器与 call/cc 的控制流</title><link>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call/cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</link><pubDate>Mon, 13 Oct 2025 15:19:20 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call/cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</guid><description>&lt;h2 id="上期回顾"&gt;上期回顾&lt;/h2&gt;
+&lt;p&gt;上面的两种方法看似都能实现对计算的“冻结”，但是它们的作用真的完全一样吗？&lt;/p&gt;</description></item><item><title>协程、生成器与 call/cc 的控制流</title><link>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call-cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</link><pubDate>Mon, 13 Oct 2025 15:19:20 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%8D%8F%E7%A8%8B%E7%94%9F%E6%88%90%E5%99%A8%E4%B8%8E-call-cc-%E7%9A%84%E6%8E%A7%E5%88%B6%E6%B5%81/</guid><description>&lt;h2 id="上期回顾"&gt;上期回顾&lt;/h2&gt;
 &lt;p&gt;光剑系列的第三作！前两篇：&lt;/p&gt;
 &lt;p&gt;第一篇：&lt;a href="https://www.luogu.com.cn/article/cr6hfiut"&gt;Let&amp;rsquo;s build our mathematics by using lambda calculus &amp;amp;&amp;amp; church encoding!&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;第二篇：&lt;a href="https://www.luogu.com.cn/article/uhume1ou"&gt;惰性求值、无穷流与发生的魔法&lt;/a&gt;&lt;/p&gt;
@@ -885,5 +885,5 @@
 &lt;p&gt;对于一些非常复杂的操作，可以考虑寻找不变量。常见的不变量常常和奇偶性或者两类元素的差有关。因为总和是容易变的，但是有时对于两类东西的作用是相同的，就可以被作差消去。&lt;/p&gt;
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;一些看似具有对称性的问题/贪心策略，其实是不对称的。&lt;/p&gt;
-&lt;p&gt;这种不对称常常是因为一些题目操作的性质引起的，比如说字典序的比较是从前往后的，这就导致有时你必须逆向贪心。或者一个操作操作了“从当前位置开始，长度为 k 的区间”，这也是一种不对称性，常常导致你需要逆向贪心。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item></channel></rss>
