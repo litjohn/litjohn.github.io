@@ -1,4 +1,28 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.0</generator><language>zh-cn</language><lastBuildDate>Wed, 22 Oct 2025 16:47:24 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>可以吗，总司令？</title><link>https://litjohn.github.io/posts/answer-the-paper-randomly/</link><pubDate>Wed, 22 Oct 2025 16:47:24 +0800</pubDate><guid>https://litjohn.github.io/posts/answer-the-paper-randomly/</guid><description>&lt;p&gt;一个由不可以总司令想到的有趣概率/期望题。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.0</generator><language>zh-cn</language><lastBuildDate>Wed, 22 Oct 2025 21:52:41 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>宏，中缀表达式，自定义语法与可编程的编程语言</title><link>https://litjohn.github.io/posts/bin-exp/</link><pubDate>Wed, 22 Oct 2025 21:52:41 +0800</pubDate><guid>https://litjohn.github.io/posts/bin-exp/</guid><description>&lt;p&gt;光剑后日谈 #2.&lt;/p&gt;
+&lt;p&gt;在 Scheme/Racket 的世界里，我们常说“一切代码皆为 S-expression”。一个函数调用是 &lt;code&gt;(函数名 参数1 参数2)&lt;/code&gt;，一个列表是 &lt;code&gt;(元素1 元素2 元素3)&lt;/code&gt;，它们都遵循着括号包裹、前缀表示的统一形式。&lt;/p&gt;
+&lt;p&gt;但细心的你可能会问，&lt;code&gt;'(a b c)&lt;/code&gt; 或者 &lt;code&gt;#'(+ 1 stx)&lt;/code&gt; 呢？开头的那个 &lt;code&gt;'&lt;/code&gt; 或 &lt;code&gt;#'&lt;/code&gt; 字符，怎么看也不像是列表的一部分。它们是如何融入这套 S-expression 体系的？&lt;/p&gt;
+&lt;p&gt;答案很简单：它们是一种语法糖。我们都知道 &lt;code&gt;'exp&lt;/code&gt; 等价于 &lt;code&gt;(quote exp)&lt;/code&gt;，&lt;code&gt;#'exp&lt;/code&gt; 等价于 &lt;code&gt;(syntax exp)&lt;/code&gt;。这个单引号 &lt;code&gt;'&lt;/code&gt; 仿佛是一个别名，在 Racket 读取我们的代码时，就悄无声息地将它转换成了标准的形式。这种在“读取阶段”就生效的转换规则，被称为&lt;strong&gt;读取器宏（Reader Macro）&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;读取器宏背后，是整个 Lisp 家族语言引以为傲的宏系统。宏是一种强大的元编程工具，它本质上是一个在&lt;strong&gt;编译期&lt;/strong&gt;（或称为“展开时”）执行的函数。这个特殊的函数，它的输入是代码（以语法对象的形式），输出也是代码。它允许我们对代码进行任意复杂的、图灵完备的变换，从而彻底扩展语言本身的语法。&lt;/p&gt;
+&lt;p&gt;那么，亲手编写一个宏，究竟是怎样的体验呢？&lt;/p&gt;
+&lt;h3 id="宏之初体验编写你的第一个宏-when"&gt;宏之初体验：编写你的第一个宏 &lt;code&gt;when&lt;/code&gt;&lt;/h3&gt;
+&lt;p&gt;让我们从一个简单的需求开始。在编程中，我们经常遇到一个场景：“当某个条件成立时，执行一系列操作”。用 Racket 的 &lt;code&gt;if&lt;/code&gt; 可以这样写：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt;1
+&lt;/span&gt;&lt;span class="lnt"&gt;2
+&lt;/span&gt;&lt;span class="lnt"&gt;3
+&lt;/span&gt;&lt;span class="lnt"&gt;4
+&lt;/span&gt;&lt;span class="lnt"&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-racket" data-lang="racket"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;user-level&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;begin&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;display&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;权限不足！&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;log-warning&lt;/span&gt; &lt;span class="s2"&gt;&amp;#34;Attempted access by low-level user.&amp;#34;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="no"&gt;#f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="err"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;每次都写 &lt;code&gt;(begin ...)&lt;/code&gt; 有点繁琐（更何况 Racket 强制 if 有两个分支，那个不需要的分支混淆了语义）。如果我们能创造一个新语法 &lt;code&gt;when&lt;/code&gt;，让代码变成下面这样，岂不是更清晰？&lt;/p&gt;</description></item><item><title>可以吗，总司令？</title><link>https://litjohn.github.io/posts/answer-the-paper-randomly/</link><pubDate>Wed, 22 Oct 2025 16:47:24 +0800</pubDate><guid>https://litjohn.github.io/posts/answer-the-paper-randomly/</guid><description>&lt;p&gt;一个由不可以总司令想到的有趣概率/期望题。&lt;/p&gt;
 &lt;h2 id="题面"&gt;题面&lt;/h2&gt;
 &lt;p&gt;一套卷子上有 $n$ 道判断题。你不知道它们的答案，但是你知道存在一个常数 $p \in [0, 1]$，对任意一道题，它的答案是“正确”的概率为 $p$。&lt;/p&gt;
 &lt;p&gt;你决定采用一种策略来答题：选择一个常数 $p&amp;rsquo; \in [0, 1]$，对于任意一道题，你以 $p&amp;rsquo;$ 的概率选择“正确”。&lt;/p&gt;
