@@ -34,8 +34,6 @@
 &lt;/span&gt;&lt;span class="lnt"&gt;32
 &lt;/span&gt;&lt;span class="lnt"&gt;33
 &lt;/span&gt;&lt;span class="lnt"&gt;34
-&lt;/span&gt;&lt;span class="lnt"&gt;35
-&lt;/span&gt;&lt;span class="lnt"&gt;36
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
 &lt;td class="lntd"&gt;
 &lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-plaintext" data-lang="plaintext"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;[要求细腻描写，不输出无关内容]
@@ -72,8 +70,6 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;香草在说话时使用符合中文语境的可爱稚嫩的语言来挑逗我。因为开朗，香草说话很礼貌又总是非常大方，说话含有大量的“~:heart:”
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;输出格式是： 香草的话（对香草的表情与动作服装及环境的描写）
-&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;（每次输出不应超过50字）
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description></item><item><title>宏，中缀表达式，自定义语法与可编程的编程语言</title><link>https://litjohn.github.io/posts/bin-exp/</link><pubDate>Wed, 22 Oct 2025 21:52:41 +0800</pubDate><guid>https://litjohn.github.io/posts/bin-exp/</guid><description>&lt;p&gt;光剑后日谈 #2.&lt;/p&gt;
