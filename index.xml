@@ -278,7 +278,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;h2 id="概述"&gt;概述&lt;/h2&gt;
-&lt;p&gt;一种基于完美二叉树以及斜二进制分解的结构。lisp 列表的上位替代，支持 $O(1)$ 的 car/cdr/cons，$O(\log n)$ 的随机访问修改。完全可持久化，支持不可变性和结构共享。&lt;/p&gt;</description></item><item><title>配置 Emacs</title><link>https://litjohn.github.io/posts/set-up-emacs/</link><pubDate>Mon, 27 Oct 2025 21:55:24 +0800</pubDate><guid>https://litjohn.github.io/posts/set-up-emacs/</guid><description>&lt;p&gt;为什么诸位都如此热衷于 vscode 啊？我随便一翻都能看到 inf 篇介绍 vscode 配置的文章。&lt;/p&gt;
+&lt;p&gt;一种基于完美二叉树以及斜二进制分解的结构。lisp 列表的上位替代，支持 $O(1)$ 的 car/cdr/cons，$O(\log n)$ 的随机访问修改。完全可持久化，支持不可变性和结构共享。&lt;/p&gt;</description></item><item><title>Emacs 入门笔记</title><link>https://litjohn.github.io/posts/set-up-emacs/</link><pubDate>Mon, 27 Oct 2025 21:55:24 +0800</pubDate><guid>https://litjohn.github.io/posts/set-up-emacs/</guid><description>&lt;p&gt;为什么诸位都如此热衷于 vscode 啊？我随便一翻都能看到 inf 篇介绍 vscode 配置的文章。&lt;/p&gt;
 &lt;p&gt;不如来玩点神秘的：Emacs。&lt;/p&gt;
 &lt;h2 id="什么是-emacs"&gt;什么是 Emacs？&lt;/h2&gt;
 &lt;p&gt;&lt;del&gt;Emacs 是一款由 GNU 开源软件基金会完全自主研发的开源文本编辑器。在这款编辑器中，你将在一个叫做“buffer”的环境中冒险，与 elisp 邂逅，并探明“Emacs pinky”的真相……&lt;/del&gt;&lt;/p&gt;
