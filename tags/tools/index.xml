@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Tools on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/tags/tools/</link><description>Recent content in Tools on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Mon, 27 Oct 2025 21:55:24 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/tags/tools/index.xml" rel="self" type="application/rss+xml"/><item><title>Emacs 入门笔记</title><link>https://litjohn.github.io/posts/set-up-emacs/</link><pubDate>Mon, 27 Oct 2025 21:55:24 +0800</pubDate><guid>https://litjohn.github.io/posts/set-up-emacs/</guid><description>&lt;p&gt;为什么诸位都如此热衷于 vscode 啊？我随便一翻都能看到 inf 篇介绍 vscode 配置的文章。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Tools on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/tags/tools/</link><description>Recent content in Tools on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Mon, 27 Oct 2025 21:55:24 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/tags/tools/index.xml" rel="self" type="application/rss+xml"/><item><title>Emacs 入门笔记</title><link>https://litjohn.github.io/posts/set-up-emacs/</link><pubDate>Mon, 27 Oct 2025 21:55:24 +0800</pubDate><guid>https://litjohn.github.io/posts/set-up-emacs/</guid><description>&lt;h3 id="前言--一点吐槽"&gt;前言 · 一点吐槽&lt;/h3&gt;
+&lt;p&gt;为什么诸位都如此热衷于 vscode 啊？&lt;/p&gt;
+&lt;p&gt;我随便一翻都能看到 inf 篇介绍 vscode 配置的文章，真是够了。&lt;/p&gt;
 &lt;p&gt;不如来玩点神秘的：Emacs。&lt;/p&gt;
-&lt;h2 id="什么是-emacs"&gt;什么是 Emacs？&lt;/h2&gt;
+&lt;h3 id="什么是-emacs"&gt;什么是 Emacs？&lt;/h3&gt;
 &lt;p&gt;&lt;del&gt;Emacs 是一款由 GNU 开源软件基金会完全自主研发的开源文本编辑器。在这款编辑器中，你将在一个叫做“buffer”的环境中冒险，与 elisp 邂逅，并探明“Emacs pinky”的真相……&lt;/del&gt;&lt;/p&gt;
-&lt;p&gt;不开玩笑了。Emacs 是知名老牌文本编辑器，与 vi/vim 并列，长期处于鄙视链的顶端。主要优势是无与伦比的可定制性——它是 lisp machine 思想的继承者，整个编辑器内核和其他各种功能都使用 elisp 编写，并且有内嵌的 elisp 解释器。用户可以自由地修改这些代码，或者增加属于自己的函数，从而定制编辑器的行为。它的可定制性是图灵完备的：理论上，你可以用它来做任何事情，包括但不限于浏览网页，管理日程，与朋友交流，或是原神启动。&lt;/p&gt;
-&lt;h2 id="如何获取"&gt;如何获取？&lt;/h2&gt;
-&lt;p&gt;最简单的方法是访问 GNU Emacs 项目官网或者 github 仓库然后下载。你也可以用你的 msys2 pacman 或者 winget 等等包管理器下载它。具体的包的名字我就不提供了，反正包管理器随便搜搜就能搜到。&lt;/p&gt;
-&lt;p&gt;然后，你就可以使用它了。不过这时的 Emacs 没有任何配置，外观很丑陋，功能也很匮乏。&lt;/p&gt;
-&lt;p&gt;我们需要对它进行一些配置来获得想要的效果。&lt;/p&gt;
-&lt;h2 id="如何配置"&gt;如何配置？&lt;/h2&gt;
-&lt;p&gt;好问题，你肯定听说过 Emacs 的配置非常困难，不过事实上作为一个新手（就像我）要快速上手还是很简单的。&lt;/p&gt;
-&lt;p&gt;要义在于不要纯靠自己配置。靠自己攒配置消耗的时间精力太大了，在你配出好用的编辑器前就会失去兴趣。&lt;/p&gt;
-&lt;p&gt;我们可以搜寻一些别人做好的 Emacs 发行版。比如经典的 doom Emacs、spacemacs、centaur Emacs 或者 Prelude 等等。其中 doom Emacs 和 spacemacs 默认开启 evil-mode（vim 模式），使用体验类似 vim。我没用过 vim 不会用，所以自然放弃了它们。centaur Emacs 和 Prelude 则坚持原生体验，Prelude 比较轻量级，并且为用户保留了自己进一步配置的能力，所以我选择了它。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;不开玩笑了。Emacs 是知名的老牌文本编辑器，与 vi/vim 齐名，长期处于编辑器鄙视链的顶端。它的主要优势是无与伦比的可定制性——它是 Lisp Machine 思想的继承者，整个编辑器内核连同各种功能都由一种叫做 elisp 的语言写成，并且自带一个 elisp 解释器。这意味着用户可以像修改游戏 Mod 一样，自由地修改编辑器的任何代码，或者增加自己的函数，把它打造成任何你想要的样子。&lt;/p&gt;
+&lt;p&gt;它的可定制性是图灵完备的：理论上，你可以用它来做任何事情，包括但不限于浏览网页，管理日程，与朋友吹水，又或者……原神，启动！&lt;/p&gt;
+&lt;h3 id="如何获取"&gt;如何获取？&lt;/h3&gt;
+&lt;p&gt;最简单的方法是访问 &lt;a href="https://www.gnu.org/software/emacs/"&gt;GNU Emacs 项目官网&lt;/a&gt;或者其 &lt;a href="https://github.com/emacs-mirror/emacs"&gt;GitHub 仓库&lt;/a&gt;然后下载。你也可以用你的包管理器，比如 Windows 的 &lt;code&gt;winget&lt;/code&gt; 或 &lt;code&gt;scoop&lt;/code&gt;，macOS 的 &lt;code&gt;brew&lt;/code&gt;，或者 Linux 的 &lt;code&gt;apt&lt;/code&gt;、&lt;code&gt;pacman&lt;/code&gt; 等等。在包管理器里搜 &lt;code&gt;emacs&lt;/code&gt; 通常就能找到。&lt;/p&gt;
+&lt;p&gt;装好后先别急着打开，因为这时的 Emacs 没有任何配置，外观简陋，功能匮乏，保证劝退。我们需要给它注入灵魂。&lt;/p&gt;
+&lt;h3 id="如何配置新手的捷径"&gt;如何配置？（新手的捷径）&lt;/h3&gt;
+&lt;p&gt;好问题。你肯定听说过 Emacs 的配置极其困难，但作为一个刚入门的新手（就像我），想快速上手其实非常简单。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;要义在于：不要自己从头配！&lt;/strong&gt; 靠自己一行行攒配置所消耗的时间精力是巨大的，很可能在你配出一个好用的编辑器之前，就已经失去兴趣了。&lt;/p&gt;
+&lt;p&gt;我们可以直接站在巨人的肩膀上，搜寻一些别人做好的 Emacs &lt;strong&gt;发行版&lt;/strong&gt;。比如经典的 &lt;strong&gt;Doom Emacs&lt;/strong&gt;、&lt;strong&gt;Spacemacs&lt;/strong&gt;、&lt;strong&gt;Centaur Emacs&lt;/strong&gt; 或者 &lt;strong&gt;Prelude&lt;/strong&gt;。&lt;/p&gt;</description></item></channel></rss>
