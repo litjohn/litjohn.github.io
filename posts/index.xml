@@ -1,4 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Thu, 30 Oct 2025 19:32:24 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>函数式随机访问列表（斜二叉树队列）</title><link>https://litjohn.github.io/posts/random-accessible-funtional-list/</link><pubDate>Thu, 30 Oct 2025 19:32:24 +0800</pubDate><guid>https://litjohn.github.io/posts/random-accessible-funtional-list/</guid><description>&lt;p&gt;如题，一种 lisp 列表的增强版，支持 $O(\log n)$ 级别的随机访问和修改，并且无缝可持久化。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Sun, 02 Nov 2025 00:11:22 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>未来滚滚而来，不问人们意见</title><link>https://litjohn.github.io/posts/csp-s2025/</link><pubDate>Sun, 02 Nov 2025 00:11:22 +0800</pubDate><guid>https://litjohn.github.io/posts/csp-s2025/</guid><description>&lt;p&gt;CSP2025 游记。标题本来打算起“既渡厄劫，自登天门”，但是转念一想我似乎还没有渡过劫难，甚至连准确的估分都做不到。那么就换个标题吧。&lt;/p&gt;
+&lt;p&gt;在我学习 OI 的三年以来，一个巨大的疑问始终悬挂在心头：我到底会做什么题？&lt;/p&gt;
+&lt;p&gt;这个疑问从未消解过。在我刚学 OI 的时候，水平很菜，理解力不高，外加自己学的也不是非常刻苦，导致什么都不会。&lt;br&gt;
+后来几年里，我学会了很多东西，做了不少题。然而每每点进一道新的洛谷/CF/at 题，却又发现自己完全不会。尤其是梦熊比赛的题目。&lt;/p&gt;
+&lt;p&gt;一直觉得自己的实力应当有提高，然而却不知道到底高了多少，现在又是什么情况。&lt;/p&gt;
+&lt;p&gt;就这样渡过了 2024 CSP。因为题目的水分得到了提高一等。在场上觉得自己做不了不去想正解，在下场之后才发现题怎么这么简单。&lt;/p&gt;
+&lt;p&gt;之后的一年似乎什么都没干。跟着代码源（机构）训练了一整年，做的全是 CF/at 题目，OI 题倒是没做多少。&lt;br&gt;
+每次被 CF 任意难度的题（从 1200 到 2000 的简单题）创死。ABC 成绩也一直没有长进，很少 6 题，我到现在 at 都没有突破 1600.&lt;/p&gt;
+&lt;p&gt;比较逆天的是代码源普及组课程（L4 上）结课测试，被当场击杀，T2 和 T3 都想假了，两题一共只有 10 pts，整场比赛得分 140 pts。&lt;/p&gt;
+&lt;p&gt;然后就到了 11 月。秋天开始了。&lt;/p&gt;
+&lt;p&gt;在我的记忆里，我好像还是当初五年级全校最小的 OIer，还有着充足的时间和光明的未来。但现在我已经初三（学籍初二）了，离退役也不远了。&lt;/p&gt;
+&lt;p&gt;2024-2025 的一整年如同飞一般滑过，未来滚滚而来，不问人们意见。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;初赛，我一直认为初赛虽然不重要，却是挺有意思的。可以拿到文化课去当思考题。&lt;/p&gt;
+&lt;p&gt;我之前的初赛分数一直都不高，常常挂在程序判断/填空上。这次初赛，我在第二题就被卡住了：没学 KMP ;) 试图现场理解 border 是什么，弄错了几次感觉题目有问题，最后发现是自己理解错了然后切掉了。&lt;/p&gt;
+&lt;p&gt;选择题都比较简单，后面的几个程序题一眼看上去还是同样困难。然而，令人惊讶的是，在长时间的奋力思考下，我最终都成功理解了它们的意图。唯一的例外是最后那个 (t, n) 门限的组合构造，不过我至少填出了 43 题之外的其他题。&lt;/p&gt;
+&lt;p&gt;最后得分 97.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;复赛。没什么好讲的，该会就会，不会就不会。T1 类似于 duel 和密码锁，不过中间想错一次，又没有注意到 n 是偶数（事实上我考前几天才做过一个保证 n 是偶数的题：&lt;a href="https://www.luogu.com.cn/problem/P11452"&gt;https://www.luogu.com.cn/problem/P11452&lt;/a&gt;，这个题 n 为奇数难度会飙升）。半小时通过大样例。&lt;/p&gt;</description></item><item><title>函数式随机访问列表（斜二叉树队列）</title><link>https://litjohn.github.io/posts/random-accessible-funtional-list/</link><pubDate>Thu, 30 Oct 2025 19:32:24 +0800</pubDate><guid>https://litjohn.github.io/posts/random-accessible-funtional-list/</guid><description>&lt;p&gt;如题，一种 lisp 列表的增强版，支持 $O(\log n)$ 级别的随机访问和修改，并且无缝可持久化。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
 &lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
