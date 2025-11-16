@@ -1,4 +1,31 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Sun, 02 Nov 2025 00:11:22 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>未来滚滚而来，不问人们意见</title><link>https://litjohn.github.io/posts/csp-s2025/</link><pubDate>Sun, 02 Nov 2025 00:11:22 +0800</pubDate><guid>https://litjohn.github.io/posts/csp-s2025/</guid><description>&lt;p&gt;CSP2025 游记。标题本来打算起“既渡厄劫，自登天门”，但是转念一想我似乎还没有渡过劫难，甚至连准确的估分都做不到。那么就换个标题吧。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Sun, 16 Nov 2025 11:08:19 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Splitmix64</title><link>https://litjohn.github.io/posts/splitmix64/</link><pubDate>Sun, 16 Nov 2025 11:08:19 +0800</pubDate><guid>https://litjohn.github.io/posts/splitmix64/</guid><description>&lt;p&gt;splitmix64 的实现存档。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-cpp" data-lang="cpp"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;cstdint&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="nf"&gt;splitmix64&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="c1"&gt;// 固定的“魔法”常数，都是精心挑选的
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mh"&gt;0x9e3779b97f4a7c15&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mh"&gt;0xbf58476d1ce4e5b9&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;27&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mh"&gt;0x94d049bb133111eb&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;^&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;31&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description></item><item><title>未来滚滚而来，不问人们意见</title><link>https://litjohn.github.io/posts/csp-s2025/</link><pubDate>Sun, 02 Nov 2025 00:11:22 +0800</pubDate><guid>https://litjohn.github.io/posts/csp-s2025/</guid><description>&lt;p&gt;CSP2025 游记。标题本来打算起“既渡厄劫，自登天门”，但是转念一想我似乎还没有渡过劫难，甚至连准确的估分都做不到。那么就换个标题吧。&lt;/p&gt;
 &lt;p&gt;在我学习 OI 的三年以来，一个巨大的疑问始终悬挂在心头：我到底会做什么题？&lt;/p&gt;
 &lt;p&gt;这个疑问从未消解过。在我刚学 OI 的时候，水平很菜，理解力不高，外加自己学的也不是非常刻苦，导致什么都不会。&lt;br&gt;
 后来几年里，我学会了很多东西，做了不少题。然而每每点进一道新的洛谷/CF/at 题，却又发现自己完全不会。尤其是梦熊比赛的题目。&lt;/p&gt;
