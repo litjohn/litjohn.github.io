@@ -1,4 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Sun, 16 Nov 2025 11:08:19 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Splitmix64</title><link>https://litjohn.github.io/posts/splitmix64/</link><pubDate>Sun, 16 Nov 2025 11:08:19 +0800</pubDate><guid>https://litjohn.github.io/posts/splitmix64/</guid><description>&lt;p&gt;splitmix64 的实现存档。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Wed, 26 Nov 2025 18:38:39 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>为你的设备配置更好的 DNS</title><link>https://litjohn.github.io/posts/use-better-dns/</link><pubDate>Wed, 26 Nov 2025 18:38:39 +0800</pubDate><guid>https://litjohn.github.io/posts/use-better-dns/</guid><description>&lt;h2 id="前言"&gt;前言&lt;/h2&gt;
+&lt;p&gt;昨天对&lt;a href="https://litjohn.github.io"&gt;我的博客&lt;/a&gt;界面进行了更新。但是你可能发现数学公式（katex）炸了。&lt;/p&gt;
+&lt;p&gt;更有趣的是，你可能会发现换了一台设备，katex 又复活了。而在某些设备上，katex 就是渲染不出来。&lt;/p&gt;
+&lt;p&gt;这正是我本人的经历：我在家里能够看到正常渲染的 katex，但是到了学校就渲染不了。&lt;/p&gt;
+&lt;p&gt;事实上，这并不是我配置写出锅了。而是 GFW 搞的鬼。&lt;/p&gt;
+&lt;h2 id="排查问题"&gt;排查问题&lt;/h2&gt;
+&lt;p&gt;我们将使用一些入门级的网络开发者工具。&lt;/p&gt;
+&lt;p&gt;使用 F12 等方法打开 chrome（或其他浏览器）的开发者工具。选择“network”项。先点击左上角的灰色禁止图标（一个被斜杠穿过的圆圈）清除过去的活动记录，然后点击它左边的灰色同心圆开启活动记录录制（如果这个图标是红色的圆圈套着方框，那么录制已经开始了，不用管。这个图标看上去和你手机录像时的那个红色源泉很像）。勾选最上方的“preserve log”（其实不勾也行）。然后如果下面有一个类似于“/get”之类的过滤选项，关掉它。&lt;/p&gt;
+&lt;p&gt;访问&lt;a href="https://litjohn.github.io"&gt;我的博客&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;看下面的那一栏（上面一栏是时间轴，不用理会），它显示了访问我博客时的各种网络活动，包括名字，URL，状态等等。&lt;/p&gt;
+&lt;p&gt;我们发现大多数都正常返回（状态码 200），但是有一些会显示叉和 404 或者其他一些状态码。这些请求里有名字带 .ico 或者类似于 icon 之类的，这些是请求博客的图标（我没设置），不用管。&lt;/p&gt;
+&lt;p&gt;注意到有名字中带 katex 和 css/js 或者 auto-render 之类的（比如 katex.min.js/katex.min.css/auto-render.min.js）。这些其实就是在向 cdn 请求用于渲染 katex 公式的脚本和样式。&lt;/p&gt;
+&lt;p&gt;观察到域名大概是 cdn.jsdelivr.net。&lt;/p&gt;
+&lt;p&gt;试着使用 curl/iwr 或者浏览器直接访问。发现访问不了。&lt;/p&gt;
+&lt;p&gt;至此，我们找到了罪魁祸首。&lt;/p&gt;
+&lt;h2 id="分析原因"&gt;分析原因&lt;/h2&gt;
+&lt;p&gt;jsdelivr 是一个著名的 cdn，可以让你把你的 git 仓库弄上去，然后提供加速的下载（即内容分发）。不过这个 cdn 现在不是很稳定，有时（指有些 DNS 服务器上）会被 DNS 污染导致访问不了。&lt;/p&gt;
+&lt;p&gt;事实上，这应该是 hugo 生成器或者 papermod 主题默认的 katex 来源。所以使用这套东西的人可能会遇到和我一模一样的问题。&lt;/p&gt;
+&lt;p&gt;所幸它没有遭遇 SNI 阻断甚至 IP 黑洞之类更加强力的 GFW 手段，这使得我们可以在直连情况下解决问题。&lt;/p&gt;</description></item><item><title>Splitmix64</title><link>https://litjohn.github.io/posts/splitmix64/</link><pubDate>Sun, 16 Nov 2025 11:08:19 +0800</pubDate><guid>https://litjohn.github.io/posts/splitmix64/</guid><description>&lt;p&gt;splitmix64 的实现存档。&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
 &lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
 &lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
