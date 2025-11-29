@@ -434,7 +434,7 @@
 &lt;p&gt;孤链压缩权值线段树/01 trie。线性空间复杂度，从此整数可重集再也不用平衡树。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;线性筛线性预处理积性数论函数。要点在于筛 n = i * p 时用到的 p 和 i 满足 p 不大于 i 的最小质因子。比埃筛更好写。&lt;/p&gt;
-&lt;p&gt;以后再也不要 naive 地 n log n 算 d(i) 了。&lt;/p&gt;
+&lt;p&gt;以后再也不要 naive 地 $O(n \log n)$ 算 d(i) 了。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;利用单调性等等贪心性质简化问题。&lt;/p&gt;
 &lt;p&gt;有交不优 =&amp;gt; 钦定末尾。&lt;/p&gt;
