@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Interesting Problems on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/tags/interesting-problems/</link><description>Recent content in Interesting Problems on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.152.2</generator><language>zh-cn</language><lastBuildDate>Wed, 22 Oct 2025 16:47:24 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/tags/interesting-problems/index.xml" rel="self" type="application/rss+xml"/><item><title>可以吗，总司令？</title><link>https://litjohn.github.io/posts/answer-the-paper-randomly/</link><pubDate>Wed, 22 Oct 2025 16:47:24 +0800</pubDate><guid>https://litjohn.github.io/posts/answer-the-paper-randomly/</guid><description>&lt;p&gt;一个由不可以总司令想到的有趣概率/期望题。&lt;/p&gt;
 &lt;h2 id="题面"&gt;题面&lt;/h2&gt;
 &lt;p&gt;一套卷子上有 $n$ 道判断题。你不知道它们的答案，但是你知道存在一个常数 $p \in [0, 1]$，对任意一道题，它的答案是“正确”的概率为 $p$。&lt;/p&gt;
-&lt;p&gt;你决定采用一种策略来答题：选择一个常数 $p&amp;rsquo; \in [0, 1]$，对于任意一道题，你以 $p&amp;rsquo;$ 的概率选择“正确”。&lt;/p&gt;
+&lt;p&gt;你决定采用一种策略来答题：选择一个常数 $p' \in [0, 1]$，对于任意一道题，你以 $p'$ 的概率选择“正确”。&lt;/p&gt;
 &lt;p&gt;求问：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;若要使得期望做对题数最多，应该选择怎样的 $p&amp;rsquo;$？期望做对题数是多少？&lt;/li&gt;
-&lt;li&gt;若要使得期望全对概率最大，应当选择怎样的 $p&amp;rsquo;$？期望全对概率是多大？&lt;/li&gt;
+&lt;li&gt;若要使得期望做对题数最多，应该选择怎样的 $p'$？期望做对题数是多少？&lt;/li&gt;
+&lt;li&gt;若要使得期望全对概率最大，应当选择怎样的 $p'$？期望全对概率是多大？&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h2 id="解答"&gt;解答&lt;/h2&gt;
 &lt;p&gt;这是一个非常棒的问题！它涉及了期望、概率和优化策略，我们来一步步分解它。&lt;/p&gt;
@@ -14,20 +14,20 @@
 &lt;li&gt;$n$: 题目的总数。&lt;/li&gt;
 &lt;li&gt;$p$: 任意一道题的真实答案是“正确”的概率。&lt;/li&gt;
 &lt;li&gt;$1-p$: 任意一道题的真实答案是“错误”的概率。&lt;/li&gt;
-&lt;li&gt;$p&amp;rsquo;$: 你回答任意一道题为“正确”的概率。&lt;/li&gt;
-&lt;li&gt;$1-p&amp;rsquo;$: 你回答任意一道题为“错误”的概率。&lt;/li&gt;
+&lt;li&gt;$p'$: 你回答任意一道题为“正确”的概率。&lt;/li&gt;
+&lt;li&gt;$1-p'$: 你回答任意一道题为“错误”的概率。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;你的回答策略和你不知道的真实答案是相互独立的。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id="1-使得期望做对题数最多"&gt;1) 使得期望做对题数最多&lt;/h3&gt;
-&lt;p&gt;我们要计算做对题数的期望值，并找到使这个期望值最大的 $p&amp;rsquo;$。&lt;/p&gt;
+&lt;p&gt;我们要计算做对题数的期望值，并找到使这个期望值最大的 $p'$。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;计算单题做对的概率&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;首先，我们考虑只做对一道题的概率。有两种情况可以做对一道题：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;题目的真实答案是“正确”（概率为 $p$），你也回答“正确”（概率为 $p&amp;rsquo;$）。这件事情发生的概率是 $p \cdot p&amp;rsquo;$。&lt;/li&gt;
-&lt;li&gt;题目的真实答案是“错误”（概率为 $1-p$），你也回答“错误”（概率为 $1-p&amp;rsquo;$）。这件事情发生的概率是 $(1-p) \cdot (1-p&amp;rsquo;)$。&lt;/li&gt;
+&lt;li&gt;题目的真实答案是“正确”（概率为 $p$），你也回答“正确”（概率为 $p'$）。这件事情发生的概率是 $p \cdot p'$。&lt;/li&gt;
+&lt;li&gt;题目的真实答案是“错误”（概率为 $1-p$），你也回答“错误”（概率为 $1-p'$）。这件事情发生的概率是 $(1-p) \cdot (1-p')$。&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;由于这两种情况是互斥的，所以做对任意一道题的概率 $P(\text{单题正确})$ 是两者之和：
-$P(\text{单题正确}) = p p&amp;rsquo; + (1-p)(1-p&amp;rsquo;)$&lt;/p&gt;
+$P(\text{单题正确}) = p p' + (1-p)(1-p')$&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;计算期望做对题数&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;设 $X$ 为你做对的总题数。$X$ 可以看作是 $n$ 个独立的伯努利试验的和，其中每次试验“成功”（即做对题）的概率为 $P(\text{单题正确})$。&lt;/p&gt;</description></item></channel></rss>
