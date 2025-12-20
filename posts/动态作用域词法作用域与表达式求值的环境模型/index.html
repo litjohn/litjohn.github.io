@@ -205,7 +205,7 @@
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>x</span> <span class=o>=</span> <span class=mi>3</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>f</span><span class=p>();</span> <span class=c1>// 200
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></td></tr></table></div></div><p>要实现这个，函数不能仅仅是参数列表和函数体代码。它还需要捕获定义时的环境，然后把它和参数以及函数体一起打包成一个闭包（closure）。</p><h3 id=动态作用域>动态作用域<a hidden class=anchor aria-hidden=true href=#动态作用域>#</a></h3><p>与上面相反，动态作用域的函数中的自由变量，其含义取决于调用时的环境。</p><p>（假设 C++ 是动态作用域的）</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
@@ -213,13 +213,13 @@
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>x</span> <span class=o>=</span> <span class=mi>3</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>f</span><span class=p>();</span> <span class=c1>// 6
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>f</span><span class=p>();</span> <span class=c1>// CE
-</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span></code></pre></td></tr></table></div></div><p>动态作用域的函数被调用时，会去调用者的环境链中查找自由变量的含义，而不是从自己被定义时的环境中查找。找不到就报错。</p><p>动态作用域的函数，实现可以远比词法作用域简单。你只需要保存它的代码（函数体），然后调用时放到当前环境中求值就行了。不用维护闭包。</p><h2 id=动态作用域的缺陷>动态作用域的缺陷<a hidden class=anchor aria-hidden=true href=#动态作用域的缺陷>#</a></h2><p>动态作用域有很大的问题。调用者手里的变量绑定，可能会莫名其妙地改变函数自由变量的值，从而导致函数产生奇怪的行为。（就像我们开头的例子中 quote 版 thunk 求出来的值发生了变化）</p><p>这是非常不好的，因为它破坏了过程抽象。设计良好的封装/抽象，使用者不应该知道或者关心内部的细节。而动态作用域却要求你小心翼翼地处理函数中的自由变量——我凭什么要知道函数里用了哪些自由变量、都叫什么、取什么值才能得到正确结果？</p><p>所以，几乎所有现代语言（比如 C++、Java、Python、JavaScript……，以及 scheme 和 common lisp 等现代 lisp 方言）都采用了词法作用域。</p><p>但是在早期，许多语言是动态作用域的（比如早期的 lisp）。这并不是因为它们的作者“选择”了动态作用域，而是因为动态作用域实在是太简单、易于实现和容易想到了。缺乏经验的语言设计者，第一次想到的就是它，他们自然把自己的语言实现为动态作用域的。</p><p>在现代，elisp（Emacs lisp）由于领域特定的便利性，依然保留着动态作用域的特性。不过也可以手动启用词法作用域。common lisp 也保留着手动开启动态作用域的方式。</p><h2 id=两种-thunk-实现到不同作用域策略的对应>两种 thunk 实现到不同作用域策略的对应<a hidden class=anchor aria-hidden=true href=#两种-thunk-实现到不同作用域策略的对应>#</a></h2><p>用 lambda 实现的 thunk，本质上是 scheme 中的一个函数。自然也就继承了 scheme 中函数的共性：词法作用域、闭包。它是词法作用域的。</p><p>而用 quote 实现的 thunk，就是简单地保存了函数的“代码”，并且把它放在调用环境中求值。这是典型的动态作用域特征。</p><p>所以，在开头的那个例子中，你会看见 lambda 版 thunk 没有被外面的 let 影响，而 quote 版则做出了奇怪的行为。</p><p><strong>一个有趣的旁注：C++ 宏中的“动态”魅影</strong></p><p>谈到动态作用域这种“通过外部环境影响内部行为”的特性，一些熟悉 C++ 的读者可能会会心一笑，想起那个著名（甚至可以说是臭名昭著）的技巧：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#define private public

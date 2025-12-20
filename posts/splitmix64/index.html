@@ -66,10 +66,10 @@ uint64_t splitmix64(uint64_t x) {
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;cstdint&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl><span class=cp></span>
+</span></span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=kt>uint64_t</span> <span class=nf>splitmix64</span><span class=p>(</span><span class=kt>uint64_t</span> <span class=n>x</span><span class=p>)</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// 固定的“魔法”常数，都是精心挑选的
-</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>x</span> <span class=o>+=</span> <span class=mh>0x9e3779b97f4a7c15</span><span class=p>;</span>
+</span></span></span><span class=line><span class=cl>    <span class=n>x</span> <span class=o>+=</span> <span class=mh>0x9e3779b97f4a7c15</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=n>x</span> <span class=o>=</span> <span class=p>(</span><span class=n>x</span> <span class=o>^</span> <span class=p>(</span><span class=n>x</span> <span class=o>&gt;&gt;</span> <span class=mi>30</span><span class=p>))</span> <span class=o>*</span> <span class=mh>0xbf58476d1ce4e5b9</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=n>x</span> <span class=o>=</span> <span class=p>(</span><span class=n>x</span> <span class=o>^</span> <span class=p>(</span><span class=n>x</span> <span class=o>&gt;&gt;</span> <span class=mi>27</span><span class=p>))</span> <span class=o>*</span> <span class=mh>0x94d049bb133111eb</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=n>x</span> <span class=o>=</span> <span class=n>x</span> <span class=o>^</span> <span class=p>(</span><span class=n>x</span> <span class=o>&gt;&gt;</span> <span class=mi>31</span><span class=p>);</span>
