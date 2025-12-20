@@ -1562,7 +1562,7 @@ $$f((x_1, x_2, \cdots x_n)) = (g_1((x_1, x_2, \cdots x_n)), g_2((x_1, x_2, \cdot
 &lt;p&gt;那个叫做“k”的参数是什么东西？它在干什么？&lt;/p&gt;
 &lt;p&gt;事实上，这个“k”就是一个外部传入的续延。它代表“当前函数执行完毕后，还要进行哪些操作”。&lt;/p&gt;
 &lt;p&gt;现在让我们来看看代码。条件判断很寻常。&lt;/p&gt;</description></item><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
-&lt;p&gt;系列前作：https://www.luogu.com.cn/article/yc9w22em&lt;/p&gt;
+&lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
 &lt;p&gt;优化一些代数式计算的复杂度时，最简单常用的技巧就是试着拆开，然后分离常量和变量，将不同类项分开处理。而当你推不出一些式子时，可以放弃推式子而使用递推。交换求和顺序/交换 DP 转移顺序/维度是破解循环依赖，找到好的计算顺序的方法，这和拆贡献是相关的：拆贡献其实就是变换了统计的第一维度。从按照整体的统计变成按照单个元素统计。&lt;/p&gt;
