@@ -43,7 +43,7 @@
 &lt;p&gt;当且仅当 $\exist x \in S \text{ s.t. } i \text{ xor } j = x$ 时，$i$ 与 $j$ 间有一条无向边。&lt;/p&gt;
 &lt;p&gt;对所有满足 $G_S$ 连通，且元素数量（在使得图连通的集合中）最小的 $S$ 计数。模 998244353。&lt;/p&gt;
 &lt;h2 id="初步分析与转化"&gt;初步分析与转化&lt;/h2&gt;
-&lt;p&gt;使用异或的性质。$i \text{ xor } j = k \leftrightarrow i \text{ xor } k = j$，所以，可以视为我们从一个点 $i$ 出发，每一步异或上一个 $S$ 中元素走到另一个点，重复任意多次走动而抵达终点 $j$。&lt;/p&gt;
+&lt;p&gt;使用异或的性质。$i \text{ xor } j = k \Leftrightarrow i \text{ xor } k = j$，所以，可以视为我们从一个点 $i$ 出发，每一步异或上一个 $S$ 中元素走到另一个点，重复任意多次走动而抵达终点 $j$。&lt;/p&gt;
 &lt;p&gt;考虑异或的结合律。所以这个过程整体等价于 $i$ 异或上一个常数 $k$。我们知道，$k$ 是 $S$ 中的一些元素的异或和，但又有 $k = i \text{ xor } j$。&lt;/p&gt;</description></item><item><title>Pattern Matching</title><link>https://litjohn.github.io/posts/pattern-matching/</link><pubDate>Sat, 13 Dec 2025 11:21:34 +0800</pubDate><guid>https://litjohn.github.io/posts/pattern-matching/</guid><description>&lt;p&gt;我想诸位应该都用过结构化绑定（structure bindings）吧。或者听说过“模式匹配”这个工具（我之前的一些文章中就用过）。&lt;/p&gt;
 &lt;p&gt;今天来聊聊这个有趣的语言特性。&lt;/p&gt;
 &lt;p&gt;依然先放代码：&lt;/p&gt;
