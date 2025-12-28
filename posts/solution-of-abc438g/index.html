@@ -1,0 +1,371 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Solution of ABC438G | 正确即是废话，废话亦是正确</title><meta name=keywords content><meta name=description content="考虑 gcd 的动机在于，对于这样的题，$k$ 巨大。
+于是考虑循环节。发现循环节是 $\mathrm{lcm}(n, m)$。
+这时，我们考虑完整的循环节。
+发现在 $n$ 与 $m$ 不互素时这是麻烦的，而 $n$ 与 $m$ 互素时一个循环节内每对 $(a_i, b_j)$ 刚好出现且仅出现一次。
+这时考虑 $g = \gcd(n, m)$。
+发现，对于任意 $r$，一个模 $g$ 余 $r$ 的 $i$ 只会和模 $g$ 余 $r$ 的 $j$ 配对。
+这样就能够把非互素情形转化为互素情形。
+对于互素情形，循环节是容易处理的。
+考虑多余的一部分。这时，考虑枚举 $i$，寻找能与 $i$ 配对的 $j$。
+记 $n' = n / g, m' = m / g$。
+这时，对于一个下标 $i$，能够与它配对的任意 $j$ 与 $kn'+i, k \in \N$ 在模 $m'$ 意义下同余。
+这样，我们对 $b$ 重排，将 $b_j$ 挪到 $b_{j \times \mathrm{inv}(n') \bmod m'}$。
+发现所有 $i$ 对应的 $b$ 中元素是一个完整的区间。那么找出这个区间并计算它的贡献。"><meta name=author content><link rel=canonical href=https://litjohn.github.io/posts/solution-of-abc438g/><link crossorigin=anonymous href=/assets/css/stylesheet.b915ce98f9f65cca5e346b24fc336009b3608a3eeb24ce4b0e53c4500eba9374.css integrity="sha256-uRXOmPn2XMpeNGsk/DNgCbNgij7rJM5LDlPEUA66k3Q=" rel="preload stylesheet" as=style><link rel=icon href=https://litjohn.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://litjohn.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://litjohn.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://litjohn.github.io/apple-touch-icon.png><link rel=mask-icon href=https://litjohn.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://litjohn.github.io/posts/solution-of-abc438g/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css integrity=sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.js integrity=sha384-Qsn9KnoKISj6dI8g7p1HBlNpVx0I8p1SvlwOldgi3IorMle61nQy4zEahWYtljaz crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous></script><script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],throwOnError:!1})})</script><meta property="og:url" content="https://litjohn.github.io/posts/solution-of-abc438g/"><meta property="og:site_name" content="正确即是废话，废话亦是正确"><meta property="og:title" content="Solution of ABC438G"><meta property="og:description" content="考虑 gcd 的动机在于，对于这样的题，$k$ 巨大。
+于是考虑循环节。发现循环节是 $\mathrm{lcm}(n, m)$。
+这时，我们考虑完整的循环节。
+发现在 $n$ 与 $m$ 不互素时这是麻烦的，而 $n$ 与 $m$ 互素时一个循环节内每对 $(a_i, b_j)$ 刚好出现且仅出现一次。
+这时考虑 $g = \gcd(n, m)$。
+发现，对于任意 $r$，一个模 $g$ 余 $r$ 的 $i$ 只会和模 $g$ 余 $r$ 的 $j$ 配对。
+这样就能够把非互素情形转化为互素情形。
+对于互素情形，循环节是容易处理的。
+考虑多余的一部分。这时，考虑枚举 $i$，寻找能与 $i$ 配对的 $j$。
+记 $n' = n / g, m' = m / g$。
+这时，对于一个下标 $i$，能够与它配对的任意 $j$ 与 $kn'+i, k \in \N$ 在模 $m'$ 意义下同余。
+这样，我们对 $b$ 重排，将 $b_j$ 挪到 $b_{j \times \mathrm{inv}(n') \bmod m'}$。
+发现所有 $i$ 对应的 $b$ 中元素是一个完整的区间。那么找出这个区间并计算它的贡献。"><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-12-28T19:44:17+08:00"><meta property="article:modified_time" content="2025-12-28T19:44:17+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Solution of ABC438G"><meta name=twitter:description content="考虑 gcd 的动机在于，对于这样的题，$k$ 巨大。
+于是考虑循环节。发现循环节是 $\mathrm{lcm}(n, m)$。
+这时，我们考虑完整的循环节。
+发现在 $n$ 与 $m$ 不互素时这是麻烦的，而 $n$ 与 $m$ 互素时一个循环节内每对 $(a_i, b_j)$ 刚好出现且仅出现一次。
+这时考虑 $g = \gcd(n, m)$。
+发现，对于任意 $r$，一个模 $g$ 余 $r$ 的 $i$ 只会和模 $g$ 余 $r$ 的 $j$ 配对。
+这样就能够把非互素情形转化为互素情形。
+对于互素情形，循环节是容易处理的。
+考虑多余的一部分。这时，考虑枚举 $i$，寻找能与 $i$ 配对的 $j$。
+记 $n' = n / g, m' = m / g$。
+这时，对于一个下标 $i$，能够与它配对的任意 $j$ 与 $kn'+i, k \in \N$ 在模 $m'$ 意义下同余。
+这样，我们对 $b$ 重排，将 $b_j$ 挪到 $b_{j \times \mathrm{inv}(n') \bmod m'}$。
+发现所有 $i$ 对应的 $b$ 中元素是一个完整的区间。那么找出这个区间并计算它的贡献。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://litjohn.github.io/posts/"},{"@type":"ListItem","position":2,"name":"Solution of ABC438G","item":"https://litjohn.github.io/posts/solution-of-abc438g/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Solution of ABC438G","name":"Solution of ABC438G","description":"考虑 gcd 的动机在于，对于这样的题，$k$ 巨大。\n于是考虑循环节。发现循环节是 $\\mathrm{lcm}(n, m)$。\n这时，我们考虑完整的循环节。\n发现在 $n$ 与 $m$ 不互素时这是麻烦的，而 $n$ 与 $m$ 互素时一个循环节内每对 $(a_i, b_j)$ 刚好出现且仅出现一次。\n这时考虑 $g = \\gcd(n, m)$。\n发现，对于任意 $r$，一个模 $g$ 余 $r$ 的 $i$ 只会和模 $g$ 余 $r$ 的 $j$ 配对。\n这样就能够把非互素情形转化为互素情形。\n对于互素情形，循环节是容易处理的。\n考虑多余的一部分。这时，考虑枚举 $i$，寻找能与 $i$ 配对的 $j$。\n记 $n' = n / g, m' = m / g$。\n这时，对于一个下标 $i$，能够与它配对的任意 $j$ 与 $kn'+i, k \\in \\N$ 在模 $m'$ 意义下同余。\n这样，我们对 $b$ 重排，将 $b_j$ 挪到 $b_{j \\times \\mathrm{inv}(n') \\bmod m'}$。\n发现所有 $i$ 对应的 $b$ 中元素是一个完整的区间。那么找出这个区间并计算它的贡献。\n","keywords":[],"articleBody":"考虑 gcd 的动机在于，对于这样的题，$k$ 巨大。\n于是考虑循环节。发现循环节是 $\\mathrm{lcm}(n, m)$。\n这时，我们考虑完整的循环节。\n发现在 $n$ 与 $m$ 不互素时这是麻烦的，而 $n$ 与 $m$ 互素时一个循环节内每对 $(a_i, b_j)$ 刚好出现且仅出现一次。\n这时考虑 $g = \\gcd(n, m)$。\n发现，对于任意 $r$，一个模 $g$ 余 $r$ 的 $i$ 只会和模 $g$ 余 $r$ 的 $j$ 配对。\n这样就能够把非互素情形转化为互素情形。\n对于互素情形，循环节是容易处理的。\n考虑多余的一部分。这时，考虑枚举 $i$，寻找能与 $i$ 配对的 $j$。\n记 $n' = n / g, m' = m / g$。\n这时，对于一个下标 $i$，能够与它配对的任意 $j$ 与 $kn'+i, k \\in \\N$ 在模 $m'$ 意义下同余。\n这样，我们对 $b$ 重排，将 $b_j$ 挪到 $b_{j \\times \\mathrm{inv}(n') \\bmod m'}$。\n发现所有 $i$ 对应的 $b$ 中元素是一个完整的区间。那么找出这个区间并计算它的贡献。\n区间是容易找到的。\n第一个索引是 $i \\times \\mathrm{inv}(n') \\bmod m'$。\n长度则是 $\\lfloor c/n' \\rfloor + [c \\bmod n' \\geq i]$。\n其中方括号是艾弗森括号，$c$ 是循环节之外的“剩余部分”的操作总数。\n下一步是利用数据结构维护区间的贡献。\n于是转化为给定若干询问 $(\\mathrm{range}, \\mathrm{lim})$，查询 $\\mathrm{range}$ 中小于 $\\mathrm{lim}$ 的元素的和与数量。\n这是一个二维数点问题。离线使用 BIT 维护值域上前缀计数与前缀和，扫描线即可。\nAC 代码：\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162 163 164 #include using namespace std; constexpr int mod = 998244353; int n, m; long long k; array\u003cint, 200005\u003e a, b; pair\u003clong long, long long\u003e exgcd(long long a, long long b) { if (b == 0) { return {1, 0}; } else { auto [x, y] = exgcd(b, a % b); return {y, x - (a / b) * y}; } } struct question { int pos, lim; bool op; question(int pos, bool op, int lim) : pos(pos), op(op), lim(lim) {} friend bool operator\u003c(const question \u0026lhs, const question \u0026rhs) { return lhs.pos \u003c rhs.pos; } }; int64_t solve(vector\u003cint\u003e \u0026a, vector\u003cint\u003e \u0026b, const int n, const int m, long long cnt) { auto copy = b; ranges::sort(copy); auto prefix_sum = copy; for (int i = 0; i + 1 \u003c m; ++i) { prefix_sum[i + 1] = (prefix_sum[i + 1] + prefix_sum[i]) % mod; } long long res = 0; const int64_t num = cnt / ((long long) n * m), rem = cnt - num * n * m; for (int v: a) { auto it = ranges::upper_bound(copy, v); int c = distance(copy.begin(), it); res = (res + (c \u003e 0 ? prefix_sum[c - 1] : 0) + (long long) (m - c) * v) % mod; } res = (res * (num % mod)) % mod; // cerr \u003c\u003c res \u003c\u003c \"\\n\"; const int64_t inv = (exgcd(n, m).first % m + m) % m; // cerr \u003c\u003c inv \u003c\u003c \"\\n\"; for (int i = 0; i \u003c m; ++i) { copy[i * inv % m] = b[i]; } vector\u003cquestion\u003e questions; for (int i = 0; i \u003c n; ++i) { const int start = i * inv % m, len = rem / n + (rem % n \u003e i); // cerr \u003c\u003c i \u003c\u003c \" \" \u003c\u003c start \u003c\u003c \" \" \u003c\u003c len \u003c\u003c \"\\n\"; if (start + len \u003c= m) { questions.emplace_back(start - 1, false, a[i]); questions.emplace_back(start + len - 1, true, a[i]); } else { questions.emplace_back(start - 1, false, a[i]); questions.emplace_back(m - 1, true, a[i]); questions.emplace_back(len - (m - start) - 1, true, a[i]); } } vector\u003cint\u003e mapping; for (int i = 0; i \u003c n; ++i) { mapping.push_back(a[i]); } for (int i = 0; i \u003c m; ++i) { mapping.emplace_back(b[i]); } ranges::sort(mapping); mapping.erase(ranges::unique(mapping).begin(), mapping.end()); vector\u003cint\u003e bit_cnt(mapping.size() + 2, 0), bit_sum(mapping.size() + 2, 0); auto get_id = [\u0026mapping](int x) { return distance(mapping.begin(), ranges::upper_bound(mapping, x)); }; auto low_bit = [](int x) { return x \u0026 (-x); }; auto query = [low_bit](int pos, auto \u0026arr) { int res = 0; while (pos) { res = (res + arr[pos]) % mod; pos -= low_bit(pos); } return res; }; auto add = [low_bit](int pos, int val, auto \u0026arr) { while (pos \u003c arr.size()) { arr[pos] = (arr[pos] + val) % mod; pos += low_bit(pos); } }; sort(questions.begin(), questions.end()); int ptr = 0; for (const auto [pos, lim, op]: questions) { if (pos \u003e= 0) { // cerr \u003c\u003c pos \u003c\u003c \" \" \u003c\u003c lim \u003c\u003c \" \" \u003c\u003c op \u003c\u003c \"\\n\"; const int f = (op ? 1 : -1); while (ptr \u003c= pos) { add(get_id(copy[ptr]), 1, bit_cnt); add(get_id(copy[ptr]), copy[ptr], bit_sum); ptr++; } const int rank = get_id(lim); const int term1 = query(rank, bit_cnt), term2 = query(rank, bit_sum); const int64_t term3 = (term2 + (long long) (pos + 1 - term1) * lim) % mod; res += f * term3; res %= mod; if (res \u003c 0) { res += mod; } } } return res; } int main() { ios_base::sync_with_stdio(false); cin.tie(nullptr); cin \u003e\u003e n \u003e\u003e m \u003e\u003e k; for (int i = 0; i \u003c n; ++i) { cin \u003e\u003e a[i]; } for (int i = 0; i \u003c m; ++i) { cin \u003e\u003e b[i]; } const int g = gcd(m, n); long long ans = 0; for (int i = 0; i \u003c g; ++i) { vector\u003cint\u003e tmp1, tmp2; for (int j = i; j \u003c n; j += g) { tmp1.push_back(a[j]); } for (int j = i; j \u003c m; j += g) { tmp2.push_back(b[j]); } ans = (ans + solve(tmp1, tmp2, n / g, m / g, k / g + (k % g \u003e i))) % mod; } cout \u003c\u003c ans; return 0; } ","wordCount":"977","inLanguage":"en","datePublished":"2025-12-28T19:44:17+08:00","dateModified":"2025-12-28T19:44:17+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://litjohn.github.io/posts/solution-of-abc438g/"},"publisher":{"@type":"Organization","name":"正确即是废话，废话亦是正确","logo":{"@type":"ImageObject","url":"https://litjohn.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://litjohn.github.io/ accesskey=h title="正确即是废话，废话亦是正确 (Alt + H)">正确即是废话，废话亦是正确</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://litjohn.github.io/categories/ title=分类><span>分类</span></a></li><li><a href=https://litjohn.github.io/tags/ title=标签><span>标签</span></a></li><li><a href=https://litjohn.github.io/series/ title=系列><span>系列</span></a></li><li><a href=https://litjohn.github.io/archives/ title=归档><span>归档</span></a></li><li><a href=https://litjohn.github.io/search/ title="搜索 (Alt + /)" accesskey=/><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">Solution of ABC438G</h1><div class=post-meta><span title='2025-12-28 19:44:17 +0800 +0800'>December 28, 2025</span></div></header><div class=post-content><p>考虑 gcd 的动机在于，对于这样的题，$k$ 巨大。<br>于是考虑循环节。发现循环节是 $\mathrm{lcm}(n, m)$。</p><p>这时，我们考虑完整的循环节。<br>发现在 $n$ 与 $m$ 不互素时这是麻烦的，而 $n$ 与 $m$ 互素时一个循环节内每对 $(a_i, b_j)$ 刚好出现且仅出现一次。</p><p>这时考虑 $g = \gcd(n, m)$。<br>发现，对于任意 $r$，一个模 $g$ 余 $r$ 的 $i$ 只会和模 $g$ 余 $r$ 的 $j$ 配对。<br>这样就能够把非互素情形转化为互素情形。</p><p>对于互素情形，循环节是容易处理的。<br>考虑多余的一部分。这时，考虑枚举 $i$，寻找能与 $i$ 配对的 $j$。</p><p>记 $n' = n / g, m' = m / g$。<br>这时，对于一个下标 $i$，能够与它配对的任意 $j$ 与 $kn'+i, k \in \N$ 在模 $m'$ 意义下同余。</p><p>这样，我们对 $b$ 重排，将 $b_j$ 挪到 $b_{j \times \mathrm{inv}(n') \bmod m'}$。<br>发现所有 $i$ 对应的 $b$ 中元素是一个完整的区间。那么找出这个区间并计算它的贡献。</p><p>区间是容易找到的。<br>第一个索引是 $i \times \mathrm{inv}(n') \bmod m'$。<br>长度则是 $\lfloor c/n' \rfloor + [c \bmod n' \geq i]$。<br>其中方括号是艾弗森括号，$c$ 是循环节之外的“剩余部分”的操作总数。</p><p>下一步是利用数据结构维护区间的贡献。<br>于是转化为给定若干询问 $(\mathrm{range}, \mathrm{lim})$，查询 $\mathrm{range}$ 中小于 $\mathrm{lim}$ 的元素的和与数量。</p><p>这是一个二维数点问题。离线使用 BIT 维护值域上前缀计数与前缀和，扫描线即可。</p><p>AC 代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;bits/stdc++.h&gt;</span><span class=cp>
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>using</span> <span class=k>namespace</span> <span class=n>std</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>constexpr</span> <span class=kt>int</span> <span class=n>mod</span> <span class=o>=</span> <span class=mi>998244353</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=n>n</span><span class=p>,</span> <span class=n>m</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>long</span> <span class=kt>long</span> <span class=n>k</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>array</span><span class=o>&lt;</span><span class=kt>int</span><span class=p>,</span> <span class=mi>200005</span><span class=o>&gt;</span> <span class=n>a</span><span class=p>,</span> <span class=n>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>pair</span><span class=o>&lt;</span><span class=kt>long</span> <span class=kt>long</span><span class=p>,</span> <span class=kt>long</span> <span class=kt>long</span><span class=o>&gt;</span> <span class=n>exgcd</span><span class=p>(</span><span class=kt>long</span> <span class=kt>long</span> <span class=n>a</span><span class=p>,</span> <span class=kt>long</span> <span class=kt>long</span> <span class=n>b</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>b</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=p>{</span><span class=mi>1</span><span class=p>,</span> <span class=mi>0</span><span class=p>};</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>auto</span> <span class=p>[</span><span class=n>x</span><span class=p>,</span> <span class=n>y</span><span class=p>]</span> <span class=o>=</span> <span class=n>exgcd</span><span class=p>(</span><span class=n>b</span><span class=p>,</span> <span class=n>a</span> <span class=o>%</span> <span class=n>b</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=p>{</span><span class=n>y</span><span class=p>,</span> <span class=n>x</span> <span class=o>-</span> <span class=p>(</span><span class=n>a</span> <span class=o>/</span> <span class=n>b</span><span class=p>)</span> <span class=o>*</span> <span class=n>y</span><span class=p>};</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>struct</span> <span class=nc>question</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>pos</span><span class=p>,</span> <span class=n>lim</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>bool</span> <span class=n>op</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>question</span><span class=p>(</span><span class=kt>int</span> <span class=n>pos</span><span class=p>,</span> <span class=kt>bool</span> <span class=n>op</span><span class=p>,</span> <span class=kt>int</span> <span class=n>lim</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=o>:</span> <span class=n>pos</span><span class=p>(</span><span class=n>pos</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>          <span class=n>op</span><span class=p>(</span><span class=n>op</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>          <span class=n>lim</span><span class=p>(</span><span class=n>lim</span><span class=p>)</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>friend</span> <span class=kt>bool</span> <span class=k>operator</span><span class=o>&lt;</span><span class=p>(</span><span class=k>const</span> <span class=n>question</span> <span class=o>&amp;</span><span class=n>lhs</span><span class=p>,</span> <span class=k>const</span> <span class=n>question</span> <span class=o>&amp;</span><span class=n>rhs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>lhs</span><span class=p>.</span><span class=n>pos</span> <span class=o>&lt;</span> <span class=n>rhs</span><span class=p>.</span><span class=n>pos</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int64_t</span> <span class=nf>solve</span><span class=p>(</span><span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=o>&amp;</span><span class=n>a</span><span class=p>,</span> <span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=o>&amp;</span><span class=n>b</span><span class=p>,</span> <span class=k>const</span> <span class=kt>int</span> <span class=n>n</span><span class=p>,</span> <span class=k>const</span> <span class=kt>int</span> <span class=n>m</span><span class=p>,</span> <span class=kt>long</span> <span class=kt>long</span> <span class=n>cnt</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>copy</span> <span class=o>=</span> <span class=n>b</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>ranges</span><span class=o>::</span><span class=n>sort</span><span class=p>(</span><span class=n>copy</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>prefix_sum</span> <span class=o>=</span> <span class=n>copy</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>+</span> <span class=mi>1</span> <span class=o>&lt;</span> <span class=n>m</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>prefix_sum</span><span class=p>[</span><span class=n>i</span> <span class=o>+</span> <span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=p>(</span><span class=n>prefix_sum</span><span class=p>[</span><span class=n>i</span> <span class=o>+</span> <span class=mi>1</span><span class=p>]</span> <span class=o>+</span> <span class=n>prefix_sum</span><span class=p>[</span><span class=n>i</span><span class=p>])</span> <span class=o>%</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=kt>long</span> <span class=kt>long</span> <span class=n>res</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=kt>int64_t</span> <span class=n>num</span> <span class=o>=</span> <span class=n>cnt</span> <span class=o>/</span> <span class=p>((</span><span class=kt>long</span> <span class=kt>long</span><span class=p>)</span> <span class=n>n</span> <span class=o>*</span> <span class=n>m</span><span class=p>),</span> <span class=n>rem</span> <span class=o>=</span> <span class=n>cnt</span> <span class=o>-</span> <span class=n>num</span> <span class=o>*</span> <span class=n>n</span> <span class=o>*</span> <span class=n>m</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=nl>v</span><span class=p>:</span> <span class=n>a</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>auto</span> <span class=n>it</span> <span class=o>=</span> <span class=n>ranges</span><span class=o>::</span><span class=n>upper_bound</span><span class=p>(</span><span class=n>copy</span><span class=p>,</span> <span class=n>v</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=kt>int</span> <span class=n>c</span> <span class=o>=</span> <span class=n>distance</span><span class=p>(</span><span class=n>copy</span><span class=p>.</span><span class=n>begin</span><span class=p>(),</span> <span class=n>it</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>res</span> <span class=o>=</span> <span class=p>(</span><span class=n>res</span> <span class=o>+</span> <span class=p>(</span><span class=n>c</span> <span class=o>&gt;</span> <span class=mi>0</span> <span class=o>?</span> <span class=n>prefix_sum</span><span class=p>[</span><span class=n>c</span> <span class=o>-</span> <span class=mi>1</span><span class=p>]</span> <span class=o>:</span> <span class=mi>0</span><span class=p>)</span> <span class=o>+</span> <span class=p>(</span><span class=kt>long</span> <span class=kt>long</span><span class=p>)</span> <span class=p>(</span><span class=n>m</span> <span class=o>-</span> <span class=n>c</span><span class=p>)</span> <span class=o>*</span> <span class=n>v</span><span class=p>)</span> <span class=o>%</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>res</span> <span class=o>=</span> <span class=p>(</span><span class=n>res</span> <span class=o>*</span> <span class=p>(</span><span class=n>num</span> <span class=o>%</span> <span class=n>mod</span><span class=p>))</span> <span class=o>%</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// cerr &lt;&lt; res &lt;&lt; &#34;\n&#34;;
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=kt>int64_t</span> <span class=n>inv</span> <span class=o>=</span> <span class=p>(</span><span class=n>exgcd</span><span class=p>(</span><span class=n>n</span><span class=p>,</span> <span class=n>m</span><span class=p>).</span><span class=n>first</span> <span class=o>%</span> <span class=n>m</span> <span class=o>+</span> <span class=n>m</span><span class=p>)</span> <span class=o>%</span> <span class=n>m</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// cerr &lt;&lt; inv &lt;&lt; &#34;\n&#34;;
+</span></span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>m</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>copy</span><span class=p>[</span><span class=n>i</span> <span class=o>*</span> <span class=n>inv</span> <span class=o>%</span> <span class=n>m</span><span class=p>]</span> <span class=o>=</span> <span class=n>b</span><span class=p>[</span><span class=n>i</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>vector</span><span class=o>&lt;</span><span class=n>question</span><span class=o>&gt;</span> <span class=n>questions</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>n</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=kt>int</span> <span class=n>start</span> <span class=o>=</span> <span class=n>i</span> <span class=o>*</span> <span class=n>inv</span> <span class=o>%</span> <span class=n>m</span><span class=p>,</span> <span class=n>len</span> <span class=o>=</span> <span class=n>rem</span> <span class=o>/</span> <span class=n>n</span> <span class=o>+</span> <span class=p>(</span><span class=n>rem</span> <span class=o>%</span> <span class=n>n</span> <span class=o>&gt;</span> <span class=n>i</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// cerr &lt;&lt; i &lt;&lt; &#34; &#34; &lt;&lt; start &lt;&lt; &#34; &#34; &lt;&lt; len &lt;&lt; &#34;\n&#34;;
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>start</span> <span class=o>+</span> <span class=n>len</span> <span class=o>&lt;=</span> <span class=n>m</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>questions</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span><span class=n>start</span> <span class=o>-</span> <span class=mi>1</span><span class=p>,</span> <span class=nb>false</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>            <span class=n>questions</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span><span class=n>start</span> <span class=o>+</span> <span class=n>len</span> <span class=o>-</span> <span class=mi>1</span><span class=p>,</span> <span class=nb>true</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>questions</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span><span class=n>start</span> <span class=o>-</span> <span class=mi>1</span><span class=p>,</span> <span class=nb>false</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>            <span class=n>questions</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span><span class=n>m</span> <span class=o>-</span> <span class=mi>1</span><span class=p>,</span> <span class=nb>true</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>            <span class=n>questions</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span><span class=n>len</span> <span class=o>-</span> <span class=p>(</span><span class=n>m</span> <span class=o>-</span> <span class=n>start</span><span class=p>)</span> <span class=o>-</span> <span class=mi>1</span><span class=p>,</span> <span class=nb>true</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>mapping</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>n</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>mapping</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=n>a</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>m</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>mapping</span><span class=p>.</span><span class=n>emplace_back</span><span class=p>(</span><span class=n>b</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>ranges</span><span class=o>::</span><span class=n>sort</span><span class=p>(</span><span class=n>mapping</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>mapping</span><span class=p>.</span><span class=n>erase</span><span class=p>(</span><span class=n>ranges</span><span class=o>::</span><span class=n>unique</span><span class=p>(</span><span class=n>mapping</span><span class=p>).</span><span class=n>begin</span><span class=p>(),</span> <span class=n>mapping</span><span class=p>.</span><span class=n>end</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>bit_cnt</span><span class=p>(</span><span class=n>mapping</span><span class=p>.</span><span class=n>size</span><span class=p>()</span> <span class=o>+</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>0</span><span class=p>),</span> <span class=n>bit_sum</span><span class=p>(</span><span class=n>mapping</span><span class=p>.</span><span class=n>size</span><span class=p>()</span> <span class=o>+</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>get_id</span> <span class=o>=</span> <span class=p>[</span><span class=o>&amp;</span><span class=n>mapping</span><span class=p>](</span><span class=kt>int</span> <span class=n>x</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>distance</span><span class=p>(</span><span class=n>mapping</span><span class=p>.</span><span class=n>begin</span><span class=p>(),</span> <span class=n>ranges</span><span class=o>::</span><span class=n>upper_bound</span><span class=p>(</span><span class=n>mapping</span><span class=p>,</span> <span class=n>x</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>low_bit</span> <span class=o>=</span> <span class=p>[](</span><span class=kt>int</span> <span class=n>x</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>x</span> <span class=o>&amp;</span> <span class=p>(</span><span class=o>-</span><span class=n>x</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>query</span> <span class=o>=</span> <span class=p>[</span><span class=n>low_bit</span><span class=p>](</span><span class=kt>int</span> <span class=n>pos</span><span class=p>,</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=n>arr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=kt>int</span> <span class=n>res</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>while</span> <span class=p>(</span><span class=n>pos</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>res</span> <span class=o>=</span> <span class=p>(</span><span class=n>res</span> <span class=o>+</span> <span class=n>arr</span><span class=p>[</span><span class=n>pos</span><span class=p>])</span> <span class=o>%</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>pos</span> <span class=o>-=</span> <span class=n>low_bit</span><span class=p>(</span><span class=n>pos</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>res</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>auto</span> <span class=n>add</span> <span class=o>=</span> <span class=p>[</span><span class=n>low_bit</span><span class=p>](</span><span class=kt>int</span> <span class=n>pos</span><span class=p>,</span> <span class=kt>int</span> <span class=n>val</span><span class=p>,</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=n>arr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>while</span> <span class=p>(</span><span class=n>pos</span> <span class=o>&lt;</span> <span class=n>arr</span><span class=p>.</span><span class=n>size</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>arr</span><span class=p>[</span><span class=n>pos</span><span class=p>]</span> <span class=o>=</span> <span class=p>(</span><span class=n>arr</span><span class=p>[</span><span class=n>pos</span><span class=p>]</span> <span class=o>+</span> <span class=n>val</span><span class=p>)</span> <span class=o>%</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>pos</span> <span class=o>+=</span> <span class=n>low_bit</span><span class=p>(</span><span class=n>pos</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>sort</span><span class=p>(</span><span class=n>questions</span><span class=p>.</span><span class=n>begin</span><span class=p>(),</span> <span class=n>questions</span><span class=p>.</span><span class=n>end</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>ptr</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=p>[</span><span class=n>pos</span><span class=p>,</span> <span class=n>lim</span><span class=p>,</span> <span class=n>op</span><span class=p>]</span><span class=o>:</span> <span class=n>questions</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>pos</span> <span class=o>&gt;=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// cerr &lt;&lt; pos &lt;&lt; &#34; &#34; &lt;&lt; lim &lt;&lt; &#34; &#34; &lt;&lt; op &lt;&lt; &#34;\n&#34;;
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=kt>int</span> <span class=n>f</span> <span class=o>=</span> <span class=p>(</span><span class=n>op</span> <span class=o>?</span> <span class=mi>1</span> <span class=o>:</span> <span class=o>-</span><span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=k>while</span> <span class=p>(</span><span class=n>ptr</span> <span class=o>&lt;=</span> <span class=n>pos</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>add</span><span class=p>(</span><span class=n>get_id</span><span class=p>(</span><span class=n>copy</span><span class=p>[</span><span class=n>ptr</span><span class=p>]),</span> <span class=mi>1</span><span class=p>,</span> <span class=n>bit_cnt</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=n>add</span><span class=p>(</span><span class=n>get_id</span><span class=p>(</span><span class=n>copy</span><span class=p>[</span><span class=n>ptr</span><span class=p>]),</span> <span class=n>copy</span><span class=p>[</span><span class=n>ptr</span><span class=p>],</span> <span class=n>bit_sum</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=n>ptr</span><span class=o>++</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=kt>int</span> <span class=n>rank</span> <span class=o>=</span> <span class=n>get_id</span><span class=p>(</span><span class=n>lim</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=kt>int</span> <span class=n>term1</span> <span class=o>=</span> <span class=n>query</span><span class=p>(</span><span class=n>rank</span><span class=p>,</span> <span class=n>bit_cnt</span><span class=p>),</span> <span class=n>term2</span> <span class=o>=</span> <span class=n>query</span><span class=p>(</span><span class=n>rank</span><span class=p>,</span> <span class=n>bit_sum</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>const</span> <span class=kt>int64_t</span> <span class=n>term3</span> <span class=o>=</span> <span class=p>(</span><span class=n>term2</span> <span class=o>+</span> <span class=p>(</span><span class=kt>long</span> <span class=kt>long</span><span class=p>)</span> <span class=p>(</span><span class=n>pos</span> <span class=o>+</span> <span class=mi>1</span> <span class=o>-</span> <span class=n>term1</span><span class=p>)</span> <span class=o>*</span> <span class=n>lim</span><span class=p>)</span> <span class=o>%</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>res</span> <span class=o>+=</span> <span class=n>f</span> <span class=o>*</span> <span class=n>term3</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>res</span> <span class=o>%=</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>res</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>res</span> <span class=o>+=</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>res</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>ios_base</span><span class=o>::</span><span class=n>sync_with_stdio</span><span class=p>(</span><span class=nb>false</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>cin</span><span class=p>.</span><span class=n>tie</span><span class=p>(</span><span class=k>nullptr</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>cin</span> <span class=o>&gt;&gt;</span> <span class=n>n</span> <span class=o>&gt;&gt;</span> <span class=n>m</span> <span class=o>&gt;&gt;</span> <span class=n>k</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>n</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>cin</span> <span class=o>&gt;&gt;</span> <span class=n>a</span><span class=p>[</span><span class=n>i</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>m</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>cin</span> <span class=o>&gt;&gt;</span> <span class=n>b</span><span class=p>[</span><span class=n>i</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=kt>int</span> <span class=n>g</span> <span class=o>=</span> <span class=n>gcd</span><span class=p>(</span><span class=n>m</span><span class=p>,</span> <span class=n>n</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=kt>long</span> <span class=kt>long</span> <span class=n>ans</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>g</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>vector</span><span class=o>&lt;</span><span class=kt>int</span><span class=o>&gt;</span> <span class=n>tmp1</span><span class=p>,</span> <span class=n>tmp2</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>j</span> <span class=o>=</span> <span class=n>i</span><span class=p>;</span> <span class=n>j</span> <span class=o>&lt;</span> <span class=n>n</span><span class=p>;</span> <span class=n>j</span> <span class=o>+=</span> <span class=n>g</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>tmp1</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=n>a</span><span class=p>[</span><span class=n>j</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>j</span> <span class=o>=</span> <span class=n>i</span><span class=p>;</span> <span class=n>j</span> <span class=o>&lt;</span> <span class=n>m</span><span class=p>;</span> <span class=n>j</span> <span class=o>+=</span> <span class=n>g</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>tmp2</span><span class=p>.</span><span class=n>push_back</span><span class=p>(</span><span class=n>b</span><span class=p>[</span><span class=n>j</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>ans</span> <span class=o>=</span> <span class=p>(</span><span class=n>ans</span> <span class=o>+</span> <span class=n>solve</span><span class=p>(</span><span class=n>tmp1</span><span class=p>,</span> <span class=n>tmp2</span><span class=p>,</span> <span class=n>n</span> <span class=o>/</span> <span class=n>g</span><span class=p>,</span> <span class=n>m</span> <span class=o>/</span> <span class=n>g</span><span class=p>,</span> <span class=n>k</span> <span class=o>/</span> <span class=n>g</span> <span class=o>+</span> <span class=p>(</span><span class=n>k</span> <span class=o>%</span> <span class=n>g</span> <span class=o>&gt;</span> <span class=n>i</span><span class=p>)))</span> <span class=o>%</span> <span class=n>mod</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>ans</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div></div><footer class=post-footer><ul class=post-tags></ul></footer></article></main><footer class=footer><span>&copy; 2025 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>

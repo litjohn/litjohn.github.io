@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.153.3</generator><language>zh-cn</language><lastBuildDate>Sat, 27 Dec 2025 14:25:42 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>May the force be with you</title><link>https://litjohn.github.io/posts/the-dark-side-of-the-force/</link><pubDate>Sat, 27 Dec 2025 14:25:42 +0800</pubDate><guid>https://litjohn.github.io/posts/the-dark-side-of-the-force/</guid><description>&lt;p&gt;假设你刚刚看过这篇文章：&lt;a href="https://www.luogu.com.cn/article/i4twa64m"&gt;浅谈valarray&lt;/a&gt;。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.153.3</generator><language>zh-cn</language><lastBuildDate>Sun, 28 Dec 2025 19:44:17 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Solution of ABC438G</title><link>https://litjohn.github.io/posts/solution-of-abc438g/</link><pubDate>Sun, 28 Dec 2025 19:44:17 +0800</pubDate><guid>https://litjohn.github.io/posts/solution-of-abc438g/</guid><description>&lt;p&gt;考虑 gcd 的动机在于，对于这样的题，$k$ 巨大。&lt;br&gt;
+于是考虑循环节。发现循环节是 $\mathrm{lcm}(n, m)$。&lt;/p&gt;
+&lt;p&gt;这时，我们考虑完整的循环节。&lt;br&gt;
+发现在 $n$ 与 $m$ 不互素时这是麻烦的，而 $n$ 与 $m$ 互素时一个循环节内每对 $(a_i, b_j)$ 刚好出现且仅出现一次。&lt;/p&gt;
+&lt;p&gt;这时考虑 $g = \gcd(n, m)$。&lt;br&gt;
+发现，对于任意 $r$，一个模 $g$ 余 $r$ 的 $i$ 只会和模 $g$ 余 $r$ 的 $j$ 配对。&lt;br&gt;
+这样就能够把非互素情形转化为互素情形。&lt;/p&gt;
+&lt;p&gt;对于互素情形，循环节是容易处理的。&lt;br&gt;
+考虑多余的一部分。这时，考虑枚举 $i$，寻找能与 $i$ 配对的 $j$。&lt;/p&gt;
+&lt;p&gt;记 $n' = n / g, m' = m / g$。&lt;br&gt;
+这时，对于一个下标 $i$，能够与它配对的任意 $j$ 与 $kn'+i, k \in \N$ 在模 $m'$ 意义下同余。&lt;/p&gt;
+&lt;p&gt;这样，我们对 $b$ 重排，将 $b_j$ 挪到 $b_{j \times \mathrm{inv}(n') \bmod m'}$。&lt;br&gt;
+发现所有 $i$ 对应的 $b$ 中元素是一个完整的区间。那么找出这个区间并计算它的贡献。&lt;/p&gt;</description></item><item><title>May the force be with you</title><link>https://litjohn.github.io/posts/the-dark-side-of-the-force/</link><pubDate>Sat, 27 Dec 2025 14:25:42 +0800</pubDate><guid>https://litjohn.github.io/posts/the-dark-side-of-the-force/</guid><description>&lt;p&gt;假设你刚刚看过这篇文章：&lt;a href="https://www.luogu.com.cn/article/i4twa64m"&gt;浅谈valarray&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;现在我们需要模仿 valarray 写一个科学计算库。其中，我们需要支持形如 &lt;code&gt;a + b&lt;/code&gt; 的写法，&lt;code&gt;a&lt;/code&gt; 和 &lt;code&gt;b&lt;/code&gt; 是两个向量，这个表达式的值是两个向量的和，即逐元素相加得到的新向量。&lt;/p&gt;
 &lt;p&gt;没错。这是运算符重载板子。你也许会写出类似这样的代码：&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
