@@ -1,4 +1,54 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.153.5</generator><language>zh-cn</language><lastBuildDate>Wed, 31 Dec 2025 21:16:38 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>同学你是做什么工作的</title><link>https://litjohn.github.io/posts/%E5%90%8C%E5%AD%A6%E4%BD%A0%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84/</link><pubDate>Wed, 31 Dec 2025 21:16:38 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%90%8C%E5%AD%A6%E4%BD%A0%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84/</guid><description>&lt;p&gt;（这篇文章经过了我与 Gemini 3 的讨论之后对观点有所补充。现在的文本不再是我的原文，而是 Gemini 3 将我的新观点加入原文后的新版本）&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.154.2</generator><language>zh-cn</language><lastBuildDate>Sat, 03 Jan 2026 09:06:20 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Regular Engine</title><link>https://litjohn.github.io/posts/regular-engine/</link><pubDate>Sat, 03 Jan 2026 09:06:20 +0800</pubDate><guid>https://litjohn.github.io/posts/regular-engine/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;亲手实现一个正则引擎！&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;众所周知，一类经典的自动机是有限状态自动机。它们识别的语言是正则语言，而正则表达式能够匹配的字符串的集合也是正则语言。&lt;/p&gt;
+&lt;p&gt;（如果你之前没有了解过，询问 AI 或是使用搜索引擎都很适合快速了解）&lt;/p&gt;
+&lt;h2 id="导数法"&gt;导数法&lt;/h2&gt;
+&lt;p&gt;要匹配一个正则表达式，最经典的方法就是构造对应的 NFA，然后通过一些手法转化为 DFA。但这太复杂了。有没有更简单的方法呢？&lt;/p&gt;
+&lt;p&gt;有一种被称为“导数法”的方法。&lt;/p&gt;
+&lt;p&gt;思想非常简单：我们将构造出的 DFA 编码为一个正则。这样，转移之后相当于产生了一个新的自动机，也就是一个新的正则表达式。&lt;/p&gt;
+&lt;p&gt;原始正则表达式是 $r$。那么，$r$“吃掉”一个字符 $c$ 之后产生的表达式 $r'$，能匹配的所有字符串就是所有满足 &lt;code&gt;(match? (cat c s) r)&lt;/code&gt; 的字符串 $s$。&lt;/p&gt;
+&lt;p&gt;读者可以自行思考一下导数公式。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;我想用代码表示是最清晰的。&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;div class="chroma"&gt;
+&lt;table class="lntable"&gt;&lt;tr&gt;&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code&gt;&lt;span class="lnt"&gt; 1
+&lt;/span&gt;&lt;span class="lnt"&gt; 2
+&lt;/span&gt;&lt;span class="lnt"&gt; 3
+&lt;/span&gt;&lt;span class="lnt"&gt; 4
+&lt;/span&gt;&lt;span class="lnt"&gt; 5
+&lt;/span&gt;&lt;span class="lnt"&gt; 6
+&lt;/span&gt;&lt;span class="lnt"&gt; 7
+&lt;/span&gt;&lt;span class="lnt"&gt; 8
+&lt;/span&gt;&lt;span class="lnt"&gt; 9
+&lt;/span&gt;&lt;span class="lnt"&gt;10
+&lt;/span&gt;&lt;span class="lnt"&gt;11
+&lt;/span&gt;&lt;span class="lnt"&gt;12
+&lt;/span&gt;&lt;span class="lnt"&gt;13
+&lt;/span&gt;&lt;span class="lnt"&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class="lntd"&gt;
+&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-racket" data-lang="racket"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;define&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;derive&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;match&lt;/span&gt; &lt;span class="n"&gt;re&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;Void&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Void&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;Eps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Void&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;Dot&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Eps&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;Chr&lt;/span&gt; &lt;span class="n"&gt;ch&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;char=?&lt;/span&gt; &lt;span class="n"&gt;ch&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Eps&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Void&lt;/span&gt;&lt;span class="p"&gt;))]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;Alt&lt;/span&gt; &lt;span class="n"&gt;e1&lt;/span&gt; &lt;span class="n"&gt;e2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;make-alt&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;derive&lt;/span&gt; &lt;span class="n"&gt;e1&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;derive&lt;/span&gt; &lt;span class="n"&gt;e2&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;))]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;Cat&lt;/span&gt; &lt;span class="n"&gt;e1&lt;/span&gt; &lt;span class="n"&gt;e2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;nullable?&lt;/span&gt; &lt;span class="n"&gt;e1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;make-alt&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;make-cat&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;derive&lt;/span&gt; &lt;span class="n"&gt;e1&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;e2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;derive&lt;/span&gt; &lt;span class="n"&gt;e2&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;make-cat&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;derive&lt;/span&gt; &lt;span class="n"&gt;e1&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;e2&lt;/span&gt;&lt;span class="p"&gt;))]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;Star&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;make-cat&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;derive&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Star&lt;/span&gt; &lt;span class="n"&gt;e&lt;/span&gt;&lt;span class="p"&gt;))]))&lt;/span&gt;&lt;span class="err"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;导数法将是我们使用的核心算法。&lt;/p&gt;
+&lt;h2 id="特性与抽象语法"&gt;特性与抽象语法&lt;/h2&gt;
+&lt;p&gt;我们将实现支持连接（cat），选择（alt）与闭包（kleene star）三种特性的正则表达式。同时添加“任意字符”（Dot）这种有用的语法糖（为了辅助包含匹配）。&lt;/p&gt;
+&lt;p&gt;使用 S-expression 以及 racket 结构体表达正则：&lt;/p&gt;</description></item><item><title>同学你是做什么工作的</title><link>https://litjohn.github.io/posts/%E5%90%8C%E5%AD%A6%E4%BD%A0%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84/</link><pubDate>Wed, 31 Dec 2025 21:16:38 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%90%8C%E5%AD%A6%E4%BD%A0%E6%98%AF%E5%81%9A%E4%BB%80%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84/</guid><description>&lt;p&gt;（这篇文章经过了我与 Gemini 3 的讨论之后对观点有所补充。现在的文本不再是我的原文，而是 Gemini 3 将我的新观点加入原文后的新版本）&lt;/p&gt;
 &lt;p&gt;省流：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;“你总要知道自己要做些什么吧？”&lt;/p&gt;
