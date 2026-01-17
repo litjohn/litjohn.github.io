@@ -1541,7 +1541,7 @@ $P(\text{单题正确}) = p p' + (1-p)(1-p')$&lt;/p&gt;
 &lt;p&gt;$R_{\alpha+\beta} = R_\alpha R_\beta$&lt;/p&gt;
 &lt;p&gt;这样，由于我们知道 $R_{\alpha+\beta}$ 中包含 $\sin (\alpha+\beta)$ 和 $\cos (\alpha+\beta)$ 项，我们就可以用矩阵乘法算出来 $R_{\alpha+\beta}$，然后从中取出相应的项。&lt;/p&gt;
 &lt;p&gt;计算过程如下：&lt;/p&gt;
-&lt;p&gt;$R_{\alpha+\beta} = R_\alpha R_\beta = \begin{pmatrix} \cos\alpha &amp; -\sin\alpha \\\\ \sin\alpha &amp; \cos\alpha \end{pmatrix} \begin{pmatrix} \cos\beta &amp; -\sin\beta \\\\ \sin\beta &amp; \cos\beta \end{pmatrix}$&lt;/p&gt;</description></item><item><title>瓜豆原理学习笔记/线性代数大学习</title><link>https://litjohn.github.io/posts/studying-linear-algebra/</link><pubDate>Tue, 21 Oct 2025 21:05:06 +0800</pubDate><guid>https://litjohn.github.io/posts/studying-linear-algebra/</guid><description>&lt;h2 id="瓜豆原理"&gt;瓜豆原理&lt;/h2&gt;
+&lt;p&gt;$R_{\alpha+\beta} = R_\alpha R_\beta = \begin{pmatrix} \cos\alpha &amp; -\sin\alpha \\ \sin\alpha &amp; \cos\alpha \end{pmatrix} \begin{pmatrix} \cos\beta &amp; -\sin\beta \\ \sin\beta &amp; \cos\beta \end{pmatrix}$&lt;/p&gt;</description></item><item><title>瓜豆原理学习笔记/线性代数大学习</title><link>https://litjohn.github.io/posts/studying-linear-algebra/</link><pubDate>Tue, 21 Oct 2025 21:05:06 +0800</pubDate><guid>https://litjohn.github.io/posts/studying-linear-algebra/</guid><description>&lt;h2 id="瓜豆原理"&gt;瓜豆原理&lt;/h2&gt;
 &lt;p&gt;一个图形经过任意旋转、缩放、平移、对称之后，与原图形保持相似，且相似比等于缩放比。&lt;/p&gt;
 &lt;p&gt;非常强大而泛用的定理。可以用来解决一整类初中的几何题。&lt;/p&gt;
 &lt;p&gt;这篇文章的目的是证明它，从地基开始重构这整套工具箱。所以默认读者已经会了这些东西，主要进行推式子。&lt;/p&gt;

@@ -24,7 +24,7 @@ $R_{\alpha+\beta}P = (R_\alpha R_\beta) P$
 $R_{\alpha+\beta} = R_\alpha R_\beta$
 这样，由于我们知道 $R_{\alpha+\beta}$ 中包含 $\sin (\alpha+\beta)$ 和 $\cos (\alpha+\beta)$ 项，我们就可以用矩阵乘法算出来 $R_{\alpha+\beta}$，然后从中取出相应的项。
 计算过程如下：
-$R_{\alpha+\beta} = R_\alpha R_\beta = \begin{pmatrix} \cos\alpha & -\sin\alpha \\\\ \sin\alpha & \cos\alpha \end{pmatrix} \begin{pmatrix} \cos\beta & -\sin\beta \\\\ \sin\beta & \cos\beta \end{pmatrix}$
+$R_{\alpha+\beta} = R_\alpha R_\beta = \begin{pmatrix} \cos\alpha & -\sin\alpha \\ \sin\alpha & \cos\alpha \end{pmatrix} \begin{pmatrix} \cos\beta & -\sin\beta \\ \sin\beta & \cos\beta \end{pmatrix}$
 ...</p></div><footer class=entry-footer><span title='2025-10-21 21:08:07 +0800 +0800'>October 21, 2025</span></footer><a class=entry-link aria-label="post link to 和角公式证明" href=https://litjohn.github.io/posts/proof-of-the-sum-and-difference-formula/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>瓜豆原理学习笔记/线性代数大学习</h2></header><div class=entry-content><p>瓜豆原理 一个图形经过任意旋转、缩放、平移、对称之后，与原图形保持相似，且相似比等于缩放比。
 非常强大而泛用的定理。可以用来解决一整类初中的几何题。
 这篇文章的目的是证明它，从地基开始重构这整套工具箱。所以默认读者已经会了这些东西，主要进行推式子。
