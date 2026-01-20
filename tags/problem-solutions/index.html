@@ -12,12 +12,25 @@
 也就是说，最小化它前面的“冗余”（那些在退出一个点时产生的记录）的节点数。
 冗余的节点数……注意到我们可以挑一条（起点为根的）路径不产生冗余节点数，这时我们遍历的最后一个点是这条路径的终点。而其他地方必然产生冗余记录。
 那么挑选直径作为这条路径。大胆写一发，发现 AC 了。
-不过为什么这是对的？首先我们的构造能够达到 $2n-l$，其中 $l$ 是树的直径的长度。
-能不能更优？这等价于，以某种顺序遍历树上的每个节点，走过的总路程的最小值。
-基于欧拉序的构造相当于每次走到一个最近的节点上。在 $A\to B \to C$ 这样的链路中，如果 $C$ 离 $A$ 比 $B$ 更近，交换二者更优。
-交换论证证明实际构造必然基于欧拉序。而我们的构造是欧拉序构造中最优的。于是正确性得证。
-代码：
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 #include &lt;bits/stdc++.h> using namespace std; int n; array&lt;int, 200005> ans, depth; array&lt;vector&lt;int>, 200005> e; void mark(int u, int fa) { static int cur = 0; cur++; // clog &lt;&lt; u &lt;&lt; "\n"; ans[u] = cur; for (int v: e[u]) { if (v != fa) { mark(v, u); } } cur++; } void dfs1(int u, int fa) { for (int v: e[u]) { if (v != fa) { depth[v] = depth[u] + 1; dfs1(v, u); } } } void dfs2(int u, int fa) { depth[u] = 0; for (int v: e[u]) { if (v != fa) { dfs2(v, u); depth[u] = max(depth[u], depth[v]); } } depth[u]++; } int main() { ios_base::sync_with_stdio(false); cin.tie(nullptr); cin >> n; for (int i = 1; i &lt; n; ++i) { int u, v; cin >> u >> v; e[u].push_back(v); e[v].push_back(u); } dfs1(1, 0); const int p = max_element(depth.begin() + 1, depth.begin() + n + 1) - depth.begin(); // clog &lt;&lt; p &lt;&lt; "\n"; dfs2(p, 0); for (int i = 1; i &lt;= n; ++i) { ranges::sort(e[i], [](int x, int y)-> bool { return depth[x] &lt; depth[y]; }); } mark(p, 0); for (int i = 1; i &lt;= n; ++i) { cout &lt;&lt; ans[i] &lt;&lt; " "; } return 0; }</p></div><footer class=entry-footer><span title='2026-01-10 17:31:15 +0800 +0800'>January 10, 2026</span></footer><a class=entry-link aria-label="post link to 解题过程实录 ARC117D" href=https://litjohn.github.io/posts/%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B%E5%AE%9E%E5%BD%95-arc117d/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>解题过程实录 P10283</h2></header><div class=entry-content><p>备注：解题过程实录不是题解。它是做题过程中的思维草稿，可能比较语无伦次。
+不过为什么这是对的？首先我们的构造能够达到 $2n-l$，其中 $l$ 是树的直径的长度（点数）。
+能不能更优？答案是否定的。如何证明呢？
+考虑将所有点按标号大小升序排序。我们假想进行一次遍历：从标号最小的点开始，每次沿两点间唯一简单路径走到下一个点，直到标号最大的点结束。
+我们记 $d_i$ 是遍历到第 $i$ 个（意味着标号第 $i$ 大）点时已经走过的距离（边数），$p_i$ 是第 $i$ 个点，$a_i$ 是第 $i$ 个点的标号。
+注意到 $d_{i+1} - d_i = \operatorname{dis}(p_{i+1}, p_i) \leq a_{i+1}-a_i$，即标号之差不小于距离。
+注意到让第 $i$ 个点标号为 $d_i+1$（加一是为了让所有点标号不小于 1）时，每个不等号都可以取等。由于 $a_1$ 不变，取等显然更优。
+并且取等的情况同样都可以建模为一种遍历顺序。
+那么考虑最优化遍历顺序。
+优化目标是 $d_n$，即总共经过的边的数目。
+使用一种拆贡献的方法：考虑每条边被经过了多少次。
+每条边被经过两次是显然上界。
+那么考虑让尽可能多的边只被遍历一次。
+注意到遍历一次就像“过桥”，如果从这条边砍断后的两个联通分量中的一个到了另一个，就无法再回去了。
+显然所有遍历一次的边形成了一条链（这可以用归纳法证明）。
+最大化它们的数目就是最大化链的长度。
+不妨取直径作为这条链。
+注意到只遍历一次的边的数目不可能更多，即不会因为有边走了超过两次而增加。
+所以剩下的边一定遍历两次。
+...</p></div><footer class=entry-footer><span title='2026-01-10 17:31:15 +0800 +0800'>January 10, 2026</span></footer><a class=entry-link aria-label="post link to 解题过程实录 ARC117D" href=https://litjohn.github.io/posts/%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B%E5%AE%9E%E5%BD%95-arc117d/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>解题过程实录 P10283</h2></header><div class=entry-content><p>备注：解题过程实录不是题解。它是做题过程中的思维草稿，可能比较语无伦次。
 并且由于中途有中断（比如去上学），可能会有一些内容看上去“奇迹般地突然出现”。
 原题链接
 这是个什么玩意儿。即没有任何奶牛是另一个奶牛的前缀。
