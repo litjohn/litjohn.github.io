@@ -23,7 +23,22 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>Exchange Method</h2></header><div class=entry-content><p>你的调整法证明可能假了！
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>小学奥数合集</h2></header><div class=entry-content><p>永远在增加新题目的路上。
+一根长度为 1，宽度不计的针，抽象为线段。在平面上，你需要通过一系列平移和旋转操作使得针扫过每个方向，并最后回到原位，请问针经过的所有点的集合的面积最小是多少？
+给定六个正整数，你需要分别以前三个和后三个为边长构造同一平面上的两个三角形并最大化它们的交集的面积，请问这个面积是多少？
+请使用实数常量，不等关系与等于号，加法和乘法，逻辑连接词与实数上的量词，写出一个公式 $\Phi$，使得对任意实数 $x$，它是整数当且仅当 $\Phi(x)$ 成立
+一根长 1 公里的橡皮筋。一只蚂蚁在它的一端，以每秒 1 厘米的速度向另一端爬行。与此同时，橡皮筋自身以每秒 1 公里的速度均匀伸长（比如，它的中点以 0.5 公里/秒的速度远离起点，终点以 1 公里/秒的速度远离起点）。请问，蚂蚁最终能爬到终点吗？
+在平面上给定一条任意的简单封闭曲线（即首尾相连、不自交的环路），请问是否一定能在曲线上找到四个点，使得它们构成一个正方形的四个顶点？
+有一块 $m \times n$ 的矩形巧克力，左上角那一格是苦的（毒药）， 两个人轮流掰巧克力。
+每次必须选剩下的巧克力中的某一格，把这一格右边和下边的所有部分（包括这一格自己）全部掰掉吃掉。
+吃到左上角苦巧克力的人输。
+请问：对于任意 $m, n > 1$，先手必胜还是后手必胜？
+如果是先手必胜，第一步该怎么掰？
+在宽度为 1 的 L 型走廊直角转弯处，能够通过的刚性（不可形变）二维物体的最大面积是多少？
+我们把一个自然数 $n$ 写成“遗传 $k$ 进制”的形式。比如在 2 进制下，$19 = 2^4 + 2^1 + 2^0$，我们把指数也必须写成 2 进制，直到所有数字只包含 $k$ 和 0。 比如 $19$ 在 2 进制的遗传写法是 $2^{2^2} + 2^1 + 2^0$。
+现在的游戏规则是：
+把 $n$ 写成遗传 $k$ 进制（初始 $k=2$）。 把式子中所有的底数 $k$ 换成 $k+1$（底数膨胀）。 把结果减 1。 重复步骤 1-3（下一次用 $k+2$ 进制）。 请问，如果你从 $19$ 开始玩这个游戏，这个数字最终会变成 0 吗？
+...</p></div><footer class=entry-footer><span title='2026-01-24 23:33:28 +0800 +0800'>January 24, 2026</span></footer><a class=entry-link aria-label="post link to 小学奥数合集" href=https://litjohn.github.io/posts/%E5%B0%8F%E5%AD%A6%E5%A5%A5%E6%95%B0%E5%90%88%E9%9B%86/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>Exchange Method</h2></header><div class=entry-content><p>你的调整法证明可能假了！
 看到 P1012 被升蓝，以及 Register_int 的帖子，感慨良多。
 事实上，我发现自己之前许多调整法/交换论证的证明是假的。所以写这篇文章来整理交换论证相关。
 邻项交换 若对于相邻两项 $x, y$，让 $x$ 在 $y$ 前面更优，我们称 $x &lt; y$。
@@ -144,13 +159,7 @@ In fact, many programming languages—such as C++ and RnRS Scheme—leave the ev
 As shown in this post, ignoring this detail can trigger undefined behavior, leading to a Wrong Answer (WA) or Runtime Error (RE).
 The Behavior in C++ and Scheme Consider the following C++ code:
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 void foo(int x, int y) { cout &lt;&lt; x &lt;&lt; " " &lt;&lt; y &lt;&lt; "\n"; } int counter() { static int x = 0; x++; return x; } int main() { foo(counter(), counter()); return 0; } If you compile and run this using GCC 15.2 with -O2, you might notice the output is 2 1. The compiler chose to evaluate the arguments from right to left.
-...</p></div><footer class=entry-footer><span title='2025-12-21 19:13:04 +0800 +0800'>December 21, 2025</span></footer><a class=entry-link aria-label="post link to Evaluation Order of Function Arguments" href=https://litjohn.github.io/posts/evaluation-order-of-function-arguments/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>数数</h2></header><div class=entry-content><p>题目 拜谢 @CXiii 提供题目。
-NOIP 模拟赛签到题。我们有 $2^n$ 个点，编号 $0 \cdots 2^n-1$。对于一个包含 $[0, 2^n)$ 中整数的集合 $S$，我们有图 $G_S$：
-当且仅当 $\exist x \in S \text{ s.t. } i \text{ xor } j = x$ 时，$i$ 与 $j$ 间有一条无向边。
-对所有满足 $G_S$ 连通，且元素数量（在使得图连通的集合中）最小的 $S$ 计数。模 998244353。
-初步分析与转化 使用异或的性质。$i \text{ xor } j = k \Leftrightarrow i \text{ xor } k = j$，所以，可以视为我们从一个点 $i$ 出发，每一步异或上一个 $S$ 中元素走到另一个点，重复任意多次走动而抵达终点 $j$。
-考虑异或的结合律。所以这个过程整体等价于 $i$ 异或上一个常数 $k$。我们知道，$k$ 是 $S$ 中的一些元素的异或和，但又有 $k = i \text{ xor } j$。
-...</p></div><footer class=entry-footer><span title='2025-12-18 20:59:28 +0800 +0800'>December 18, 2025</span></footer><a class=entry-link aria-label="post link to 数数" href=https://litjohn.github.io/posts/an-interesting-counting-problem/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+...</p></div><footer class=entry-footer><span title='2025-12-21 19:13:04 +0800 +0800'>December 21, 2025</span></footer><a class=entry-link aria-label="post link to Evaluation Order of Function Arguments" href=https://litjohn.github.io/posts/evaluation-order-of-function-arguments/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
