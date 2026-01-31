@@ -35,7 +35,7 @@
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
 &lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>下载 ComfyUI 记录</title><link>https://litjohn.github.io/posts/comfyui/</link><pubDate>Sat, 31 Jan 2026 21:39:56 +0800</pubDate><guid>https://litjohn.github.io/posts/comfyui/</guid><description>&lt;blockquote&gt;
-&lt;p&gt;我是 comfyUI 萌新。这篇文章不会有太多的技术干货，仅仅是下载和配置过程的记录。
+&lt;p&gt;我是 comfyUI 萌新。这篇文章技术干货不多，仅仅是下载和配置过程的记录。&lt;br&gt;
 省流：垃圾&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;最近听说了 Z-image turbo。非常感兴趣，于是打算部署一发。&lt;/p&gt;
