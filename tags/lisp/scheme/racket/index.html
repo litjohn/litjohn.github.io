@@ -11,7 +11,6 @@
 我想用代码表示是最清晰的。
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 (define (derive re c) (match re [(Void) (Void)] [(Eps) (Void)] [(Dot) (Eps)] [(Chr ch) (if (char=? ch c) (Eps) (Void))] [(Alt e1 e2) (make-alt (derive e1 c) (derive e2 c))] [(Cat e1 e2) (if (nullable? e1) (make-alt (make-cat (derive e1 c) e2) (derive e2 c)) (make-cat (derive e1 c) e2))] [(Star e) (make-cat (derive e c) (Star e))])) 导数法将是我们使用的核心算法。
 特性与抽象语法 我们将实现支持连接（cat），选择（alt）与闭包（kleene star）三种特性的正则表达式。同时添加“任意字符”（Dot）这种有用的语法糖（为了辅助包含匹配）。
-使用 S-expression 以及 racket 结构体表达正则：
 ...</p></div><footer class=entry-footer><span title='2026-01-03 09:06:20 +0800 +0800'>January 3, 2026</span></footer><a class=entry-link aria-label="post link to Regular Engine" href=https://litjohn.github.io/posts/regular-engine/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>What is meant by miracle?</h2></header><div class=entry-content><p>光剑的后日谈 #3. 这次来聊聊什么是许愿机。
 If bird born with no shackles 现在我们需要写一段代码，用矩阵快速幂求解一个递推数列：
 $$ \begin{cases} f(0)=f(1)=f(2)=1 \\\\ f(n)=f(n-1)+2f(n-2)+5f(n-3), n \geq 3 \end{cases} $$我们知道我们将数列中的相邻几项写成一个向量 $(f(i), f(i+1), f(i+2))$，然后找到一个矩阵乘上它转移到下一个向量 $(f(i+1), f(i+2), f(i+3))$，那么这个矩阵怎么算呢？

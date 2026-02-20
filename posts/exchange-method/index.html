@@ -1,12 +1,10 @@
 <!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>Exchange Method | 正确即是废话，废话亦是正确</title><meta name=keywords content="algorithms"><meta name=description content="
 你的调整法证明可能假了！
-
 看到 P1012 被升蓝，以及 Register_int 的帖子，感慨良多。
 事实上，我发现自己之前许多调整法/交换论证的证明是假的。所以写这篇文章来整理交换论证相关。
 邻项交换
 
 若对于相邻两项 $x, y$，让 $x$ 在 $y$ 前面更优，我们称 $x < y$。
-
 很多证明可能到这一步就停止了。然而这是错误的。仅仅具备这样的性质，并不能保证“对于任意相邻两项 $x, y$，其中靠前的 $x$ 满足 $x < y$”的序列是唯一的。
 简单的反例：$x < y, y < z, z < x$。这时 $(x, y, z)$ 与 $(z, x, y)$ 均满足条件。
 不同的序关系
@@ -23,13 +21,11 @@ oi-wiki 有所提及：https://oi-wiki.org/math/order-theory/
 重点在于定义的那些性质，以及全序、偏序、严格偏序、弱序、严格弱序等不同种类的序关系。
 众所周知，如果把 $\lambda x . \lambda y . \; (x\leq y)$ 放进 std::sort 中，很有可能会得到死循环的结果。因为它要求严格弱序，即需要非自反性和非对称性。简单来说，$x < y \text{ and } y < x$ 与 $x < x$ 两个性质都是恒不成立的。同时，严格弱序还要求不可比性是一个等价关系（即满足自反性、传递性和对称性，如果不可比性不是等价关系，则这只是严格偏序而不是严格弱序）。"><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-01-16T22:35:04+08:00"><meta property="article:modified_time" content="2026-01-16T22:35:04+08:00"><meta property="article:tag" content="Algorithms"><meta name=twitter:card content="summary"><meta name=twitter:title content="Exchange Method"><meta name=twitter:description content="
 你的调整法证明可能假了！
-
 看到 P1012 被升蓝，以及 Register_int 的帖子，感慨良多。
 事实上，我发现自己之前许多调整法/交换论证的证明是假的。所以写这篇文章来整理交换论证相关。
 邻项交换
 
 若对于相邻两项 $x, y$，让 $x$ 在 $y$ 前面更优，我们称 $x < y$。
-
 很多证明可能到这一步就停止了。然而这是错误的。仅仅具备这样的性质，并不能保证“对于任意相邻两项 $x, y$，其中靠前的 $x$ 满足 $x < y$”的序列是唯一的。
 简单的反例：$x < y, y < z, z < x$。这时 $(x, y, z)$ 与 $(z, x, y)$ 均满足条件。
 不同的序关系

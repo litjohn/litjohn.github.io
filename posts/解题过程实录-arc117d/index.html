@@ -156,7 +156,7 @@
 </span><span class=lnt>67
 </span><span class=lnt>68
 </span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cp>#include</span> <span class=cpf>&lt;bits/stdc++.h&gt;</span><span class=cp>
-</span></span></span><span class=line><span class=cl>
+</span></span></span><span class=line><span class=cl><span class=cp></span>
 </span></span><span class=line><span class=cl><span class=k>using</span> <span class=k>namespace</span> <span class=n>std</span><span class=p>;</span>
 </span></span><span class=line><span class=cl><span class=kt>int</span> <span class=n>n</span><span class=p>;</span>
 </span></span><span class=line><span class=cl><span class=n>array</span><span class=o>&lt;</span><span class=kt>int</span><span class=p>,</span> <span class=mi>200005</span><span class=o>&gt;</span> <span class=n>ans</span><span class=p>,</span> <span class=n>depth</span><span class=p>;</span>
@@ -166,7 +166,7 @@
 </span></span><span class=line><span class=cl>    <span class=k>static</span> <span class=kt>int</span> <span class=n>cur</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=n>cur</span><span class=o>++</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// clog &lt;&lt; u &lt;&lt; &#34;\n&#34;;
-</span></span></span><span class=line><span class=cl>    <span class=n>ans</span><span class=p>[</span><span class=n>u</span><span class=p>]</span> <span class=o>=</span> <span class=n>cur</span><span class=p>;</span>
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>ans</span><span class=p>[</span><span class=n>u</span><span class=p>]</span> <span class=o>=</span> <span class=n>cur</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=nl>v</span><span class=p>:</span> <span class=n>e</span><span class=p>[</span><span class=n>u</span><span class=p>])</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>v</span> <span class=o>!=</span> <span class=n>fa</span><span class=p>)</span> <span class=p>{</span>
@@ -210,7 +210,7 @@
 </span></span><span class=line><span class=cl>    <span class=n>dfs1</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=k>const</span> <span class=kt>int</span> <span class=n>p</span> <span class=o>=</span> <span class=n>max_element</span><span class=p>(</span><span class=n>depth</span><span class=p>.</span><span class=n>begin</span><span class=p>()</span> <span class=o>+</span> <span class=mi>1</span><span class=p>,</span> <span class=n>depth</span><span class=p>.</span><span class=n>begin</span><span class=p>()</span> <span class=o>+</span> <span class=n>n</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=o>-</span> <span class=n>depth</span><span class=p>.</span><span class=n>begin</span><span class=p>();</span>
 </span></span><span class=line><span class=cl>    <span class=c1>// clog &lt;&lt; p &lt;&lt; &#34;\n&#34;;
-</span></span></span><span class=line><span class=cl>    <span class=n>dfs2</span><span class=p>(</span><span class=n>p</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>dfs2</span><span class=p>(</span><span class=n>p</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;=</span> <span class=n>n</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=n>ranges</span><span class=o>::</span><span class=n>sort</span><span class=p>(</span><span class=n>e</span><span class=p>[</span><span class=n>i</span><span class=p>],</span> <span class=p>[](</span><span class=kt>int</span> <span class=n>x</span><span class=p>,</span> <span class=kt>int</span> <span class=n>y</span><span class=p>)</span><span class=o>-&gt;</span> <span class=kt>bool</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>depth</span><span class=p>[</span><span class=n>x</span><span class=p>]</span> <span class=o>&lt;</span> <span class=n>depth</span><span class=p>[</span><span class=n>y</span><span class=p>];</span>
