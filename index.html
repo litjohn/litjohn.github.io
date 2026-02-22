@@ -23,7 +23,9 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>在 Trie 中维护全局加一操作</h2></header><div class=entry-content><p>考虑这么一个题目：
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>FFT</h2></header><div class=entry-content><p>AI 作品。笑点自寻。
+不过其实挺深刻的。
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 #include &lt;iostream> #include &lt;complex> #include &lt;vector> #include &lt;cmath> #include &lt;iomanip> using Complex = std::complex&lt;double>; constexpr double PI = 3.14159265358979323846; // 强制编译器内联，坚决不留任何函数调用栈 #if defined(__GNUC__) || defined(__clang__) #define FORCE_INLINE __attribute__((always_inline)) inline #elif defined(_MSC_VER) #define FORCE_INLINE __forceinline #else #define FORCE_INLINE inline #endif // ========================================================== // 1. 蝴蝶操作（Butterfly）的模板完全展开 // ========================================================== template &lt;int N, int I> struct Butterfly { FORCE_INLINE static void apply(Complex* out) { // 编译期常量计算旋转因子 W_N^I (编译器在 -O3 下会直接将其折叠为常数) constexpr double angle = -2.0 * PI * I / N; const Complex w(std::cos(angle), std::sin(angle)); // 核心蝴蝶计算 Complex t = w * out[I + N / 2]; Complex u = out[I]; out[I] = u + t; out[I + N / 2] = u - t; // 递归实例化下一个蝴蝶操作 Butterfly&lt;N, I + 1>::apply(out); } }; // 蝴蝶操作递归终点 template &lt;int N> struct Butterfly&lt;N, N / 2> { FORCE_INLINE static void apply(Complex* /*out*/) { // 递归终止，什么都不做 } }; // ========================================================== // 2. FFT 递归深度的模板完全展开 (分治阶段) // ========================================================== template &lt;int N, int Stride = 1> struct FFT_Unrolled { FORCE_INLINE static void apply(Complex* out, const Complex* in) { // 1. 编译期静态分治：偶数部分和奇数部分 FFT_Unrolled&lt;N / 2, Stride * 2>::apply(out, in); FFT_Unrolled&lt;N / 2, Stride * 2>::apply(out + N / 2, in + Stride); // 2. 对当前层执行完全展开的蝴蝶操作 Butterfly&lt;N, 0>::apply(out); } }; // FFT 分治递归终点 (N = 1) template &lt;int Stride> struct FFT_Unrolled&lt;1, Stride> { FORCE_INLINE static void apply(Complex* out, const Complex* in) { out[0] = in[0]; // 直接赋值，底层汇编就是一条 MOV 指令 } }; // ========================================================== // 3. 动态分派器 (运行时根据 k 调用对应的实例化代码) // ========================================================== void fft_dispatch(int k, Complex* out, const Complex* in) { switch (k) { case 0: FFT_Unrolled&lt;1>::apply(out, in); break; case 1: FFT_Unrolled&lt;2>::apply(out, in); break; case 2: FFT_Unrolled&lt;4>::apply(out, in); break; case 3: FFT_Unrolled&lt;8>::apply(out, in); break; case 4: FFT_Unrolled&lt;16>::apply(out, in); break; case 5: FFT_Unrolled&lt;32>::apply(out, in); break; case 6: FFT_Unrolled&lt;64>::apply(out, in); break; // 你可以继续写到 7, 8... 但建议不要超过 10，否则编译器会崩溃 default: std::cerr &lt;&lt; "K out of bounds for unrolled FFT!" &lt;&lt; std::endl; } } // ========================================================== // 4. 测试代码 // ========================================================== int main() { constexpr int K = 3; constexpr int N = 1 &lt;&lt; K; // N = 8 std::vector&lt;Complex> in(N); std::vector&lt;Complex> out(N); // 构造一个简单的测试信号 for (int i = 0; i &lt; N; ++i) { in[i] = Complex(i, 0); } // 调用 K=3 的展开 FFT fft_dispatch(K, out.data(), in.data()); // 打印结果 std::cout &lt;&lt; std::fixed &lt;&lt; std::setprecision(2); for (int i = 0; i &lt; N; ++i) { std::cout &lt;&lt; "out[" &lt;&lt; i &lt;&lt; "] = " &lt;&lt; out[i].real() &lt;&lt; " + " &lt;&lt; out[i].imag() &lt;&lt; "i\n"; } return 0; }</p></div><footer class=entry-footer><span title='2026-02-22 19:49:12 +0800 +0800'>February 22, 2026</span></footer><a class=entry-link aria-label="post link to FFT" href=https://litjohn.github.io/posts/control-flow-unroll/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>在 Trie 中维护全局加一操作</h2></header><div class=entry-content><p>考虑这么一个题目：
 维护整数多重集，支持插入删除，查询全局 xor 和以及全局加一。
 如果不考虑全局加一，就是唐题。不过全局加一和异或本质不兼容，比较难搞。
 本文介绍的就是用以解决这一问题的技巧。
@@ -108,37 +110,7 @@ comfyUI 是一款美观易用的本地部署应用。主要战场是扩散生图
 不同的序关系 oi-wiki 有所提及：https://oi-wiki.org/math/order-theory/
 重点在于定义的那些性质，以及全序、偏序、严格偏序、弱序、严格弱序等不同种类的序关系。
 众所周知，如果把 $\lambda x . \lambda y . \; (x\leq y)$ 放进 std::sort 中，很有可能会得到死循环的结果。因为它要求严格弱序，即需要非自反性和非对称性。简单来说，$x &lt; y \text{ and } y &lt; x$ 与 $x &lt; x$ 两个性质都是恒不成立的。同时，严格弱序还要求不可比性是一个等价关系（即满足自反性、传递性和对称性，如果不可比性不是等价关系，则这只是严格偏序而不是严格弱序）。
-...</p></div><footer class=entry-footer><span title='2026-01-16 22:35:04 +0800 +0800'>January 16, 2026</span></footer><a class=entry-link aria-label="post link to Exchange Method" href=https://litjohn.github.io/posts/exchange-method/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>解题过程实录 ARC117D</h2></header><div class=entry-content><p>原题链接
-首先看上去像差分约束，但边太多不太对。
-假如一个点标 $x$，距离它 $d$ 的点可能标 $x-d$（如果 $x>d$），否则只能标 $x+d$。
-这样是不是只需要考虑一个点对应的约束就做完了？但事实上（根据三角形不等式）其他约束几乎从来不会被自动满足（除非是链）。
-绝对值。前两天做的题中就有绝对值。绝对值对应到距离。那么设法把树拍平到数轴上。
-按照 DFS 序给树上节点标号？不太对。欧拉序？对完了。考虑将每个点的标号设为它在欧拉序中第一次出现的位置。
-随手写一发哦哦过不了样例啊。有点麻烦，欧拉序一定是合法的，但未必是最优的。
-我需要枚举每个点作为根吗？复杂度太高。怎么办？
-注意到根的标号一定是 1。那么，考虑标号最大的节点，它是在欧拉序中最后出现的节点。我们要尽可能把它往前排。
-也就是说，最小化它前面的“冗余”（那些在退出一个点时产生的记录）的节点数。
-冗余的节点数……注意到我们可以挑一条（起点为根的）路径不产生冗余节点数，这时我们遍历的最后一个点是这条路径的终点。而其他地方必然产生冗余记录。
-那么挑选直径作为这条路径。大胆写一发，发现 AC 了。
-不过为什么这是对的？首先我们的构造能够达到 $2n-l$，其中 $l$ 是树的直径的长度（点数）。
-能不能更优？答案是否定的。如何证明呢？
-考虑将所有点按标号大小升序排序。我们假想进行一次遍历：从标号最小的点开始，每次沿两点间唯一简单路径走到下一个点，直到标号最大的点结束。
-我们记 $d_i$ 是遍历到第 $i$ 个（意味着标号第 $i$ 大）点时已经走过的距离（边数），$p_i$ 是第 $i$ 个点，$a_i$ 是第 $i$ 个点的标号。
-注意到 $d_{i+1} - d_i = \operatorname{dis}(p_{i+1}, p_i) \leq a_{i+1}-a_i$，即标号之差不小于距离。
-注意到让第 $i$ 个点标号为 $d_i+1$（加一是为了让所有点标号不小于 1）时，每个不等号都可以取等。由于 $a_1$ 不变，取等显然更优。
-并且取等的情况同样都可以建模为一种遍历顺序。
-那么考虑最优化遍历顺序。
-优化目标是 $d_n$，即总共经过的边的数目。
-使用一种拆贡献的方法：考虑每条边被经过了多少次。
-每条边被经过两次是显然上界。
-那么考虑让尽可能多的边只被遍历一次。
-注意到遍历一次就像“过桥”，如果从这条边砍断后的两个联通分量中的一个到了另一个，就无法再回去了。
-显然所有遍历一次的边形成了一条链（这可以用归纳法证明）。
-最大化它们的数目就是最大化链的长度。
-不妨取直径作为这条链。
-注意到只遍历一次的边的数目不可能更多，即不会因为有边走了超过两次而增加。
-所以剩下的边一定遍历两次。
-...</p></div><footer class=entry-footer><span title='2026-01-10 17:31:15 +0800 +0800'>January 10, 2026</span></footer><a class=entry-link aria-label="post link to 解题过程实录 ARC117D" href=https://litjohn.github.io/posts/%E8%A7%A3%E9%A2%98%E8%BF%87%E7%A8%8B%E5%AE%9E%E5%BD%95-arc117d/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+...</p></div><footer class=entry-footer><span title='2026-01-16 22:35:04 +0800 +0800'>January 16, 2026</span></footer><a class=entry-link aria-label="post link to Exchange Method" href=https://litjohn.github.io/posts/exchange-method/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
