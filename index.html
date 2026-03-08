@@ -23,7 +23,21 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1621D 题解</h2></header><div class=entry-content><p>原题链接
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>等比数列求和的四种方法</h2></header><div class=entry-content><p>做到了 ABC448E，感觉很精妙。
+题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。
+公式 直接套公式。
+$$ \sum_{i=0}^n a^i = \frac{a^{n+1}-1}{a-1} $$然后用逆元。不讲。
+如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。
+更好的方法 公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。
+我们有几种方法来处理这个情况
+下文定义
+$$ f(l, a) = \sum_{i = 0}^{l-1} a^i $$分治求和 洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。
+大概来说，我们将序列平均分为两部分。
+$$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax+1), \; l \text{ is odd} \end{cases} $$其中 $x := f(\lfloor \frac{l}{2} \rfloor, a)$。
+这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。
+两种优化的分治 维护幂信息
+注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。
+...</p></div><footer class=entry-footer><span title='2026-03-07 21:56:41 +0800 +0800'>March 7, 2026</span></footer><a class=entry-link aria-label="post link to 等比数列求和的四种方法" href=https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1621D 题解</h2></header><div class=entry-content><p>原题链接
 一句话总结：四个关键点是“支架”。
 首先注意到右下角的 $n \times n$ 区域内的雪必须全部清除，否则连目的地都不安全，一定会有人生病。
 于是我们只需要在左下和右上两块区域中设法开出一条路来。
@@ -110,9 +124,7 @@ comfyUI 是一款美观易用的本地部署应用。主要战场是扩散生图
 量化精度高的模型性能更好。但是会更加消耗显存和算力，所以根据硬件资源量力而行。否则生成速度可能会非常缓慢，并且大量动用虚拟内存，甚至直接崩掉。
 下载的模型权重放在你之前选择的那个目录（比如叫做 comfyUI-data）下的 \models\ 中的 \diffusion_models，\text_encoders 和 \vae 中。
 注意绝对不是 \ComfyUI\resources\ComfyUI\models。如果你忘记了之前选了哪个目录，你可以进入 comfyUI，点击图标打开菜单，然后选择帮助一栏下的“open folder”，“open model folder”（英文）或者“打开模型文件夹”（中文）。
-...</p></div><footer class=entry-footer><span title='2026-01-31 21:39:56 +0800 +0800'>January 31, 2026</span></footer><a class=entry-link aria-label="post link to 下载 ComfyUI 记录" href=https://litjohn.github.io/posts/comfyui/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>无题</h2></header><div class=entry-content><p>醒醒，星星。</p></div><footer class=entry-footer><span title='2026-01-27 21:41:06 +0800 +0800'>January 27, 2026</span></footer><a class=entry-link aria-label="post link to 无题" href=https://litjohn.github.io/posts/%E6%97%A0%E9%A2%98/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>趁着年轻，好好犯病</h2></header><div class=entry-content><p>演得像真的一样，去拯救世界吧。
-毕竟，意义本身没有意义。
-——而意义本身，就是意义。</p></div><footer class=entry-footer><span title='2026-01-27 20:13:28 +0800 +0800'>January 27, 2026</span></footer><a class=entry-link aria-label="post link to 趁着年轻，好好犯病" href=https://litjohn.github.io/posts/%E8%B6%81%E7%9D%80%E5%B9%B4%E8%BD%BB%E5%A5%BD%E5%A5%BD%E7%8A%AF%E7%97%85/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+...</p></div><footer class=entry-footer><span title='2026-01-31 21:39:56 +0800 +0800'>January 31, 2026</span></footer><a class=entry-link aria-label="post link to 下载 ComfyUI 记录" href=https://litjohn.github.io/posts/comfyui/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>无题</h2></header><div class=entry-content><p>醒醒，星星。</p></div><footer class=entry-footer><span title='2026-01-27 21:41:06 +0800 +0800'>January 27, 2026</span></footer><a class=entry-link aria-label="post link to 无题" href=https://litjohn.github.io/posts/%E6%97%A0%E9%A2%98/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>

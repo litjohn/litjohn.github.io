@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Thu, 05 Mar 2026 19:50:41 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sat, 07 Mar 2026 21:56:41 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,34 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>CF1621D 题解</title><link>https://litjohn.github.io/posts/cf1621d/</link><pubDate>Thu, 05 Mar 2026 19:50:41 +0800</pubDate><guid>https://litjohn.github.io/posts/cf1621d/</guid><description>&lt;p&gt;&lt;a href="https://codeforces.com/problemset/problem/1621/D"&gt;原题链接&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>等比数列求和的四种方法</title><link>https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/</link><pubDate>Sat, 07 Mar 2026 21:56:41 +0800</pubDate><guid>https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/</guid><description>&lt;p&gt;做到了 &lt;a href="https://atcoder.jp/contests/abc448/tasks/abc448_e"&gt;ABC448E&lt;/a&gt;，感觉很精妙。&lt;/p&gt;
+&lt;p&gt;题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。&lt;/p&gt;
+&lt;h3 id="公式"&gt;公式&lt;/h3&gt;
+&lt;p&gt;直接套公式。&lt;/p&gt;
+$$
+\sum_{i=0}^n a^i = \frac{a^{n+1}-1}{a-1}
+$$&lt;p&gt;然后用逆元。不讲。&lt;/p&gt;
+&lt;p&gt;如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。&lt;/p&gt;
+&lt;h2 id="更好的方法"&gt;更好的方法&lt;/h2&gt;
+&lt;p&gt;公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。&lt;/p&gt;
+&lt;p&gt;我们有几种方法来处理这个情况&lt;/p&gt;
+&lt;p&gt;下文定义&lt;/p&gt;
+$$
+f(l, a) = \sum_{i = 0}^{l-1} a^i
+$$&lt;h3 id="分治求和"&gt;分治求和&lt;/h3&gt;
+&lt;p&gt;洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。&lt;/p&gt;
+&lt;p&gt;大概来说，我们将序列平均分为两部分。&lt;/p&gt;
+$$
+f(l, a) =
+\begin{cases}
+(1+a^{l/2})x, \; l \text{ is even}\\
+x+a^{(l-1)/2}(ax+1), \; l \text{ is odd}
+\end{cases}
+$$&lt;p&gt;其中 $x := f(\lfloor \frac{l}{2} \rfloor, a)$。&lt;/p&gt;
+&lt;p&gt;这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。&lt;/p&gt;
+&lt;h3 id="两种优化的分治"&gt;两种优化的分治&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;维护幂信息&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。&lt;/p&gt;</description></item><item><title>CF1621D 题解</title><link>https://litjohn.github.io/posts/cf1621d/</link><pubDate>Thu, 05 Mar 2026 19:50:41 +0800</pubDate><guid>https://litjohn.github.io/posts/cf1621d/</guid><description>&lt;p&gt;&lt;a href="https://codeforces.com/problemset/problem/1621/D"&gt;原题链接&lt;/a&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;一句话总结：四个关键点是“支架”。&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;首先注意到右下角的 $n \times n$ 区域内的雪必须全部清除，否则连目的地都不安全，一定会有人生病。&lt;/p&gt;
