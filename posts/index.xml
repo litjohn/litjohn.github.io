@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sat, 07 Mar 2026 21:56:41 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sun, 08 Mar 2026 19:27:55 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,12 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>等比数列求和的四种方法</title><link>https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/</link><pubDate>Sat, 07 Mar 2026 21:56:41 +0800</pubDate><guid>https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/</guid><description>&lt;p&gt;做到了 &lt;a href="https://atcoder.jp/contests/abc448/tasks/abc448_e"&gt;ABC448E&lt;/a&gt;，感觉很精妙。&lt;/p&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>我常常追忆过去</title><link>https://litjohn.github.io/posts/snoi2026/</link><pubDate>Sun, 08 Mar 2026 19:27:55 +0800</pubDate><guid>https://litjohn.github.io/posts/snoi2026/</guid><description>&lt;p&gt;D1 没有想出任何题目的任何非平凡的做法。三个最低档部分分。&lt;/p&gt;
+&lt;p&gt;D2 怒了，all in T1，然而无法成功 recall 区间 MEX 等于补区间 min 的性质，全在套极小 MEX 区间，只会 2n 做法。&lt;/p&gt;
+&lt;p&gt;D2T2 不会。T3 看不懂题面。结束了。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;我是不是已经不适合学 OI 了。热爱淡化之后，可能也不该留在这里了。&lt;/p&gt;
+&lt;p&gt;我常常追忆过去。&lt;/p&gt;</description></item><item><title>等比数列求和的四种方法</title><link>https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/</link><pubDate>Sat, 07 Mar 2026 21:56:41 +0800</pubDate><guid>https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/</guid><description>&lt;p&gt;做到了 &lt;a href="https://atcoder.jp/contests/abc448/tasks/abc448_e"&gt;ABC448E&lt;/a&gt;，感觉很精妙。&lt;/p&gt;
 &lt;p&gt;题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。&lt;/p&gt;
 &lt;h3 id="公式"&gt;公式&lt;/h3&gt;
 &lt;p&gt;直接套公式。&lt;/p&gt;
