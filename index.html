@@ -23,7 +23,12 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1691E 总结</h2></header><div class=entry-content><p>显然有平方做法。然后如果边数少一些，并查集做法也是显然的。
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1616E</h2></header><div class=entry-content><p>怎么办啊。一种想法是枚举第一个不同的位置在哪里。
+这样我们需要让前缀变成相同的，然后挪一个最近的比 b 的相应位置更小的字符过来。
+哦哦哦是不是抓一堆相同的字符来再抓一个更小的字符来就行啊。贪心的选，肯定每次选最近的。
+这个贪心感觉非常对啊。当前步肯定是最优化了，考虑它会不会使之后的步骤变劣。
+假设选取一个更远的字符，现在改为选最近的字符。那么只有在这两个字符之间的东西会受到影响。然后它们会离下一个位置更近，所以是不劣的。
+贪心好像是对的。</p></div><footer class=entry-footer><span title='2026-03-09 20:49:49 +0800 +0800'>March 9, 2026</span></footer><a class=entry-link aria-label="post link to CF1616E" href=https://litjohn.github.io/posts/cf1616e/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1691E 总结</h2></header><div class=entry-content><p>显然有平方做法。然后如果边数少一些，并查集做法也是显然的。
 然而这个东西到底怎么做？？？
 先想想如果没有颜色怎么做。
 每个线段如果被包含了，那么就直接连边然后不管。否则，我们考虑所有在它左边和它相交的线段。
@@ -106,22 +111,7 @@ $$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax
 以下是详细的做法和原理解析：
 核心思想：按位拆分 + 余数定理 我们要查询区间异或和，实际上等价于：对于每一位 $k$（$k \in [0, 30]$），统计区间内该位为 $1$ 的数字个数。如果个数为奇数，那么异或和的第 $k$ 位就是 $1$。
 假设一个数字原来是 $x$，被加上了 $v$。那么 $x+v$ 的第 $k$ 位是否为 $1$，完全取决于它们对 $2^{k+1}$ 的余数。 具体规律如下： 设 $M = 2^{k+1}$， $H = 2^k$。 那么 $(x + v)$ 的第 $k$ 位为 $1$，当且仅当： $$ (x \bmod M + v \bmod M) \bmod M \ge H $$如果我们将 $y = x \bmod M$ 看作原数组的属性， $V = v \bmod M$ 看作懒标记（Lazy Tag），因为 $y \in [0, M-1]$ 且 $V \in [0, M-1]$，上述条件其实等价于 $y$ 落在了两个连续的区间内：
-...</p></div><footer class=entry-footer><span title='2026-02-20 22:21:13 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 区间加区间异或和" href=https://litjohn.github.io/posts/range-add-query-xor-sum/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>哈集幂！</h2></header><div class=entry-content><p>原题链接
-挺神妙的一个题吧。自己做的时候完全没做明白，看题解也看到晕晕乎乎的。今天重新从哈集幂的视角理解了一下，才发现确实挺妙（而且典）。
-面对这个题首先做一些小转化。考虑一条边，它在哪几条路径上？我们用一个掩码（$k$ 位二进制数）表示这个集合。第 $i$ 位为 1 代表这条边在 $a_i$ 与 $b_i$ 间的简单路径上。
-我们考虑给树赋一个根，然后把每条边和它连接的两个点中深度较大的对应起来。一条路径经过这条边，当且仅当一个端点在这个点的子树中，而另一个端点不在子树中。这样，我们对每个点维护一个掩码，第 $i$ 位代表第 $i$ 条路径在该点子树中的端点的数目的奇偶性。不难发现这个掩码其实和这个点对应的边的掩码相等。
-容易预处理这个掩码。具体的，考虑对第 $i$ 条路径的一个端点 $a$，$\text{mask}_a = \text{mask}_a \text{ xor } 2^i$。然后我们做一次 dfs，对每个点，先处理它的所有子节点，然后它的掩码异或上它所有子节点的掩码的异或和。
-然后，我们就注意到，挑选一些边涂色，这时被满足（即有至少一条边被涂色）的简单路径的集合就是这些边对应的掩码（集合）的并集（或者按位或）。
-至此，我们就完成了所有平凡的预处理工作。问题被转化为：
-给定若干集合，求最少需要选取多少集合才能使得它们的并集为全集。
-这个问题是本题的核心，也是一个非常经典的 NP-hard 问题。
-我们考虑将最优化问题转化为判定问题：从小到大枚举需要多少集合，再判定这是否可行。
-注意到答案最大等于全集大小。因为每个集合至少贡献一位，否则直接去除它更好。
-进一步转化为计数问题：选出 $x$ 个集合，有多少种方案使得它们的并集为全集？
-原题在这里要求选出的集合互不相同，但选出重复集合并不影响。
-考虑哈集幂。我们构造一个长度为 $2^k$ 的序列 $a_i$（数组），其中第 $s$ 个位置是选出 $i$ 个集合，其并集是掩码为 $s$ 的集合的方案数。
-显然有 $a_i = (a_1)^i$，这里的乘法是并集卷积，即 $(\text{or}, \times)$ 卷积。意思是，$a\times b$ 的第 $k$ 位是所有满足 $i \text{ or } j = k$ 的 $a_i \times b_j$ 的和。
-...</p></div><footer class=entry-footer><span title='2026-02-19 21:37:57 +0800 +0800'>February 19, 2026</span></footer><a class=entry-link aria-label="post link to 哈集幂！" href=https://litjohn.github.io/posts/solution-of-cf1929e/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+...</p></div><footer class=entry-footer><span title='2026-02-20 22:21:13 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 区间加区间异或和" href=https://litjohn.github.io/posts/range-add-query-xor-sum/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
