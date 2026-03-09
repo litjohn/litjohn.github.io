@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sun, 08 Mar 2026 19:27:55 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Mon, 09 Mar 2026 19:16:45 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,21 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>我常常追忆过去</title><link>https://litjohn.github.io/posts/snoi2026/</link><pubDate>Sun, 08 Mar 2026 19:27:55 +0800</pubDate><guid>https://litjohn.github.io/posts/snoi2026/</guid><description>&lt;p&gt;D1 没有想出任何题目的任何非平凡的做法。三个最低档部分分。&lt;/p&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>CF1691E 总结</title><link>https://litjohn.github.io/posts/cf1691e/</link><pubDate>Mon, 09 Mar 2026 19:16:45 +0800</pubDate><guid>https://litjohn.github.io/posts/cf1691e/</guid><description>&lt;p&gt;显然有平方做法。然后如果边数少一些，并查集做法也是显然的。&lt;/p&gt;
+&lt;p&gt;然而这个东西到底怎么做？？？&lt;/p&gt;
+&lt;p&gt;先想想如果没有颜色怎么做。&lt;/p&gt;
+&lt;p&gt;每个线段如果被包含了，那么就直接连边然后不管。否则，我们考虑所有在它左边和它相交的线段。&lt;/p&gt;
+&lt;p&gt;这时显然应当和左边延伸的最远的线段连边。&lt;/p&gt;
+&lt;p&gt;推广到有颜色的情况。是不是直接套上去就对了。&lt;/p&gt;
+&lt;p&gt;其实不对。两种颜色的连边限制带来了更多复杂性。&lt;/p&gt;
+&lt;p&gt;比较重要的一个对象是每条线段能直接到达的线段的区间并集。在没有颜色限制时，这个区间很好求。主要因为一条线段可以到达自己。但现在就麻烦了。&lt;/p&gt;
+&lt;p&gt;注意那些和当前线段有交（而不包含当前线段）的异色线段。其中一些不被完全包含，另一些则被当前线段完全包含。后者已经和当前线段有连边，可以忽略。于是我们只需要维护前者的并集，这是可做的。&lt;/p&gt;
+&lt;p&gt;但这要求当前线段向所有包含它的异色线段连边，这个怎么弄？&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;放弃了。题解启动。&lt;/p&gt;
+&lt;p&gt;原来是扫描线维护。&lt;/p&gt;
+&lt;p&gt;不过没有颜色限制时也用不上这么复杂的手法。没有颜色限制的问题就等价于数区间并集中有多少段区间。那么确实很容易启发出扫描线。&lt;/p&gt;
+&lt;p&gt;扫描线相当于强制去掉了一维，然后每个连通分量只需要保留两种颜色各自最大的右端点。我们使用某种数据结构动态的维护所有联通分量两种颜色的右端点，如果遇到能合并的连通分量就把它们全部合并到一块去。这个数据结构可以是 set 等，在这个场景下由于可合并的端点是后缀而不是任意区间，所以堆也能维护（但可能需要懒惰删除）。&lt;/p&gt;</description></item><item><title>我常常追忆过去</title><link>https://litjohn.github.io/posts/snoi2026/</link><pubDate>Sun, 08 Mar 2026 19:27:55 +0800</pubDate><guid>https://litjohn.github.io/posts/snoi2026/</guid><description>&lt;p&gt;D1 没有想出任何题目的任何非平凡的做法。三个最低档部分分。&lt;/p&gt;
 &lt;p&gt;D2 怒了，all in T1，然而无法成功 recall 区间 MEX 等于补区间 min 的性质，全在套极小 MEX 区间，只会 2n 做法。&lt;/p&gt;
 &lt;p&gt;D2T2 不会。T3 看不懂题面。结束了。&lt;/p&gt;
 &lt;hr&gt;
