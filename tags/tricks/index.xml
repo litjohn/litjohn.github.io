@@ -136,4 +136,5 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;</description></item></channel></rss>
+&lt;/div&gt;&lt;h2 id="分块优化"&gt;分块优化&lt;/h2&gt;
+&lt;p&gt;三维偏序模板直接套 bitset 会爆空间。解决方法是分块处理：将所有元素划分进一个个大小为 &lt;code&gt;B&lt;/code&gt; 的块里。&lt;/p&gt;</description></item></channel></rss>
