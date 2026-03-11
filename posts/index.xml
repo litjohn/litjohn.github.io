@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Mon, 09 Mar 2026 20:49:49 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Wed, 11 Mar 2026 20:02:22 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,16 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>CF1616E</title><link>https://litjohn.github.io/posts/cf1616e/</link><pubDate>Mon, 09 Mar 2026 20:49:49 +0800</pubDate><guid>https://litjohn.github.io/posts/cf1616e/</guid><description>&lt;p&gt;怎么办啊。一种想法是枚举第一个不同的位置在哪里。&lt;/p&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>P1155 总结</title><link>https://litjohn.github.io/posts/p1155/</link><pubDate>Wed, 11 Mar 2026 20:02:22 +0800</pubDate><guid>https://litjohn.github.io/posts/p1155/</guid><description>&lt;p&gt;注意到一个元素进入一个栈的条件：要么小于栈顶，要么栈中比它小的东西都比另一个栈的栈顶小。&lt;/p&gt;
+&lt;p&gt;统一一下。栈中比它小的东西都比另一个栈的栈顶小。同时两个栈都有类似单调栈的性质。&lt;/p&gt;
+&lt;p&gt;字典序有很好的贪心性质。注意到平方复杂度是可接受的，那么只要我们能够线性判定合法性，就能解决原题。&lt;/p&gt;
+&lt;p&gt;一个新来的元素应该如何安置？如果两个栈都是可行的，应该放在哪里？&lt;/p&gt;
+&lt;p&gt;注意到两个栈都可行的情况中至少有一个栈的栈顶大于当前元素。如果两个栈顶都大于当前元素，自然选较小的那个栈顶放。&lt;/p&gt;
+&lt;p&gt;否则呢？这时注意到那些较小的元素迟早要弹，不如现在就弹，然后规约到上面那种情况。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;想法假了，在关于“弹出的元素是不是需要的元素”上有漏洞。虽然这些元素比另一个栈的栈顶小意味着它是当前前缀中的最小值，但未来可能会有更小的。&lt;/p&gt;
+&lt;p&gt;最后发现是二分图。如果两个元素自始至终都无法放入同一个栈，连边。如果不是二分图，那么无解。否则贪心构造。&lt;/p&gt;
+&lt;p&gt;两点之间有边的充要条件是它们是顺序对，且更后方有比两者中较小的更小的元素。&lt;/p&gt;</description></item><item><title>CF1616E</title><link>https://litjohn.github.io/posts/cf1616e/</link><pubDate>Mon, 09 Mar 2026 20:49:49 +0800</pubDate><guid>https://litjohn.github.io/posts/cf1616e/</guid><description>&lt;p&gt;怎么办啊。一种想法是枚举第一个不同的位置在哪里。&lt;/p&gt;
 &lt;p&gt;这样我们需要让前缀变成相同的，然后挪一个最近的比 b 的相应位置更小的字符过来。&lt;/p&gt;
 &lt;p&gt;哦哦哦是不是抓一堆相同的字符来再抓一个更小的字符来就行啊。贪心的选，肯定每次选最近的。&lt;/p&gt;
 &lt;p&gt;这个贪心感觉非常对啊。当前步肯定是最优化了，考虑它会不会使之后的步骤变劣。&lt;/p&gt;

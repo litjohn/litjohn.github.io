@@ -23,7 +23,15 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1616E</h2></header><div class=entry-content><p>怎么办啊。一种想法是枚举第一个不同的位置在哪里。
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>P1155 总结</h2></header><div class=entry-content><p>注意到一个元素进入一个栈的条件：要么小于栈顶，要么栈中比它小的东西都比另一个栈的栈顶小。
+统一一下。栈中比它小的东西都比另一个栈的栈顶小。同时两个栈都有类似单调栈的性质。
+字典序有很好的贪心性质。注意到平方复杂度是可接受的，那么只要我们能够线性判定合法性，就能解决原题。
+一个新来的元素应该如何安置？如果两个栈都是可行的，应该放在哪里？
+注意到两个栈都可行的情况中至少有一个栈的栈顶大于当前元素。如果两个栈顶都大于当前元素，自然选较小的那个栈顶放。
+否则呢？这时注意到那些较小的元素迟早要弹，不如现在就弹，然后规约到上面那种情况。
+想法假了，在关于“弹出的元素是不是需要的元素”上有漏洞。虽然这些元素比另一个栈的栈顶小意味着它是当前前缀中的最小值，但未来可能会有更小的。
+最后发现是二分图。如果两个元素自始至终都无法放入同一个栈，连边。如果不是二分图，那么无解。否则贪心构造。
+两点之间有边的充要条件是它们是顺序对，且更后方有比两者中较小的更小的元素。</p></div><footer class=entry-footer><span title='2026-03-11 20:02:22 +0800 +0800'>March 11, 2026</span></footer><a class=entry-link aria-label="post link to P1155 总结" href=https://litjohn.github.io/posts/p1155/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1616E</h2></header><div class=entry-content><p>怎么办啊。一种想法是枚举第一个不同的位置在哪里。
 这样我们需要让前缀变成相同的，然后挪一个最近的比 b 的相应位置更小的字符过来。
 哦哦哦是不是抓一堆相同的字符来再抓一个更小的字符来就行啊。贪心的选，肯定每次选最近的。
 这个贪心感觉非常对啊。当前步肯定是最优化了，考虑它会不会使之后的步骤变劣。
@@ -101,17 +109,7 @@ $$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax
 考虑维护全局懒标记：Trie 中的一个值 v 的实际值是 v xor tag。
 全局异或就变成了对 tag 的简单更新。
 现在考虑如何在有 tag 的情况下做全局加一。
-很简单：套用之前交换子树和递归进位的逻辑。不过，注意 Trie 中当前位为 1 的子树未必是真实产生进位的子树，因为 tag 的当前位可能为 1，这时，Trie 中的 1 子树的真实值为 0，反而是 0 子树的真实值为 1。</p></div><footer class=entry-footer><span title='2026-02-20 23:16:41 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 在 Trie 中维护全局加一操作" href=https://litjohn.github.io/posts/binary-trie-for-global-addition/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>区间加区间异或和</h2></header><div class=entry-content><p>省流：gemini 3.1 Pro 对这个经典难题提出了一个优于暴力的做法。
-区间加区间异或和怎么做？
-具体的，你需要维护一个整数数组，支持两种操作：
-将一个连续区间内所有元素加上一个整数 查询一个连续区间内的元素的异或和 这个题有任何比较好的做法吗？
-这是一个在算法竞赛（如 Codeforces、Luogu）中非常经典的高级数据结构难题。
-区间加（Addition）和区间异或和（XOR Sum）在本质上是“不兼容”的。因为加法会产生进位（Carry），一个加法操作可能会同时改变多个连续的高位，这导致传统的线段树（Segment Tree）无法在 $O(\log n)$ 的时间内合并和下传 Lazy Tag。
-目前解决这个问题最通用且高效的经典做法是：分块（Square Root Decomposition / Block Decomposition），结合按位拆分与二分查找。
-以下是详细的做法和原理解析：
-核心思想：按位拆分 + 余数定理 我们要查询区间异或和，实际上等价于：对于每一位 $k$（$k \in [0, 30]$），统计区间内该位为 $1$ 的数字个数。如果个数为奇数，那么异或和的第 $k$ 位就是 $1$。
-假设一个数字原来是 $x$，被加上了 $v$。那么 $x+v$ 的第 $k$ 位是否为 $1$，完全取决于它们对 $2^{k+1}$ 的余数。 具体规律如下： 设 $M = 2^{k+1}$， $H = 2^k$。 那么 $(x + v)$ 的第 $k$ 位为 $1$，当且仅当： $$ (x \bmod M + v \bmod M) \bmod M \ge H $$如果我们将 $y = x \bmod M$ 看作原数组的属性， $V = v \bmod M$ 看作懒标记（Lazy Tag），因为 $y \in [0, M-1]$ 且 $V \in [0, M-1]$，上述条件其实等价于 $y$ 落在了两个连续的区间内：
-...</p></div><footer class=entry-footer><span title='2026-02-20 22:21:13 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 区间加区间异或和" href=https://litjohn.github.io/posts/range-add-query-xor-sum/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+很简单：套用之前交换子树和递归进位的逻辑。不过，注意 Trie 中当前位为 1 的子树未必是真实产生进位的子树，因为 tag 的当前位可能为 1，这时，Trie 中的 1 子树的真实值为 0，反而是 0 子树的真实值为 1。</p></div><footer class=entry-footer><span title='2026-02-20 23:16:41 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 在 Trie 中维护全局加一操作" href=https://litjohn.github.io/posts/binary-trie-for-global-addition/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
