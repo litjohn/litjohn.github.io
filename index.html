@@ -49,7 +49,21 @@ $$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax
 这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。
 两种优化的分治 维护幂信息
 注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。
-...</p></div><footer class=entry-footer><span title='2026-03-07 21:56:41 +0800 +0800'>March 7, 2026</span></footer><a class=entry-link aria-label="post link to 等比数列求和的四种方法" href=https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1621D 题解</h2></header><div class=entry-content><p>原题链接
+...</p></div><footer class=entry-footer><span title='2026-03-07 21:56:41 +0800 +0800'>March 7, 2026</span></footer><a class=entry-link aria-label="post link to 等比数列求和的四种方法" href=https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>Knuth-Morris-Pratt algorithm</h2></header><div class=entry-content><p>引入 给定字符串 $S$ 与模式串 $P$。问 $P$ 的最长的是 $S$ 的子串的前缀的长度。
+我会暴力！ $O(nm)$，非常显然。不讲。
+喜欢哈希的小朋友们你们好啊！ 注意到答案具备单调性。于是我们使用二分，外加哈希来检验。
+复杂度 $O(n\log m)$，其中 $n$ 是 $S$ 的长度，$m$ 是 $P$ 的长度。
+已经很优秀了，但是还不够，毒瘤出题人出了 $n=m=3\times 10^7$ 的数据范围！
+等价重写 Hash 的算法相当于二分匹配前缀长度，然后枚举前缀匹配起始点。
+重写为另一种等价的形式：枚举前缀匹配的起始点，然后二分产生的匹配的长度。
+现在，Hash 的问题在于每次重新二分一看就非常不优。
+当然我不是让大家写分散层叠（分散层叠也完全用不上）。但是我们获得了一些优化的可能。
+包的 假设现在我们在一个匹配起始点 $i$，有一个长度为 $l$ 的匹配（意味着匹配的结束点在 $e = i + l - 1$）。
+考虑一个起始点在 $i$ 之后的匹配：假设起始点为 $j$。
+有两种可能：
+$j \leq e$ $j > e$ 我们先处理所有第一种情况，然后我们重置 $i = e + 1$ 就可以继续处理第二种情况。
+注意到第一种情况具备非常神奇的特性：$[j, i + l)$ 这段下标区间内 $S$ 的子串，等于 $P$ 长度为 $i + l - j$ 的前缀，而同时，当前起始点在 $i$ 的匹配中，与这部分对齐的一段后缀也等于这段子串！
+...</p></div><footer class=entry-footer><span title='2026-03-05 20:04:15 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to Knuth-Morris-Pratt algorithm" href=https://litjohn.github.io/posts/kmp/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1621D 题解</h2></header><div class=entry-content><p>原题链接
 一句话总结：四个关键点是“支架”。
 首先注意到右下角的 $n \times n$ 区域内的雪必须全部清除，否则连目的地都不安全，一定会有人生病。
 于是我们只需要在左下和右上两块区域中设法开出一条路来。
@@ -101,22 +115,7 @@ $$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax
 以下是详细的做法和原理解析：
 核心思想：按位拆分 + 余数定理 我们要查询区间异或和，实际上等价于：对于每一位 $k$（$k \in [0, 30]$），统计区间内该位为 $1$ 的数字个数。如果个数为奇数，那么异或和的第 $k$ 位就是 $1$。
 假设一个数字原来是 $x$，被加上了 $v$。那么 $x+v$ 的第 $k$ 位是否为 $1$，完全取决于它们对 $2^{k+1}$ 的余数。 具体规律如下： 设 $M = 2^{k+1}$， $H = 2^k$。 那么 $(x + v)$ 的第 $k$ 位为 $1$，当且仅当： $$ (x \bmod M + v \bmod M) \bmod M \ge H $$如果我们将 $y = x \bmod M$ 看作原数组的属性， $V = v \bmod M$ 看作懒标记（Lazy Tag），因为 $y \in [0, M-1]$ 且 $V \in [0, M-1]$，上述条件其实等价于 $y$ 落在了两个连续的区间内：
-...</p></div><footer class=entry-footer><span title='2026-02-20 22:21:13 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 区间加区间异或和" href=https://litjohn.github.io/posts/range-add-query-xor-sum/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>哈集幂！</h2></header><div class=entry-content><p>原题链接
-挺神妙的一个题吧。自己做的时候完全没做明白，看题解也看到晕晕乎乎的。今天重新从哈集幂的视角理解了一下，才发现确实挺妙（而且典）。
-面对这个题首先做一些小转化。考虑一条边，它在哪几条路径上？我们用一个掩码（$k$ 位二进制数）表示这个集合。第 $i$ 位为 1 代表这条边在 $a_i$ 与 $b_i$ 间的简单路径上。
-我们考虑给树赋一个根，然后把每条边和它连接的两个点中深度较大的对应起来。一条路径经过这条边，当且仅当一个端点在这个点的子树中，而另一个端点不在子树中。这样，我们对每个点维护一个掩码，第 $i$ 位代表第 $i$ 条路径在该点子树中的端点的数目的奇偶性。不难发现这个掩码其实和这个点对应的边的掩码相等。
-容易预处理这个掩码。具体的，考虑对第 $i$ 条路径的一个端点 $a$，$\text{mask}_a = \text{mask}_a \text{ xor } 2^i$。然后我们做一次 dfs，对每个点，先处理它的所有子节点，然后它的掩码异或上它所有子节点的掩码的异或和。
-然后，我们就注意到，挑选一些边涂色，这时被满足（即有至少一条边被涂色）的简单路径的集合就是这些边对应的掩码（集合）的并集（或者按位或）。
-至此，我们就完成了所有平凡的预处理工作。问题被转化为：
-给定若干集合，求最少需要选取多少集合才能使得它们的并集为全集。
-这个问题是本题的核心，也是一个非常经典的 NP-hard 问题。
-我们考虑将最优化问题转化为判定问题：从小到大枚举需要多少集合，再判定这是否可行。
-注意到答案最大等于全集大小。因为每个集合至少贡献一位，否则直接去除它更好。
-进一步转化为计数问题：选出 $x$ 个集合，有多少种方案使得它们的并集为全集？
-原题在这里要求选出的集合互不相同，但选出重复集合并不影响。
-考虑哈集幂。我们构造一个长度为 $2^k$ 的序列 $a_i$（数组），其中第 $s$ 个位置是选出 $i$ 个集合，其并集是掩码为 $s$ 的集合的方案数。
-显然有 $a_i = (a_1)^i$，这里的乘法是并集卷积，即 $(\text{or}, \times)$ 卷积。意思是，$a\times b$ 的第 $k$ 位是所有满足 $i \text{ or } j = k$ 的 $a_i \times b_j$ 的和。
-...</p></div><footer class=entry-footer><span title='2026-02-19 21:37:57 +0800 +0800'>February 19, 2026</span></footer><a class=entry-link aria-label="post link to 哈集幂！" href=https://litjohn.github.io/posts/solution-of-cf1929e/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+...</p></div><footer class=entry-footer><span title='2026-02-20 22:21:13 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 区间加区间异或和" href=https://litjohn.github.io/posts/range-add-query-xor-sum/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
