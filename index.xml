@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sun, 08 Mar 2026 19:27:55 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sat, 14 Mar 2026 09:23:50 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,20 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>我常常追忆过去</title><link>https://litjohn.github.io/posts/snoi2026/</link><pubDate>Sun, 08 Mar 2026 19:27:55 +0800</pubDate><guid>https://litjohn.github.io/posts/snoi2026/</guid><description>&lt;p&gt;D1 没有想出任何题目的任何非平凡的做法。三个最低档部分分。&lt;/p&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>带有问号通配符的字符串模式匹配</title><link>https://litjohn.github.io/posts/glob-pattern-matching/</link><pubDate>Sat, 14 Mar 2026 09:23:50 +0800</pubDate><guid>https://litjohn.github.io/posts/glob-pattern-matching/</guid><description>&lt;h2 id="问题"&gt;问题&lt;/h2&gt;
+&lt;p&gt;给定原串 $s$ 与模式串 $t$。其中模式串可能含有一些 &lt;code&gt;?&lt;/code&gt; 字符（而原串没有），问号可以与任何字符匹配。问模式串与 $s$ 中哪些位置匹配？&lt;/p&gt;
+&lt;p&gt;形式化的：&lt;/p&gt;
+&lt;p&gt;我们称两个字符串相等，当且仅当：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;它们长度相等&lt;/li&gt;
+&lt;li&gt;对于任意一个位置 $i$（$0 \leq i &lt; \mathrm{len}$，$\mathrm{len}$ 是两个字符串的长度），两个字符串在这个位置上的对应字符相等，或至少一个字符串在这个位置上的对应字符是问号。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;现在的问题是，求出所有的 $0 \leq i \leq \operatorname{len}(s) - \operatorname{len}(t)$ 满足 $s$ 从 $i$ 开始（包含 $i$），长度为 $\operatorname{len}(t)$ 的子串与 $t$ 相等。&lt;/p&gt;
+&lt;p&gt;下设 $n := \operatorname{len}(s), \; m := \operatorname{len}(t)$。&lt;/p&gt;
+&lt;h2 id="bitset-做法"&gt;bitset 做法&lt;/h2&gt;
+&lt;p&gt;bitset 能够简单高效的解决这个问题，复杂度为 $O(nm/w)$。&lt;/p&gt;
+&lt;p&gt;具体的：对于每种字符 $c$，我们维护一个长度为 $n$ 的 bitset。bitset 的下标为 $i$ 的位置为 &lt;code&gt;true&lt;/code&gt; 当且仅当 $s_i = c$。&lt;/p&gt;
+&lt;p&gt;注意到，假如 $i$ 是一个匹配的起始点，这意味着 $s_{i+j} = t_j$ 对所有 $0 \leq j &lt; m$ 的 $j$ 成立。反过来：&lt;/p&gt;</description></item><item><title>我常常追忆过去</title><link>https://litjohn.github.io/posts/snoi2026/</link><pubDate>Sun, 08 Mar 2026 19:27:55 +0800</pubDate><guid>https://litjohn.github.io/posts/snoi2026/</guid><description>&lt;p&gt;D1 没有想出任何题目的任何非平凡的做法。三个最低档部分分。&lt;/p&gt;
 &lt;p&gt;D2 怒了，all in T1，然而无法成功 recall 区间 MEX 等于补区间 min 的性质，全在套极小 MEX 区间，只会 2n 做法。&lt;/p&gt;
 &lt;p&gt;D2T2 不会。T3 看不懂题面。结束了。&lt;/p&gt;
 &lt;hr&gt;
