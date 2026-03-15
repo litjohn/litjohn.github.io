@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Algorithms on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/tags/algorithms/</link><description>Recent content in Algorithms on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Fri, 16 Jan 2026 22:35:04 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/tags/algorithms/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Algorithms on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/tags/algorithms/</link><description>Recent content in Algorithms on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sat, 14 Mar 2026 09:23:50 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/tags/algorithms/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,109 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>Exchange Method</title><link>https://litjohn.github.io/posts/exchange-method/</link><pubDate>Fri, 16 Jan 2026 22:35:04 +0800</pubDate><guid>https://litjohn.github.io/posts/exchange-method/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>带有问号通配符的字符串模式匹配</title><link>https://litjohn.github.io/posts/glob-pattern-matching/</link><pubDate>Sat, 14 Mar 2026 09:23:50 +0800</pubDate><guid>https://litjohn.github.io/posts/glob-pattern-matching/</guid><description>&lt;h2 id="问题"&gt;问题&lt;/h2&gt;
+&lt;p&gt;给定原串 $s$ 与模式串 $t$。其中模式串可能含有一些 &lt;code&gt;?&lt;/code&gt; 字符（而原串没有），问号可以与任何字符匹配。问模式串与 $s$ 中哪些位置匹配？&lt;/p&gt;
+&lt;p&gt;形式化的：&lt;/p&gt;
+&lt;p&gt;我们称两个字符串相等，当且仅当：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;它们长度相等&lt;/li&gt;
+&lt;li&gt;对于任意一个位置 $i$（$0 \leq i &lt; \mathrm{len}$，$\mathrm{len}$ 是两个字符串的长度），两个字符串在这个位置上的对应字符相等，或至少一个字符串在这个位置上的对应字符是问号。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;现在的问题是，求出所有的 $0 \leq i \leq \operatorname{len}(s) - \operatorname{len}(t)$ 满足 $s$ 从 $i$ 开始（包含 $i$），长度为 $\operatorname{len}(t)$ 的子串与 $t$ 相等。&lt;/p&gt;
+&lt;p&gt;下设 $n := \operatorname{len}(s), \; m := \operatorname{len}(t)$。&lt;/p&gt;
+&lt;h2 id="bitset-做法"&gt;bitset 做法&lt;/h2&gt;
+&lt;p&gt;bitset 能够简单高效的解决这个问题，复杂度为 $O(nm/w)$。&lt;/p&gt;
+&lt;p&gt;具体的：对于每种字符 $c$，我们维护一个长度为 $n$ 的 bitset。bitset 的下标为 $i$ 的位置为 &lt;code&gt;true&lt;/code&gt; 当且仅当 $s_i = c$。&lt;/p&gt;
+&lt;p&gt;注意到，假如 $i$ 是一个匹配的起始点，这意味着 $s_{i+j} = t_j$ 对所有 $0 \leq j &lt; m$ 的 $j$ 成立。反过来：&lt;/p&gt;</description></item><item><title>等比数列求和的四种方法</title><link>https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/</link><pubDate>Sat, 07 Mar 2026 21:56:41 +0800</pubDate><guid>https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/</guid><description>&lt;p&gt;做到了 &lt;a href="https://atcoder.jp/contests/abc448/tasks/abc448_e"&gt;ABC448E&lt;/a&gt;，感觉很精妙。&lt;/p&gt;
+&lt;p&gt;题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。&lt;/p&gt;
+&lt;h3 id="公式"&gt;公式&lt;/h3&gt;
+&lt;p&gt;直接套公式。&lt;/p&gt;
+$$
+\sum_{i=0}^n a^i = \frac{a^{n+1}-1}{a-1}
+$$&lt;p&gt;然后用逆元。不讲。&lt;/p&gt;
+&lt;p&gt;如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。&lt;/p&gt;
+&lt;h2 id="更好的方法"&gt;更好的方法&lt;/h2&gt;
+&lt;p&gt;公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。&lt;/p&gt;
+&lt;p&gt;我们有几种方法来处理这个情况&lt;/p&gt;
+&lt;p&gt;下文定义&lt;/p&gt;
+$$
+f(l, a) = \sum_{i = 0}^{l-1} a^i
+$$&lt;h3 id="分治求和"&gt;分治求和&lt;/h3&gt;
+&lt;p&gt;洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。&lt;/p&gt;
+&lt;p&gt;大概来说，我们将序列平均分为两部分。&lt;/p&gt;
+$$
+f(l, a) =
+\begin{cases}
+(1+a^{l/2})x, \; l \text{ is even}\\
+x+a^{(l-1)/2}(ax+1), \; l \text{ is odd}
+\end{cases}
+$$&lt;p&gt;其中 $x := f(\lfloor \frac{l}{2} \rfloor, a)$。&lt;/p&gt;
+&lt;p&gt;这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。&lt;/p&gt;
+&lt;h3 id="两种优化的分治"&gt;两种优化的分治&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;维护幂信息&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。&lt;/p&gt;</description></item><item><title>Knuth-Morris-Pratt algorithm</title><link>https://litjohn.github.io/posts/kmp/</link><pubDate>Thu, 05 Mar 2026 20:04:15 +0800</pubDate><guid>https://litjohn.github.io/posts/kmp/</guid><description>&lt;h2 id="引入"&gt;引入&lt;/h2&gt;
+&lt;p&gt;给定字符串 $S$ 与模式串 $P$。问 $P$ 的最长的是 $S$ 的子串的前缀的长度。&lt;/p&gt;
+&lt;h3 id="我会暴力"&gt;我会暴力！&lt;/h3&gt;
+&lt;p&gt;$O(nm)$，非常显然。不讲。&lt;/p&gt;
+&lt;h3 id="喜欢哈希的小朋友们你们好啊"&gt;喜欢哈希的小朋友们你们好啊！&lt;/h3&gt;
+&lt;p&gt;注意到答案具备单调性。于是我们使用二分，外加哈希来检验。&lt;/p&gt;
+&lt;p&gt;复杂度 $O(n\log m)$，其中 $n$ 是 $S$ 的长度，$m$ 是 $P$ 的长度。&lt;/p&gt;
+&lt;p&gt;已经很优秀了，但是还不够，毒瘤出题人出了 $n=m=3\times 10^7$ 的数据范围！&lt;/p&gt;
+&lt;h3 id="等价重写"&gt;等价重写&lt;/h3&gt;
+&lt;p&gt;Hash 的算法相当于二分匹配前缀长度，然后枚举前缀匹配起始点。&lt;/p&gt;
+&lt;p&gt;重写为另一种等价的形式：枚举前缀匹配的起始点，然后二分产生的匹配的长度。&lt;/p&gt;
+&lt;p&gt;现在，Hash 的问题在于每次重新二分一看就非常不优。&lt;/p&gt;
+&lt;p&gt;当然我不是让大家写分散层叠（分散层叠也完全用不上）。但是我们获得了一些优化的可能。&lt;/p&gt;
+&lt;h2 id="包的"&gt;包的&lt;/h2&gt;
+&lt;p&gt;假设现在我们在一个匹配起始点 $i$，有一个长度为 $l$ 的匹配（意味着匹配的结束点在 $e = i + l - 1$）。&lt;/p&gt;
+&lt;p&gt;考虑一个起始点在 $i$ 之后的匹配：假设起始点为 $j$。&lt;/p&gt;
+&lt;p&gt;有两种可能：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;$j \leq e$&lt;/li&gt;
+&lt;li&gt;$j &gt; e$&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;我们先处理所有第一种情况，然后我们重置 $i = e + 1$ 就可以继续处理第二种情况。&lt;/p&gt;
+&lt;p&gt;注意到第一种情况具备非常神奇的特性：$[j, i + l)$ 这段下标区间内 $S$ 的子串，等于 $P$ 长度为 $i + l - j$ 的前缀，而同时，当前起始点在 $i$ 的匹配中，与这部分对齐的一段后缀也等于这段子串！&lt;/p&gt;</description></item><item><title>在 Trie 中维护全局加一操作</title><link>https://litjohn.github.io/posts/binary-trie-for-global-addition/</link><pubDate>Fri, 20 Feb 2026 23:16:41 +0800</pubDate><guid>https://litjohn.github.io/posts/binary-trie-for-global-addition/</guid><description>&lt;p&gt;考虑这么一个题目：&lt;/p&gt;
+&lt;p&gt;维护整数多重集，支持插入删除，查询全局 xor 和以及全局加一。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;如果不考虑全局加一，就是唐题。不过全局加一和异或本质不兼容，比较难搞。&lt;/p&gt;
+&lt;p&gt;本文介绍的就是用以解决这一问题的技巧。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;考虑维护一棵 01 Trie。与普通的用于按位贪心的 Trie 不同，这棵 Trie 按照从低位往高位的顺序。&lt;/p&gt;
+&lt;p&gt;简单来说，根节点是从低往高第 0 位，是一个超级源点。它的两个孩子是从低往高第 1 位，位权为 1，这两个孩子的孩子（即深度为 2 的那一层节点）的位权为 2，以此类推。&lt;/p&gt;
+&lt;p&gt;插入、删除和普通 01 Trie 相同。&lt;/p&gt;
+&lt;p&gt;查询全局 xor 和也比较好做。我们在每个节点上维护 count（子树中的元素计数）和 xor_sum（子树中元素的异或和）。&lt;/p&gt;
+&lt;p&gt;加法是重点。&lt;/p&gt;
+&lt;p&gt;注意到最低位为 0 的元素加一之后最低位为 1，而最低位为 1 的元素加一之后最低位为 0，并产生一个进位。&lt;/p&gt;
+&lt;p&gt;那么从根节点出发，先交换两个儿子，然后递归操作那个本次操作前当前位为 1 的子树。&lt;/p&gt;
+&lt;p&gt;结束了。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;扩展：全局异或上一个数&lt;/p&gt;
+&lt;p&gt;考虑维护全局懒标记：Trie 中的一个值 v 的实际值是 v xor tag。&lt;/p&gt;
+&lt;p&gt;全局异或就变成了对 tag 的简单更新。&lt;/p&gt;
+&lt;p&gt;现在考虑如何在有 tag 的情况下做全局加一。&lt;/p&gt;
+&lt;p&gt;很简单：套用之前交换子树和递归进位的逻辑。不过，注意 Trie 中当前位为 1 的子树未必是真实产生进位的子树，因为 tag 的当前位可能为 1，这时，Trie 中的 1 子树的真实值为 0，反而是 0 子树的真实值为 1。&lt;/p&gt;</description></item><item><title>区间加区间异或和</title><link>https://litjohn.github.io/posts/range-add-query-xor-sum/</link><pubDate>Fri, 20 Feb 2026 22:21:13 +0800</pubDate><guid>https://litjohn.github.io/posts/range-add-query-xor-sum/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;省流：gemini 3.1 Pro 对这个经典难题提出了一个优于暴力的做法。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;区间加区间异或和怎么做？&lt;/p&gt;
+&lt;p&gt;具体的，你需要维护一个整数数组，支持两种操作：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;将一个连续区间内所有元素加上一个整数&lt;/li&gt;
+&lt;li&gt;查询一个连续区间内的元素的异或和&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这个题有任何比较好的做法吗？&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;这是一个在算法竞赛（如 Codeforces、Luogu）中非常经典的&lt;strong&gt;高级数据结构难题&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;区间加（Addition）和区间异或和（XOR Sum）在本质上是“不兼容”的。因为加法会产生进位（Carry），一个加法操作可能会同时改变多个连续的高位，这导致传统的线段树（Segment Tree）无法在 $O(\log n)$ 的时间内合并和下传 Lazy Tag。&lt;/p&gt;
+&lt;p&gt;目前解决这个问题&lt;strong&gt;最通用且高效的经典做法是：分块（Square Root Decomposition / Block Decomposition）&lt;/strong&gt;，结合&lt;strong&gt;按位拆分与二分查找&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;以下是详细的做法和原理解析：&lt;/p&gt;
+&lt;h3 id="核心思想按位拆分--余数定理"&gt;核心思想：按位拆分 + 余数定理&lt;/h3&gt;
+&lt;p&gt;我们要查询区间异或和，实际上等价于：&lt;strong&gt;对于每一位 $k$（$k \in [0, 30]$），统计区间内该位为 $1$ 的数字个数。如果个数为奇数，那么异或和的第 $k$ 位就是 $1$。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;假设一个数字原来是 $x$，被加上了 $v$。那么 $x+v$ 的第 $k$ 位是否为 $1$，完全取决于它们对 $2^{k+1}$ 的余数。
+具体规律如下：
+设 $M = 2^{k+1}$， $H = 2^k$。
+那么 $(x + v)$ 的第 $k$ 位为 $1$，当且仅当：
+&lt;/p&gt;
+$$ (x \bmod M + v \bmod M) \bmod M \ge H $$&lt;p&gt;如果我们将 $y = x \bmod M$ 看作原数组的属性， $V = v \bmod M$ 看作懒标记（Lazy Tag），因为 $y \in [0, M-1]$ 且 $V \in [0, M-1]$，上述条件其实等价于 $y$ 落在了两个连续的区间内：&lt;/p&gt;</description></item><item><title>Exchange Method</title><link>https://litjohn.github.io/posts/exchange-method/</link><pubDate>Fri, 16 Jan 2026 22:35:04 +0800</pubDate><guid>https://litjohn.github.io/posts/exchange-method/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;你的调整法证明可能假了！&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;看到 &lt;a href="https://www.luogu.com.cn/problem/P1012"&gt;P1012&lt;/a&gt; 被升蓝，以及 &lt;a href="https://www.luogu.com.cn/discuss/1231722"&gt;Register_int 的帖子&lt;/a&gt;，感慨良多。&lt;/p&gt;
 &lt;p&gt;事实上，我发现自己之前许多调整法/交换论证的证明是假的。所以写这篇文章来整理交换论证相关。&lt;/p&gt;

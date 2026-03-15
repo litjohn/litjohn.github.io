@@ -23,7 +23,69 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>Exchange Method</h2></header><div class=entry-content><p>你的调整法证明可能假了！
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>带有问号通配符的字符串模式匹配</h2></header><div class=entry-content><p>问题 给定原串 $s$ 与模式串 $t$。其中模式串可能含有一些 ? 字符（而原串没有），问号可以与任何字符匹配。问模式串与 $s$ 中哪些位置匹配？
+形式化的：
+我们称两个字符串相等，当且仅当：
+它们长度相等 对于任意一个位置 $i$（$0 \leq i &lt; \mathrm{len}$，$\mathrm{len}$ 是两个字符串的长度），两个字符串在这个位置上的对应字符相等，或至少一个字符串在这个位置上的对应字符是问号。 现在的问题是，求出所有的 $0 \leq i \leq \operatorname{len}(s) - \operatorname{len}(t)$ 满足 $s$ 从 $i$ 开始（包含 $i$），长度为 $\operatorname{len}(t)$ 的子串与 $t$ 相等。
+下设 $n := \operatorname{len}(s), \; m := \operatorname{len}(t)$。
+bitset 做法 bitset 能够简单高效的解决这个问题，复杂度为 $O(nm/w)$。
+具体的：对于每种字符 $c$，我们维护一个长度为 $n$ 的 bitset。bitset 的下标为 $i$ 的位置为 true 当且仅当 $s_i = c$。
+注意到，假如 $i$ 是一个匹配的起始点，这意味着 $s_{i+j} = t_j$ 对所有 $0 \leq j &lt; m$ 的 $j$ 成立。反过来：
+...</p></div><footer class=entry-footer><span title='2026-03-14 09:23:50 +0800 +0800'>March 14, 2026</span></footer><a class=entry-link aria-label="post link to 带有问号通配符的字符串模式匹配" href=https://litjohn.github.io/posts/glob-pattern-matching/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>等比数列求和的四种方法</h2></header><div class=entry-content><p>做到了 ABC448E，感觉很精妙。
+题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。
+公式 直接套公式。
+$$ \sum_{i=0}^n a^i = \frac{a^{n+1}-1}{a-1} $$然后用逆元。不讲。
+如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。
+更好的方法 公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。
+我们有几种方法来处理这个情况
+下文定义
+$$ f(l, a) = \sum_{i = 0}^{l-1} a^i $$分治求和 洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。
+大概来说，我们将序列平均分为两部分。
+$$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax+1), \; l \text{ is odd} \end{cases} $$其中 $x := f(\lfloor \frac{l}{2} \rfloor, a)$。
+这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。
+两种优化的分治 维护幂信息
+注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。
+...</p></div><footer class=entry-footer><span title='2026-03-07 21:56:41 +0800 +0800'>March 7, 2026</span></footer><a class=entry-link aria-label="post link to 等比数列求和的四种方法" href=https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>Knuth-Morris-Pratt algorithm</h2></header><div class=entry-content><p>引入 给定字符串 $S$ 与模式串 $P$。问 $P$ 的最长的是 $S$ 的子串的前缀的长度。
+我会暴力！ $O(nm)$，非常显然。不讲。
+喜欢哈希的小朋友们你们好啊！ 注意到答案具备单调性。于是我们使用二分，外加哈希来检验。
+复杂度 $O(n\log m)$，其中 $n$ 是 $S$ 的长度，$m$ 是 $P$ 的长度。
+已经很优秀了，但是还不够，毒瘤出题人出了 $n=m=3\times 10^7$ 的数据范围！
+等价重写 Hash 的算法相当于二分匹配前缀长度，然后枚举前缀匹配起始点。
+重写为另一种等价的形式：枚举前缀匹配的起始点，然后二分产生的匹配的长度。
+现在，Hash 的问题在于每次重新二分一看就非常不优。
+当然我不是让大家写分散层叠（分散层叠也完全用不上）。但是我们获得了一些优化的可能。
+包的 假设现在我们在一个匹配起始点 $i$，有一个长度为 $l$ 的匹配（意味着匹配的结束点在 $e = i + l - 1$）。
+考虑一个起始点在 $i$ 之后的匹配：假设起始点为 $j$。
+有两种可能：
+$j \leq e$ $j > e$ 我们先处理所有第一种情况，然后我们重置 $i = e + 1$ 就可以继续处理第二种情况。
+注意到第一种情况具备非常神奇的特性：$[j, i + l)$ 这段下标区间内 $S$ 的子串，等于 $P$ 长度为 $i + l - j$ 的前缀，而同时，当前起始点在 $i$ 的匹配中，与这部分对齐的一段后缀也等于这段子串！
+...</p></div><footer class=entry-footer><span title='2026-03-05 20:04:15 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to Knuth-Morris-Pratt algorithm" href=https://litjohn.github.io/posts/kmp/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>在 Trie 中维护全局加一操作</h2></header><div class=entry-content><p>考虑这么一个题目：
+维护整数多重集，支持插入删除，查询全局 xor 和以及全局加一。
+如果不考虑全局加一，就是唐题。不过全局加一和异或本质不兼容，比较难搞。
+本文介绍的就是用以解决这一问题的技巧。
+考虑维护一棵 01 Trie。与普通的用于按位贪心的 Trie 不同，这棵 Trie 按照从低位往高位的顺序。
+简单来说，根节点是从低往高第 0 位，是一个超级源点。它的两个孩子是从低往高第 1 位，位权为 1，这两个孩子的孩子（即深度为 2 的那一层节点）的位权为 2，以此类推。
+插入、删除和普通 01 Trie 相同。
+查询全局 xor 和也比较好做。我们在每个节点上维护 count（子树中的元素计数）和 xor_sum（子树中元素的异或和）。
+加法是重点。
+注意到最低位为 0 的元素加一之后最低位为 1，而最低位为 1 的元素加一之后最低位为 0，并产生一个进位。
+那么从根节点出发，先交换两个儿子，然后递归操作那个本次操作前当前位为 1 的子树。
+结束了。
+扩展：全局异或上一个数
+考虑维护全局懒标记：Trie 中的一个值 v 的实际值是 v xor tag。
+全局异或就变成了对 tag 的简单更新。
+现在考虑如何在有 tag 的情况下做全局加一。
+很简单：套用之前交换子树和递归进位的逻辑。不过，注意 Trie 中当前位为 1 的子树未必是真实产生进位的子树，因为 tag 的当前位可能为 1，这时，Trie 中的 1 子树的真实值为 0，反而是 0 子树的真实值为 1。</p></div><footer class=entry-footer><span title='2026-02-20 23:16:41 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 在 Trie 中维护全局加一操作" href=https://litjohn.github.io/posts/binary-trie-for-global-addition/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>区间加区间异或和</h2></header><div class=entry-content><p>省流：gemini 3.1 Pro 对这个经典难题提出了一个优于暴力的做法。
+区间加区间异或和怎么做？
+具体的，你需要维护一个整数数组，支持两种操作：
+将一个连续区间内所有元素加上一个整数 查询一个连续区间内的元素的异或和 这个题有任何比较好的做法吗？
+这是一个在算法竞赛（如 Codeforces、Luogu）中非常经典的高级数据结构难题。
+区间加（Addition）和区间异或和（XOR Sum）在本质上是“不兼容”的。因为加法会产生进位（Carry），一个加法操作可能会同时改变多个连续的高位，这导致传统的线段树（Segment Tree）无法在 $O(\log n)$ 的时间内合并和下传 Lazy Tag。
+目前解决这个问题最通用且高效的经典做法是：分块（Square Root Decomposition / Block Decomposition），结合按位拆分与二分查找。
+以下是详细的做法和原理解析：
+核心思想：按位拆分 + 余数定理 我们要查询区间异或和，实际上等价于：对于每一位 $k$（$k \in [0, 30]$），统计区间内该位为 $1$ 的数字个数。如果个数为奇数，那么异或和的第 $k$ 位就是 $1$。
+假设一个数字原来是 $x$，被加上了 $v$。那么 $x+v$ 的第 $k$ 位是否为 $1$，完全取决于它们对 $2^{k+1}$ 的余数。 具体规律如下： 设 $M = 2^{k+1}$， $H = 2^k$。 那么 $(x + v)$ 的第 $k$ 位为 $1$，当且仅当： $$ (x \bmod M + v \bmod M) \bmod M \ge H $$如果我们将 $y = x \bmod M$ 看作原数组的属性， $V = v \bmod M$ 看作懒标记（Lazy Tag），因为 $y \in [0, M-1]$ 且 $V \in [0, M-1]$，上述条件其实等价于 $y$ 落在了两个连续的区间内：
+...</p></div><footer class=entry-footer><span title='2026-02-20 22:21:13 +0800 +0800'>February 20, 2026</span></footer><a class=entry-link aria-label="post link to 区间加区间异或和" href=https://litjohn.github.io/posts/range-add-query-xor-sum/></a></article><article class="post-entry tag-entry"><header class=entry-header><h2 class=entry-hint-parent>Exchange Method</h2></header><div class=entry-content><p>你的调整法证明可能假了！
 看到 P1012 被升蓝，以及 Register_int 的帖子，感慨良多。
 事实上，我发现自己之前许多调整法/交换论证的证明是假的。所以写这篇文章来整理交换论证相关。
 邻项交换 若对于相邻两项 $x, y$，让 $x$ 在 $y$ 前面更优，我们称 $x &lt; y$。
