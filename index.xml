@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sat, 14 Mar 2026 09:23:50 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Tue, 17 Mar 2026 21:01:09 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,29 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>带有问号通配符的字符串模式匹配</title><link>https://litjohn.github.io/posts/glob-pattern-matching/</link><pubDate>Sat, 14 Mar 2026 09:23:50 +0800</pubDate><guid>https://litjohn.github.io/posts/glob-pattern-matching/</guid><description>&lt;h2 id="问题"&gt;问题&lt;/h2&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>AGC50A 总结</title><link>https://litjohn.github.io/posts/agc50a/</link><pubDate>Tue, 17 Mar 2026 21:01:09 +0800</pubDate><guid>https://litjohn.github.io/posts/agc50a/</guid><description>&lt;p&gt;&lt;a href="https://atcoder.jp/contests/agc050/tasks/agc050_a"&gt;原题链接&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;很神妙的一个题。&lt;/p&gt;
+&lt;p&gt;首先考虑答案下界，不难注意到对于每页面 $k$ 个链接，共 $n$ 个页面的情形，最远两点间需要不小于 $\lceil \log_k n\rceil$ 次点击。&lt;/p&gt;
+&lt;p&gt;为什么？因为信息熵。对于 $c$ 次点击和 $k$ 个链接，我们有 $k^c$ 种不同的点击序列，即使它们的终点两两不同，最多也只能覆盖 $k^c$ 个点，而我们一共需要覆盖 $n$ 个点。&lt;/p&gt;
+&lt;p&gt;当然可能点击少于 $c$ 次，所以长度不超过 $c$ 的序列有 $\frac{k^{c+1}-1}{k-1}$ 种。&lt;/p&gt;
+$$
+\begin{aligned}
+\frac{k^{c+1}-1}{k-1} &amp;\geq n \\
+\log_k(k^{c+1}-1)-\log_k (k-1) &amp;\geq \log_k n
+\end{aligned}
+$$&lt;p&gt;当 $n, k$ 趋于无穷大时，左边大约可以视为 $c$。那么 $c$ 自然要取最小的不小于 $\log_k n$ 的整数，也即 $\lceil \log_k n\rceil$。&lt;/p&gt;
+&lt;p&gt;当然，$k$ 较小时可能有常数级别误差，但问题不大。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;然后考虑如何构造。&lt;/p&gt;
+&lt;p&gt;如果每个点允许三个指针，套用断线树/衡平树的结构是简单的。问题在于本题只有两个指针。&lt;/p&gt;
+&lt;p&gt;胡乱考虑了一些跳表，但是也无法砍到两个指针。思考了一些环状结构上建立加速索引，但是用处不大。&lt;/p&gt;
+&lt;p&gt;发现线段树可以利用叶子节点的剩余指针指回根节点，但最远距离是下界的 2 倍左右。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;下面是非独立思考部分。&lt;/p&gt;
+&lt;p&gt;各种树形结构都有对父指针的需求。但叶子指针指回根节点以及环状结构启发了我们。&lt;/p&gt;
+&lt;p&gt;注意到叶子指针指回根节点只利用了一个指针，不够充分。&lt;/p&gt;
+&lt;p&gt;我们考虑一棵堆式存储的线段树，但叶子节点的两个指针对 $n$ 取模。&lt;/p&gt;
+&lt;p&gt;形式化的：节点 $p$ 的两个指针指向节点 $(2p) \bmod n$ 与 $(2p+1) \bmod n$，如果其中一个数为 0，则指针指向 $n$。&lt;/p&gt;</description></item><item><title>带有问号通配符的字符串模式匹配</title><link>https://litjohn.github.io/posts/glob-pattern-matching/</link><pubDate>Sat, 14 Mar 2026 09:23:50 +0800</pubDate><guid>https://litjohn.github.io/posts/glob-pattern-matching/</guid><description>&lt;h2 id="问题"&gt;问题&lt;/h2&gt;
 &lt;p&gt;给定原串 $s$ 与模式串 $t$。其中模式串可能含有一些 &lt;code&gt;?&lt;/code&gt; 字符（而原串没有），问号可以与任何字符匹配。问模式串与 $s$ 中哪些位置匹配？&lt;/p&gt;
 &lt;p&gt;形式化的：&lt;/p&gt;
 &lt;p&gt;我们称两个字符串相等，当且仅当：&lt;/p&gt;
