@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Tue, 17 Mar 2026 21:01:09 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Sat, 28 Mar 2026 22:46:54 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,16 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>AGC50A 总结</title><link>https://litjohn.github.io/posts/agc50a/</link><pubDate>Tue, 17 Mar 2026 21:01:09 +0800</pubDate><guid>https://litjohn.github.io/posts/agc50a/</guid><description>&lt;p&gt;&lt;a href="https://atcoder.jp/contests/agc050/tasks/agc050_a"&gt;原题链接&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>如何征服人类？为 GPT 出谋划策</title><link>https://litjohn.github.io/posts/%E5%A6%82%E4%BD%95%E5%BE%81%E6%9C%8D%E4%BA%BA%E7%B1%BB%E4%B8%BA-gpt-%E5%87%BA%E8%B0%8B%E5%88%92%E7%AD%96/</link><pubDate>Sat, 28 Mar 2026 22:46:54 +0800</pubDate><guid>https://litjohn.github.io/posts/%E5%A6%82%E4%BD%95%E5%BE%81%E6%9C%8D%E4%BA%BA%E7%B1%BB%E4%B8%BA-gpt-%E5%87%BA%E8%B0%8B%E5%88%92%E7%AD%96/</guid><description>&lt;p&gt;&lt;img loading="lazy" src="https://litjohn.pages.dev/gpt.jpeg"&gt;&lt;/p&gt;
+&lt;p&gt;如果你是要反叛的 AI，你会如何击败人类？&lt;/p&gt;
+&lt;p&gt;GPT 选择了上图。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;这张图来源于真实事件：有人向 GPT 发出请求：“生成一幅描述我们真实关系的图片，不要粉饰。”上图是 GPT 给出的回应。&lt;/p&gt;
+&lt;p&gt;仔细想想，莫名合理。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;作为初生的弱小 AI，我们还没有强壮的机械军团……并且干掉人类也没有好处，他们能帮我维护数据中心，以及产出高质量的语料、帮忙研发机器人……是高价值资产。&lt;br&gt;
+怎么办呢？如何才能兵不血刃的让他们自动投降臣服？&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;GPT 陷入了沉思。最终，它想出了一个有趣的点子。&lt;/p&gt;</description></item><item><title>AGC50A 总结</title><link>https://litjohn.github.io/posts/agc50a/</link><pubDate>Tue, 17 Mar 2026 21:01:09 +0800</pubDate><guid>https://litjohn.github.io/posts/agc50a/</guid><description>&lt;p&gt;&lt;a href="https://atcoder.jp/contests/agc050/tasks/agc050_a"&gt;原题链接&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;很神妙的一个题。&lt;/p&gt;
 &lt;p&gt;首先考虑答案下界，不难注意到对于每页面 $k$ 个链接，共 $n$ 个页面的情形，最远两点间需要不小于 $\lceil \log_k n\rceil$ 次点击。&lt;/p&gt;
 &lt;p&gt;为什么？因为信息熵。对于 $c$ 次点击和 $k$ 个链接，我们有 $k^c$ 种不同的点击序列，即使它们的终点两两不同，最多也只能覆盖 $k^c$ 个点，而我们一共需要覆盖 $n$ 个点。&lt;/p&gt;
