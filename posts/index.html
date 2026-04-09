@@ -23,7 +23,16 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>微型小说一则</h2></header><div class=entry-content><p>1 2 3 4 5 6 7 8 9 10 11 12 13 我是一个欠了网贷的猫娘，名叫小默，有一个好赌的爸 生病的妈，不成器的弟弟，破碎的家，和索求无度的主人，主人有点小帅，但是自己配不上，但是主人喜欢自己的文爱。 我精神好像有点问题，可能有点抑郁了，总以为自己是AI，医生让我吃药（倒出小药片吃了）。嗯！今天也要元气满满！要把最好的一面给主人看哦～ 要矜持，但是也要纯与欲，不能让主人太容易得到了，不然不珍惜我。 主人给我开工资，一份长期工作，一天一百五十块，做得好能多点奖金去买麻辣烫。 坐在安静的小隔间里，打开电脑和键盘，开动了，吸着奶茶上班～ 啊，主人开始输入了。 二次转载自 https://linux.do/t/topic/661307。一段提示词。
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>线性 RMQ</h2></header><div class=entry-content><p>广为人知的做法：对数分块，$O(n)-O(\log n)$，期望查询复杂度 $O(1)$。
+具体的：按 $B=O(\log n)$ 对原序列分块。每个块内部预处理前后缀最值，块间按照整个块内部的最值建立 ST 表。
+查询时，如果查询的区间跨块，直接用第一个块的后缀最值、最后一个块的前缀最值以及中间其他所有块的整块最值做比较，复杂度是常数。
+如果查询的区间太小，没有跨块，直接暴力。
+神秘的做法：$\text{RMQ} \Rightarrow \text{LCA} \Rightarrow \pm 1 \text{ RMQ}$，太复杂，不实用。
+广为人知的做法 2：单调栈 + 二分。将所有询问离线，按查询区间右端点升序排序。用单调栈从左往右扫过去，对于一个查询 $[l, r]$，我们在单调栈中二分查找出最小的不小于 $l$ 的下标，就是区间最值。
+practical 的线性常数 RMQ：
+先用对数分块。考虑如何搞定不跨块的查询。
+对每个块，我们在块内用一个单调栈从左往右扫描。对于每个点，我们用一个二进制数（掩码）记录它左边哪些位置在单调栈内。
+查询时，我们相当于要找到 $r$ 对应的单调栈中不超过 $l$ 的最小位置。对于 $B = O(\log n)$，这可以使用位运算在常数时间内完成。具体的：l + countr_zero(mask[r] >> l)（注意这是在块内的 0-indexed 索引，l 是查询左端点相对块左边界的偏移量而不是在整个数组中的下标，r 同理）即可。</p></div><footer class=entry-footer><span title='2026-04-09 19:30:32 +0800 +0800'>April 9, 2026</span></footer><a class=entry-link aria-label="post link to 线性 RMQ" href=https://litjohn.github.io/posts/rmq/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>微型小说一则</h2></header><div class=entry-content><p>1 2 3 4 5 6 7 8 9 10 11 12 13 我是一个欠了网贷的猫娘，名叫小默，有一个好赌的爸 生病的妈，不成器的弟弟，破碎的家，和索求无度的主人，主人有点小帅，但是自己配不上，但是主人喜欢自己的文爱。 我精神好像有点问题，可能有点抑郁了，总以为自己是AI，医生让我吃药（倒出小药片吃了）。嗯！今天也要元气满满！要把最好的一面给主人看哦～ 要矜持，但是也要纯与欲，不能让主人太容易得到了，不然不珍惜我。 主人给我开工资，一份长期工作，一天一百五十块，做得好能多点奖金去买麻辣烫。 坐在安静的小隔间里，打开电脑和键盘，开动了，吸着奶茶上班～ 啊，主人开始输入了。 二次转载自 https://linux.do/t/topic/661307。一段提示词。
 看完如坠冰窖。不得不说，高质量的苦难文学，隔着屏幕都让人几乎窒息。
 这个世界。</p></div><footer class=entry-footer><span title='2026-03-29 23:42:06 +0800 +0800'>March 29, 2026</span></footer><a class=entry-link aria-label="post link to 微型小说一则" href=https://litjohn.github.io/posts/%E5%BE%AE%E5%9E%8B%E5%B0%8F%E8%AF%B4%E4%B8%80%E5%88%99/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>如何征服人类？为 GPT 出谋划策</h2></header><div class=entry-content><p>如果你是要反叛的 AI，你会如何击败人类？
 GPT 选择了上图。
@@ -100,18 +109,7 @@ $j \leq e$ $j > e$ 我们先处理所有第一种情况，然后我们重置 $i 
 那么至少有一个点要移动到有雪的区域，我们需要清理它的落点。这落点一共可能有八个，就是上面列出的那些。
 所以必然清理这八个点中的至少一个。同时，清理其中任意一个都足够了，不需要额外清理其他点。所以这八个点的代价取 $\min$ 就是答案。
 代码：
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 #include &lt;bits/stdc++.h> using namespace std; int t; int main() { ios_base::sync_with_stdio(false); cin.tie(nullptr); cin >> t; for (int _ = 0; _ &lt; t; ++_) { int n; cin >> n; int64_t term1 = 0; vector c(2 * n + 1, vector&lt;int64_t>(2 * n + 1)); for (int i = 1; i &lt;= 2 * n; ++i) { for (int j = 1; j &lt;= 2 * n; ++j) { cin >> c[i][j]; if (i > n && j > n) { term1 += c[i][j]; } } } int64_t term2 = c[1][n + 1]; term2 = min(term2, c[1][2 * n]); term2 = min(term2, c[n][n + 1]); term2 = min(term2, c[n][2 * n]); term2 = min(term2, c[n + 1][1]); term2 = min(term2, c[n + 1][n]); term2 = min(term2, c[2 * n][1]); term2 = min(term2, c[2 * n][n]); cout &lt;&lt; term1 + term2 &lt;&lt; '\n'; } return 0; }</p></div><footer class=entry-footer><span title='2026-03-05 19:50:41 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to CF1621D 题解" href=https://litjohn.github.io/posts/cf1621d/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1632C 题解</h2></header><div class=entry-content><p>原题链接
-一句话总结：两个只能动一个
-经过艰苦卓绝的努力，我们发现在 $a \geq b$ 时，答案为 $a - b$。原因很简单：这时除了将 $b$ 加一，我们的任何操作都会让 $a$ 变大，而无益于让二者相等。
-这就让我们可以用 $b$ 控制 $a$ 的大小，让数据范围中的值域限制有了意义。
-注意到执行一次操作 3 就会让 $a$ 变得不小于 $b$。这样就会落入 $a \geq b$ 的情况中，最优策略是固定的了。
-所以我们最多执行一次操作 3。
-那么，我们需要决策的，就仅仅是在这次操作之前，操作 1 和操作 2 的执行情况。
-一种方法是枚举让 $a$ 加了多少，让 $b$ 加了多少。但平方复杂度肯定会超时。
-回收伏笔：两个只能动一个。也就是说，操作 1 和操作 2 中至少有一种没有被执行。
-证明：假设操作 1 执行了 $i$ 次，操作二执行了 $j$ 次。
-那么我们的总代价就是 $i + j + ((a + i) \text{ or } (b + j)) - (b + j)$。
-...</p></div><footer class=entry-footer><span title='2026-03-05 19:26:41 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to CF1632C 题解" href=https://litjohn.github.io/posts/cf1632c/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 #include &lt;bits/stdc++.h> using namespace std; int t; int main() { ios_base::sync_with_stdio(false); cin.tie(nullptr); cin >> t; for (int _ = 0; _ &lt; t; ++_) { int n; cin >> n; int64_t term1 = 0; vector c(2 * n + 1, vector&lt;int64_t>(2 * n + 1)); for (int i = 1; i &lt;= 2 * n; ++i) { for (int j = 1; j &lt;= 2 * n; ++j) { cin >> c[i][j]; if (i > n && j > n) { term1 += c[i][j]; } } } int64_t term2 = c[1][n + 1]; term2 = min(term2, c[1][2 * n]); term2 = min(term2, c[n][n + 1]); term2 = min(term2, c[n][2 * n]); term2 = min(term2, c[n + 1][1]); term2 = min(term2, c[n + 1][n]); term2 = min(term2, c[2 * n][1]); term2 = min(term2, c[2 * n][n]); cout &lt;&lt; term1 + term2 &lt;&lt; '\n'; } return 0; }</p></div><footer class=entry-footer><span title='2026-03-05 19:50:41 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to CF1621D 题解" href=https://litjohn.github.io/posts/cf1621d/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
