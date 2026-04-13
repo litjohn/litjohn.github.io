@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Thu, 09 Apr 2026 19:30:32 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>Posts on 正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/posts/</link><description>Recent content in Posts on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Mon, 13 Apr 2026 20:04:37 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,18 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>线性 RMQ</title><link>https://litjohn.github.io/posts/rmq/</link><pubDate>Thu, 09 Apr 2026 19:30:32 +0800</pubDate><guid>https://litjohn.github.io/posts/rmq/</guid><description>&lt;p&gt;广为人知的做法：对数分块，$O(n)-O(\log n)$，期望查询复杂度 $O(1)$。&lt;/p&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>ABC453F 题解</title><link>https://litjohn.github.io/posts/abc453f/</link><pubDate>Mon, 13 Apr 2026 20:04:37 +0800</pubDate><guid>https://litjohn.github.io/posts/abc453f/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;没看懂题解导致虚空调试三小时&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://atcoder.jp/contests/abc453/tasks/abc453_f"&gt;原题链接&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;（假设你看过了官方题解）&lt;/p&gt;
+&lt;p&gt;大概总结一下这个算法背后的直觉。&lt;/p&gt;
+&lt;p&gt;一堆同色点会覆盖两两之间的简单路径，我们要覆盖整棵树。不妨任意钦定一根，注意到每个点能覆盖的东西都是它的一些祖先，直到与配对点的 LCA 为止。注意到叶子节点很关键，一方面因为叶子边被截断难以处理，另一方面叶子结点和叶子配对更优，同时内部节点配对应当尽可能转化为叶子的配对。&lt;/p&gt;
+&lt;p&gt;然后贪心直觉是让每个叶子覆盖的尽量高。最高的覆盖就是覆盖到根节点，注意到这在大多数时候都可行。但如果某个子树内的点多于总数一半，就会爆炸。所以选择叶子意义的重心作为根。这样我们猜想确实可以让每个叶子都覆盖到根，考虑给出一种构造。&lt;/p&gt;
+&lt;p&gt;对于不同的颜色，我们不妨从多到少考虑它们，当然乱序并不影响。我们显然不能把这种颜色全部染进一个子树里。假设我们用这种颜色染了一些叶子，那么剩余的叶子仍然需要满足上面的不存在一个子树叶子过多的限制。一个理解是，当前颜色染色完毕之后，被染色的叶子就消失了，因为它们无法和其他叶子继续配对。&lt;/p&gt;
+&lt;p&gt;那么首先我们应当考虑两个在不同子树中的叶子。注意到对任意时刻，取不在最大子树中的叶子都可能导致限制被破坏，于是我们始终应该取剩余叶子数最多的子树。这个过程可以始终持续而满足同样的没有叶子数过多子树的性质。&lt;/p&gt;
+&lt;p&gt;注意到我们一直假设的是存在两个在不同子树中的叶子，但可能只剩下一个。这时我们被迫放弃将它与其他叶子配对，但我们可以挑选一个合适的内部点，只要内部点与叶子的路径通过根即可。不妨取根节点，即叶子意义下重心 $x$。&lt;/p&gt;
+&lt;p&gt;注意到所有被染色的节点都满足有不在同一子树中的配对点。而所有叶子都被染色，从而所有叶子到根的路径都被覆盖。对任意边，它必定位于某个叶子到根的路径上。于是每条边必然被覆盖，得到了合法的构造。&lt;/p&gt;
+&lt;p&gt;代码：&lt;a href="https://atcoder.jp/contests/abc453/submissions/74928909"&gt;https://atcoder.jp/contests/abc453/submissions/74928909&lt;/a&gt;&lt;/p&gt;</description></item><item><title>线性 RMQ</title><link>https://litjohn.github.io/posts/rmq/</link><pubDate>Thu, 09 Apr 2026 19:30:32 +0800</pubDate><guid>https://litjohn.github.io/posts/rmq/</guid><description>&lt;p&gt;广为人知的做法：对数分块，$O(n)-O(\log n)$，期望查询复杂度 $O(1)$。&lt;/p&gt;
 &lt;p&gt;具体的：按 $B=O(\log n)$ 对原序列分块。每个块内部预处理前后缀最值，块间按照整个块内部的最值建立 ST 表。&lt;/p&gt;
 &lt;p&gt;查询时，如果查询的区间跨块，直接用第一个块的后缀最值、最后一个块的前缀最值以及中间其他所有块的整块最值做比较，复杂度是常数。&lt;/p&gt;
 &lt;p&gt;如果查询的区间太小，没有跨块，直接暴力。&lt;/p&gt;

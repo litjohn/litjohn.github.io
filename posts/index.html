@@ -23,7 +23,17 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>线性 RMQ</h2></header><div class=entry-content><p>广为人知的做法：对数分块，$O(n)-O(\log n)$，期望查询复杂度 $O(1)$。
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>ABC453F 题解</h2></header><div class=entry-content><p>没看懂题解导致虚空调试三小时
+原题链接
+（假设你看过了官方题解）
+大概总结一下这个算法背后的直觉。
+一堆同色点会覆盖两两之间的简单路径，我们要覆盖整棵树。不妨任意钦定一根，注意到每个点能覆盖的东西都是它的一些祖先，直到与配对点的 LCA 为止。注意到叶子节点很关键，一方面因为叶子边被截断难以处理，另一方面叶子结点和叶子配对更优，同时内部节点配对应当尽可能转化为叶子的配对。
+然后贪心直觉是让每个叶子覆盖的尽量高。最高的覆盖就是覆盖到根节点，注意到这在大多数时候都可行。但如果某个子树内的点多于总数一半，就会爆炸。所以选择叶子意义的重心作为根。这样我们猜想确实可以让每个叶子都覆盖到根，考虑给出一种构造。
+对于不同的颜色，我们不妨从多到少考虑它们，当然乱序并不影响。我们显然不能把这种颜色全部染进一个子树里。假设我们用这种颜色染了一些叶子，那么剩余的叶子仍然需要满足上面的不存在一个子树叶子过多的限制。一个理解是，当前颜色染色完毕之后，被染色的叶子就消失了，因为它们无法和其他叶子继续配对。
+那么首先我们应当考虑两个在不同子树中的叶子。注意到对任意时刻，取不在最大子树中的叶子都可能导致限制被破坏，于是我们始终应该取剩余叶子数最多的子树。这个过程可以始终持续而满足同样的没有叶子数过多子树的性质。
+注意到我们一直假设的是存在两个在不同子树中的叶子，但可能只剩下一个。这时我们被迫放弃将它与其他叶子配对，但我们可以挑选一个合适的内部点，只要内部点与叶子的路径通过根即可。不妨取根节点，即叶子意义下重心 $x$。
+注意到所有被染色的节点都满足有不在同一子树中的配对点。而所有叶子都被染色，从而所有叶子到根的路径都被覆盖。对任意边，它必定位于某个叶子到根的路径上。于是每条边必然被覆盖，得到了合法的构造。
+代码：https://atcoder.jp/contests/abc453/submissions/74928909</p></div><footer class=entry-footer><span title='2026-04-13 20:04:37 +0800 +0800'>April 13, 2026</span></footer><a class=entry-link aria-label="post link to ABC453F 题解" href=https://litjohn.github.io/posts/abc453f/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>线性 RMQ</h2></header><div class=entry-content><p>广为人知的做法：对数分块，$O(n)-O(\log n)$，期望查询复杂度 $O(1)$。
 具体的：按 $B=O(\log n)$ 对原序列分块。每个块内部预处理前后缀最值，块间按照整个块内部的最值建立 ST 表。
 查询时，如果查询的区间跨块，直接用第一个块的后缀最值、最后一个块的前缀最值以及中间其他所有块的整块最值做比较，复杂度是常数。
 如果查询的区间太小，没有跨块，直接暴力。
@@ -96,20 +106,7 @@ $$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax
 有两种可能：
 $j \leq e$ $j > e$ 我们先处理所有第一种情况，然后我们重置 $i = e + 1$ 就可以继续处理第二种情况。
 注意到第一种情况具备非常神奇的特性：$[j, i + l)$ 这段下标区间内 $S$ 的子串，等于 $P$ 长度为 $i + l - j$ 的前缀，而同时，当前起始点在 $i$ 的匹配中，与这部分对齐的一段后缀也等于这段子串！
-...</p></div><footer class=entry-footer><span title='2026-03-05 20:04:15 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to Knuth-Morris-Pratt algorithm" href=https://litjohn.github.io/posts/kmp/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>CF1621D 题解</h2></header><div class=entry-content><p>原题链接
-一句话总结：四个关键点是“支架”。
-首先注意到右下角的 $n \times n$ 区域内的雪必须全部清除，否则连目的地都不安全，一定会有人生病。
-于是我们只需要在左下和右上两块区域中设法开出一条路来。
-注意到有八个点，一旦清扫完成就不需要清扫别的点。这些点是 $(n+1, 1), (n+1, n), (2n, 1), (2n, n), (1, n+1), (1, 2n), (n, n+1), (n, 2n)$。感性理解一下。
-事实上，只需要在这些点中取最小代价，就得到了最优答案。
-因为任何一种合法答案，都必然包含这八个点中的一个。
-回到开头的省流，四个关键点是 $(1, 1), (1, n), (n, 1), (n, n)$。
-直观上理解，它们不能全都走别的点的路径离开，必须有一个有属于自己的路。或者说，它们支撑了整个网格的结构，如果不移走其中一个的话就动弹不得。
-具体的，我们最终肯定需要挪动这四个点到右下角。那么考虑第一次操作它们所在的任意行列。不可能在不使这四个点都不超出左上角 $n \times n$ 区域的情况下进行一次操作。
-那么至少有一个点要移动到有雪的区域，我们需要清理它的落点。这落点一共可能有八个，就是上面列出的那些。
-所以必然清理这八个点中的至少一个。同时，清理其中任意一个都足够了，不需要额外清理其他点。所以这八个点的代价取 $\min$ 就是答案。
-代码：
-1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 #include &lt;bits/stdc++.h> using namespace std; int t; int main() { ios_base::sync_with_stdio(false); cin.tie(nullptr); cin >> t; for (int _ = 0; _ &lt; t; ++_) { int n; cin >> n; int64_t term1 = 0; vector c(2 * n + 1, vector&lt;int64_t>(2 * n + 1)); for (int i = 1; i &lt;= 2 * n; ++i) { for (int j = 1; j &lt;= 2 * n; ++j) { cin >> c[i][j]; if (i > n && j > n) { term1 += c[i][j]; } } } int64_t term2 = c[1][n + 1]; term2 = min(term2, c[1][2 * n]); term2 = min(term2, c[n][n + 1]); term2 = min(term2, c[n][2 * n]); term2 = min(term2, c[n + 1][1]); term2 = min(term2, c[n + 1][n]); term2 = min(term2, c[2 * n][1]); term2 = min(term2, c[2 * n][n]); cout &lt;&lt; term1 + term2 &lt;&lt; '\n'; } return 0; }</p></div><footer class=entry-footer><span title='2026-03-05 19:50:41 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to CF1621D 题解" href=https://litjohn.github.io/posts/cf1621d/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+...</p></div><footer class=entry-footer><span title='2026-03-05 20:04:15 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to Knuth-Morris-Pratt algorithm" href=https://litjohn.github.io/posts/kmp/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
