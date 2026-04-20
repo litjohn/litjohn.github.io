@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Mon, 13 Apr 2026 20:04:37 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>正确即是废话，废话亦是正确</title><link>https://litjohn.github.io/</link><description>Recent content on 正确即是废话，废话亦是正确</description><generator>Hugo -- 0.151.0</generator><language>zh-cn</language><lastBuildDate>Mon, 20 Apr 2026 23:11:32 +0800</lastBuildDate><atom:link href="https://litjohn.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Algorithms Summary</title><link>https://litjohn.github.io/posts/algorithms-summary/</link><pubDate>Sun, 12 Oct 2025 22:20:28 +0800</pubDate><guid>https://litjohn.github.io/posts/algorithms-summary/</guid><description>&lt;p&gt;算法 trick 的记录。&lt;/p&gt;
 &lt;p&gt;系列前作：&lt;a href="https://www.luogu.com.cn/article/yc9w22em"&gt;https://www.luogu.com.cn/article/yc9w22em&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;拆贡献！拆贡献！交换维度！交换维度！时间逆流！时间逆流！操作顺序反演！操作顺序反演！递推！递推！分离常量！分离常量！不同的项分开算！&lt;/p&gt;
@@ -34,7 +34,48 @@
 &lt;p&gt;当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。&lt;/p&gt;
-&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>ABC453F 题解</title><link>https://litjohn.github.io/posts/abc453f/</link><pubDate>Mon, 13 Apr 2026 20:04:37 +0800</pubDate><guid>https://litjohn.github.io/posts/abc453f/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。&lt;/p&gt;</description></item><item><title>晴风</title><link>https://litjohn.github.io/posts/haru/</link><pubDate>Mon, 20 Apr 2026 23:11:32 +0800</pubDate><guid>https://litjohn.github.io/posts/haru/</guid><description>&lt;p&gt;你似那春日晴风
+闭眸在余霞夕暮
+心绪正寄向何方？
+睁开眼
+双目剔透如琉璃
+依稀有丝晴日气息&lt;/p&gt;
+&lt;p&gt;白日晴空/予花绽
+百花不过/因晴开
+纵使雨过天晴 可连草露雨滴
+也将乔饰你的晴空
+待心中浪涛平如镜
+我们亦化作晴风
+将那朵云彩也跨越
+直到吹至天际彼方&lt;/p&gt;
+&lt;p&gt;你似那晴日徐风
+闭眸又若晴蓝天空
+眉宇间，何以染了轻愁？
+待我睁开双目
+你双眸似琉璃 如今却嗅到一丝阴雨&lt;/p&gt;
+&lt;p&gt;泪痕见湿 天同泣
+落泪亦作 雨自咎
+纵使天不作美 可算阴雨连绵
+云上也将晴空万里
+倾听雨滴击打泥土
+我们亦化作春岚
+将那片海洋也跨越
+直至吹至天际彼方&lt;/p&gt;
+&lt;p&gt;疾风骤雨 拂过草原
+絮状积云 亦是春日之故
+又如微微徐风 乘我心春息
+等待放晴&lt;/p&gt;
+&lt;p&gt;白日晴空 天云裂
+斑驳花朵 春使然
+纵使雨过天晴 可连草露雨滴
+也将乔饰你的晴空&lt;/p&gt;
+&lt;p&gt;奏响心中律动 我们亦化作春风
+就似那倾听律动的晴风
+将这首歌吹至远方镜海&lt;/p&gt;
+&lt;p&gt;白日晴空 予花绽
+百花不过 因春来
+将那朵云彩也跨越
+直至吹至天际彼方&lt;/p&gt;</description></item><item><title>ABC453F 题解</title><link>https://litjohn.github.io/posts/abc453f/</link><pubDate>Mon, 13 Apr 2026 20:04:37 +0800</pubDate><guid>https://litjohn.github.io/posts/abc453f/</guid><description>&lt;blockquote&gt;
 &lt;p&gt;没看懂题解导致虚空调试三小时&lt;/p&gt;&lt;/blockquote&gt;
 &lt;p&gt;&lt;a href="https://atcoder.jp/contests/abc453/tasks/abc453_f"&gt;原题链接&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;（假设你看过了官方题解）&lt;/p&gt;

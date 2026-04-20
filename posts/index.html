@@ -23,7 +23,14 @@
 当操作是对两个相邻元素（或者类似的，一个元素附近的几个元素）时，这样的关于奇偶性或者奇偶下标的元素的差的不变量比较容易出现。
 不变量和另一种思想紧密相关，即状态而非过程。在很多贪心或者博弈论的题中，常常有复杂的流程模拟，直接陷进去就做不出来了。
 这时可以考虑最终状态或者解的性质，有时能够得到非常简洁优雅的结果。就像解方程一样。
-...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>ABC453F 题解</h2></header><div class=entry-content><p>没看懂题解导致虚空调试三小时
+...</p></div><footer class=entry-footer><span title='2025-10-12 22:20:28 +0800 +0800'>October 12, 2025</span></footer><a class=entry-link aria-label="post link to Algorithms Summary" href=https://litjohn.github.io/posts/algorithms-summary/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>晴风</h2></header><div class=entry-content><p>你似那春日晴风 闭眸在余霞夕暮 心绪正寄向何方？ 睁开眼 双目剔透如琉璃 依稀有丝晴日气息
+白日晴空/予花绽 百花不过/因晴开 纵使雨过天晴 可连草露雨滴 也将乔饰你的晴空 待心中浪涛平如镜 我们亦化作晴风 将那朵云彩也跨越 直到吹至天际彼方
+你似那晴日徐风 闭眸又若晴蓝天空 眉宇间，何以染了轻愁？ 待我睁开双目 你双眸似琉璃 如今却嗅到一丝阴雨
+泪痕见湿 天同泣 落泪亦作 雨自咎 纵使天不作美 可算阴雨连绵 云上也将晴空万里 倾听雨滴击打泥土 我们亦化作春岚 将那片海洋也跨越 直至吹至天际彼方
+疾风骤雨 拂过草原 絮状积云 亦是春日之故 又如微微徐风 乘我心春息 等待放晴
+白日晴空 天云裂 斑驳花朵 春使然 纵使雨过天晴 可连草露雨滴 也将乔饰你的晴空
+奏响心中律动 我们亦化作春风 就似那倾听律动的晴风 将这首歌吹至远方镜海
+白日晴空 予花绽 百花不过 因春来 将那朵云彩也跨越 直至吹至天际彼方</p></div><footer class=entry-footer><span title='2026-04-20 23:11:32 +0800 +0800'>April 20, 2026</span></footer><a class=entry-link aria-label="post link to 晴风" href=https://litjohn.github.io/posts/haru/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>ABC453F 题解</h2></header><div class=entry-content><p>没看懂题解导致虚空调试三小时
 原题链接
 （假设你看过了官方题解）
 大概总结一下这个算法背后的直觉。
@@ -92,21 +99,7 @@ $$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax
 这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。
 两种优化的分治 维护幂信息
 注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。
-...</p></div><footer class=entry-footer><span title='2026-03-07 21:56:41 +0800 +0800'>March 7, 2026</span></footer><a class=entry-link aria-label="post link to 等比数列求和的四种方法" href=https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/></a></article><article class=post-entry><header class=entry-header><h2 class=entry-hint-parent>Knuth-Morris-Pratt algorithm</h2></header><div class=entry-content><p>引入 给定字符串 $S$ 与模式串 $P$。问 $P$ 的最长的是 $S$ 的子串的前缀的长度。
-我会暴力！ $O(nm)$，非常显然。不讲。
-喜欢哈希的小朋友们你们好啊！ 注意到答案具备单调性。于是我们使用二分，外加哈希来检验。
-复杂度 $O(n\log m)$，其中 $n$ 是 $S$ 的长度，$m$ 是 $P$ 的长度。
-已经很优秀了，但是还不够，毒瘤出题人出了 $n=m=3\times 10^7$ 的数据范围！
-等价重写 Hash 的算法相当于二分匹配前缀长度，然后枚举前缀匹配起始点。
-重写为另一种等价的形式：枚举前缀匹配的起始点，然后二分产生的匹配的长度。
-现在，Hash 的问题在于每次重新二分一看就非常不优。
-当然我不是让大家写分散层叠（分散层叠也完全用不上）。但是我们获得了一些优化的可能。
-包的 假设现在我们在一个匹配起始点 $i$，有一个长度为 $l$ 的匹配（意味着匹配的结束点在 $e = i + l - 1$）。
-考虑一个起始点在 $i$ 之后的匹配：假设起始点为 $j$。
-有两种可能：
-$j \leq e$ $j > e$ 我们先处理所有第一种情况，然后我们重置 $i = e + 1$ 就可以继续处理第二种情况。
-注意到第一种情况具备非常神奇的特性：$[j, i + l)$ 这段下标区间内 $S$ 的子串，等于 $P$ 长度为 $i + l - j$ 的前缀，而同时，当前起始点在 $i$ 的匹配中，与这部分对齐的一段后缀也等于这段子串！
-...</p></div><footer class=entry-footer><span title='2026-03-05 20:04:15 +0800 +0800'>March 5, 2026</span></footer><a class=entry-link aria-label="post link to Knuth-Morris-Pratt algorithm" href=https://litjohn.github.io/posts/kmp/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+...</p></div><footer class=entry-footer><span title='2026-03-07 21:56:41 +0800 +0800'>March 7, 2026</span></footer><a class=entry-link aria-label="post link to 等比数列求和的四种方法" href=https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/></a></article><footer class=page-footer><nav class=pagination><a class=next href=https://litjohn.github.io/posts/page/2/>Next&nbsp;&nbsp;»</a></nav></footer></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
 <span>Powered by
 <a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
 <a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
