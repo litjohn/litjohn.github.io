@@ -1,0 +1,112 @@
+<!doctype html><html lang=en dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>等比数列求和的四种方法 | 正确即是废话，废话亦是正确</title><meta name=keywords content="algorithms"><meta name=description content="做到了 ABC448E，感觉很精妙。
+题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。
+公式
+直接套公式。
+$$
+\sum_{i=0}^n a^i = \frac{a^{n+1}-1}{a-1}
+$$然后用逆元。不讲。
+如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。
+更好的方法
+公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。
+我们有几种方法来处理这个情况
+下文定义
+$$
+f(l, a) = \sum_{i = 0}^{l-1} a^i
+$$分治求和
+洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。
+大概来说，我们将序列平均分为两部分。
+$$
+f(l, a) =
+\begin{cases}
+(1+a^{l/2})x, \; l \text{ is even}\\
+x+a^{(l-1)/2}(ax+1), \; l \text{ is odd}
+\end{cases}
+$$其中 $x := f(\lfloor \frac{l}{2} \rfloor, a)$。
+这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。
+两种优化的分治
+维护幂信息
+注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。"><meta name=author content><link rel=canonical href=https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/><link crossorigin=anonymous href=/assets/css/stylesheet.b915ce98f9f65cca5e346b24fc336009b3608a3eeb24ce4b0e53c4500eba9374.css integrity="sha256-uRXOmPn2XMpeNGsk/DNgCbNgij7rJM5LDlPEUA66k3Q=" rel="preload stylesheet" as=style><link rel=icon href=https://litjohn.github.io/favicon.ico><link rel=icon type=image/png sizes=16x16 href=https://litjohn.github.io/favicon-16x16.png><link rel=icon type=image/png sizes=32x32 href=https://litjohn.github.io/favicon-32x32.png><link rel=apple-touch-icon href=https://litjohn.github.io/apple-touch-icon.png><link rel=mask-icon href=https://litjohn.github.io/safari-pinned-tab.svg><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><link rel=alternate hreflang=en href=https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--code-block-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.css integrity=sha384-bYdxxUwYipFNohQlHt0bjN/LCpueqWz13HufFEV1SUatKs1cm4L6fFgCi1jT643X crossorigin=anonymous><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/katex.min.js integrity=sha384-Qsn9KnoKISj6dI8g7p1HBlNpVx0I8p1SvlwOldgi3IorMle61nQy4zEahWYtljaz crossorigin=anonymous></script><script defer src=https://cdn.jsdelivr.net/npm/katex@0.16.2/dist/contrib/auto-render.min.js integrity=sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05 crossorigin=anonymous></script><script>document.addEventListener("DOMContentLoaded",function(){renderMathInElement(document.body,{delimiters:[{left:"$$",right:"$$",display:!0},{left:"$",right:"$",display:!1},{left:"\\(",right:"\\)",display:!1},{left:"\\[",right:"\\]",display:!0}],throwOnError:!1})})</script><meta property="og:url" content="https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/"><meta property="og:site_name" content="正确即是废话，废话亦是正确"><meta property="og:title" content="等比数列求和的四种方法"><meta property="og:description" content="做到了 ABC448E，感觉很精妙。
+题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。
+公式 直接套公式。
+$$ \sum_{i=0}^n a^i = \frac{a^{n+1}-1}{a-1} $$然后用逆元。不讲。
+如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。
+更好的方法 公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。
+我们有几种方法来处理这个情况
+下文定义
+$$ f(l, a) = \sum_{i = 0}^{l-1} a^i $$分治求和 洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。
+大概来说，我们将序列平均分为两部分。
+$$ f(l, a) = \begin{cases} (1+a^{l/2})x, \; l \text{ is even}\\ x+a^{(l-1)/2}(ax+1), \; l \text{ is odd} \end{cases} $$其中 $x := f(\lfloor \frac{l}{2} \rfloor, a)$。
+这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。
+两种优化的分治 维护幂信息
+注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。"><meta property="og:locale" content="zh-cn"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-03-07T21:56:41+08:00"><meta property="article:modified_time" content="2026-03-07T21:56:41+08:00"><meta property="article:tag" content="Algorithms"><meta name=twitter:card content="summary"><meta name=twitter:title content="等比数列求和的四种方法"><meta name=twitter:description content="做到了 ABC448E，感觉很精妙。
+题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。
+公式
+直接套公式。
+$$
+\sum_{i=0}^n a^i = \frac{a^{n+1}-1}{a-1}
+$$然后用逆元。不讲。
+如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。
+更好的方法
+公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。
+我们有几种方法来处理这个情况
+下文定义
+$$
+f(l, a) = \sum_{i = 0}^{l-1} a^i
+$$分治求和
+洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。
+大概来说，我们将序列平均分为两部分。
+$$
+f(l, a) =
+\begin{cases}
+(1+a^{l/2})x, \; l \text{ is even}\\
+x+a^{(l-1)/2}(ax+1), \; l \text{ is odd}
+\end{cases}
+$$其中 $x := f(\lfloor \frac{l}{2} \rfloor, a)$。
+这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。
+两种优化的分治
+维护幂信息
+注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Posts","item":"https://litjohn.github.io/posts/"},{"@type":"ListItem","position":2,"name":"等比数列求和的四种方法","item":"https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"等比数列求和的四种方法","name":"等比数列求和的四种方法","description":"做到了 ABC448E，感觉很精妙。\n题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。\n公式 直接套公式。\n$$ \\sum_{i=0}^n a^i = \\frac{a^{n+1}-1}{a-1} $$然后用逆元。不讲。\n如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。\n更好的方法 公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。\n我们有几种方法来处理这个情况\n下文定义\n$$ f(l, a) = \\sum_{i = 0}^{l-1} a^i $$分治求和 洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。\n大概来说，我们将序列平均分为两部分。\n$$ f(l, a) = \\begin{cases} (1+a^{l/2})x, \\; l \\text{ is even}\\\\ x+a^{(l-1)/2}(ax+1), \\; l \\text{ is odd} \\end{cases} $$其中 $x := f(\\lfloor \\frac{l}{2} \\rfloor, a)$。\n这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。\n两种优化的分治 维护幂信息\n注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\\lfloor \\frac{l}{2} \\rfloor}$ 平方就得到 $a^l$。\n","keywords":["algorithms"],"articleBody":"做到了 ABC448E，感觉很精妙。\n题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。\n公式 直接套公式。\n$$ \\sum_{i=0}^n a^i = \\frac{a^{n+1}-1}{a-1} $$然后用逆元。不讲。\n如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。\n更好的方法 公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。\n我们有几种方法来处理这个情况\n下文定义\n$$ f(l, a) = \\sum_{i = 0}^{l-1} a^i $$分治求和 洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。\n大概来说，我们将序列平均分为两部分。\n$$ f(l, a) = \\begin{cases} (1+a^{l/2})x, \\; l \\text{ is even}\\\\ x+a^{(l-1)/2}(ax+1), \\; l \\text{ is odd} \\end{cases} $$其中 $x := f(\\lfloor \\frac{l}{2} \\rfloor, a)$。\n这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。\n两种优化的分治 维护幂信息\n注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\\lfloor \\frac{l}{2} \\rfloor}$ 平方就得到 $a^l$。\n复杂度单 log。\n奇偶分拆\n从中部分开不是非常优秀。考虑类似 FFT 的方法，把奇数和偶数位置拆开算。\n$$ f(l, a) = \\begin{cases} (1+a)x, \\; l \\text{ is even}\\\\ a(1+a)x+1, \\; l \\text{ is odd} \\end{cases} $$其中 $x := f(\\lfloor \\frac{l}{2} \\rfloor, a^2)$。\n同样复杂度 1log。\n矩阵快速幂 注意到等比数列求和是一种常系数线性递推：\n$$ f(l, a) = \\begin{cases} 1, \\; l=1\\\\ af(l-1,a)+1, \\; \\text{otherwise} \\end{cases} $$于是自然可以矩阵快速幂维护。用 2 阶方阵作为转移矩阵。\n$$ T := \\begin{bmatrix} a \u0026 1 \\\\ 0 \u0026 1 \\end{bmatrix} $$有\n$$ T \\begin{bmatrix} x \\\\ 1 \\end{bmatrix} = \\begin{bmatrix} ax+1 \\\\ 1 \\end{bmatrix} $$于是： $$ T^{l-1} \\begin{bmatrix} 1 \\\\ 1 \\end{bmatrix} = \\begin{bmatrix} f(l, a) \\\\ 1 \\end{bmatrix} $$模数扩张 非常精妙的一种做法。\n回想 448E 里我们用的另一个技巧。为了维护一个数除以另一个数下取整的值模 10007，我们推导出了这个式子：\n$$ \\lfloor \\frac{a}{b} \\rfloor \\bmod p = \\lfloor \\frac{a \\bmod pb}{b} \\rfloor \\bmod p $$回到最初的公式： $$ f(l, a) = \\frac{a^l-1}{a-1} $$那么：\n$$ \\frac{a^l-1}{a-1} \\bmod p = \\frac{(a^l-1) \\bmod p(a-1)}{a-1} \\bmod p $$只需要算一次快速幂即可。\n注意特判 $a = 1$ 的情况（和普通公式法一样）。\n","wordCount":"208","inLanguage":"en","datePublished":"2026-03-07T21:56:41+08:00","dateModified":"2026-03-07T21:56:41+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://litjohn.github.io/posts/4-ways-to-sum-geometric-series/"},"publisher":{"@type":"Organization","name":"正确即是废话，废话亦是正确","logo":{"@type":"ImageObject","url":"https://litjohn.github.io/favicon.ico"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://litjohn.github.io/ accesskey=h title="正确即是废话，废话亦是正确 (Alt + H)">正确即是废话，废话亦是正确</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)" aria-label="Toggle theme">
+<svg id="moon" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button></div></div><ul id=menu><li><a href=https://litjohn.github.io/tags/ title=标签><span>标签</span></a></li><li><a href=https://litjohn.github.io/series/ title=系列><span>系列</span></a></li><li><a href=https://litjohn.github.io/archives/ title=归档><span>归档</span></a></li><li><a href=https://litjohn.github.io/search/ title="搜索 (Alt + /)" accesskey=/><span>搜索</span></a></li></ul></nav></header><main class=main><article class=post-single><header class=post-header><h1 class="post-title entry-hint-parent">等比数列求和的四种方法</h1><div class=post-meta><span title='2026-03-07 21:56:41 +0800 +0800'>March 7, 2026</span></div></header><div class=post-content><p>做到了 <a href=https://atcoder.jp/contests/abc448/tasks/abc448_e>ABC448E</a>，感觉很精妙。</p><p>题目中有个部分是模意义下等比数列求和。那么来讲讲它的几种做法。</p><h3 id=公式>公式<a hidden class=anchor aria-hidden=true href=#公式>#</a></h3><p>直接套公式。</p>$$
+\sum_{i=0}^n a^i = \frac{a^{n+1}-1}{a-1}
+$$<p>然后用逆元。不讲。</p><p>如果等比数列不是从 1 开始的，提取首项为公因数即可。下面所有讨论都默认 1 为首项。</p><h2 id=更好的方法>更好的方法<a hidden class=anchor aria-hidden=true href=#更好的方法>#</a></h2><p>公式法需要逆元，在逆元不存在时就寄了。而恰好，448E 的模数不是质数。</p><p>我们有几种方法来处理这个情况</p><p>下文定义</p>$$
+f(l, a) = \sum_{i = 0}^{l-1} a^i
+$$<h3 id=分治求和>分治求和<a hidden class=anchor aria-hidden=true href=#分治求和>#</a></h3><p>洛谷已经有篇文章讲过这种手法了。我在场上推出来也受到了它的启发。</p><p>大概来说，我们将序列平均分为两部分。</p>$$
+f(l, a) =
+\begin{cases}
+(1+a^{l/2})x, \; l \text{ is even}\\
+x+a^{(l-1)/2}(ax+1), \; l \text{ is odd}
+\end{cases}
+$$<p>其中 $x := f(\lfloor \frac{l}{2} \rfloor, a)$。</p><p>这样，做分治再套快速幂就可以以 2log 复杂度解决。不过这样不够优秀。</p><h3 id=两种优化的分治>两种优化的分治<a hidden class=anchor aria-hidden=true href=#两种优化的分治>#</a></h3><p><strong>维护幂信息</strong></p><p>注意到每层递归重算快速幂非常不优。我们在计算 $f(l, a)$ 时顺便维护 $a^l$，在计算完 $x$ 之后将 $a^{\lfloor \frac{l}{2} \rfloor}$ 平方就得到 $a^l$。</p><p>复杂度单 log。</p><p><strong>奇偶分拆</strong></p><p>从中部分开不是非常优秀。考虑类似 FFT 的方法，把奇数和偶数位置拆开算。</p>$$
+f(l, a) =
+\begin{cases}
+(1+a)x, \; l \text{ is even}\\
+a(1+a)x+1, \; l \text{ is odd}
+\end{cases}
+$$<p>其中 $x := f(\lfloor \frac{l}{2} \rfloor, a^2)$。</p><p>同样复杂度 1log。</p><h3 id=矩阵快速幂>矩阵快速幂<a hidden class=anchor aria-hidden=true href=#矩阵快速幂>#</a></h3><p>注意到等比数列求和是一种常系数线性递推：</p>$$
+f(l, a) =
+\begin{cases}
+1, \; l=1\\
+af(l-1,a)+1, \; \text{otherwise}
+\end{cases}
+$$<p>于是自然可以矩阵快速幂维护。用 2 阶方阵作为转移矩阵。</p>$$
+T :=
+\begin{bmatrix}
+a & 1 \\
+0 & 1
+\end{bmatrix}
+$$<p>有</p>$$
+T \begin{bmatrix} x \\ 1 \end{bmatrix} = \begin{bmatrix} ax+1 \\ 1 \end{bmatrix}
+$$<p>于是：</p>$$
+T^{l-1} \begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} f(l, a) \\ 1 \end{bmatrix}
+$$<h3 id=模数扩张>模数扩张<a hidden class=anchor aria-hidden=true href=#模数扩张>#</a></h3><p>非常精妙的一种做法。</p><p>回想 448E 里我们用的另一个技巧。为了维护一个数除以另一个数下取整的值模 10007，我们推导出了这个式子：</p>$$
+\lfloor \frac{a}{b} \rfloor \bmod p = \lfloor \frac{a \bmod pb}{b} \rfloor \bmod p
+$$<p>回到最初的公式：</p>$$
+f(l, a) = \frac{a^l-1}{a-1}
+$$<p>那么：</p>$$
+\frac{a^l-1}{a-1} \bmod p = \frac{(a^l-1) \bmod p(a-1)}{a-1} \bmod p
+$$<p>只需要算一次快速幂即可。</p><p>注意特判 $a = 1$ 的情况（和普通公式法一样）。</p></div><footer class=post-footer><ul class=post-tags><li><a href=https://litjohn.github.io/tags/algorithms/>Algorithms</a></li></ul></footer></article></main><footer class=footer><span>&copy; 2026 <a href=https://litjohn.github.io/>正确即是废话，废话亦是正确</a></span> ·
+<span>Powered by
+<a href=https://gohugo.io/ rel="noopener noreferrer" target=_blank>Hugo</a> &
+<a href=https://github.com/adityatelange/hugo-PaperMod/ rel=noopener target=_blank>PaperMod</a></span></footer><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><svg viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+</a><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>var mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>800||document.documentElement.scrollTop>800?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script></body></html>
